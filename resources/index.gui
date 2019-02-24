@@ -1,5 +1,4 @@
 <svg>
-  <rect id="background" />
   <image id="60"></image>
   <image id="61"></image>
   <image id="62"></image>
@@ -55,4 +54,9 @@
   <image id="04"></image>
   <image id="05"></image>
   <image id="06"></image>
+
+  <svg>
+    <text class="time text" />
+    <text class="date text" />
+  </svg>
 </svg>

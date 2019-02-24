@@ -1,12 +1,20 @@
-.defaultText {
-  font-size: 32;
-  font-family: System-Regular;
-  font-weight: regular;
-  text-length: 32;
+.text {
+  font-family: Tungsten-Medium;
+  fill: white;
 }
 
-#background {
-  width: 100%;
-  height: 100%;
-  fill: white;
+.time {
+  font-size: 125;
+  text-length: 5;
+  text-anchor: start;
+  x: 10;
+  y: 100;
+}
+
+.date {
+  font-size: 50;
+  text-length: 10;
+  text-anchor: end;
+  x: 100%-10;
+  y: 100%-10;
 }
