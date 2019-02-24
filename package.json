@@ -1,0 +1,34 @@
+{
+  "name": "hexagons",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@fitbit/sdk": "~3.0.0",
+    "@fitbit/sdk-cli": "^1.5.0",
+    "io-ts": "^1.8.2"
+  },
+  "fitbit": {
+    "appUUID": "a6ed4a7f-45f7-4ed8-9961-b8ce660b86a3",
+    "appType": "clockface",
+    "appDisplayName": "Hexagons",
+    "iconFile": "resources/icon.png",
+    "wipeColor": "#ffffff",
+    "requestedPermissions": [],
+    "buildTargets": [
+      "higgs",
+      "meson"
+    ],
+    "i18n": {
+      "en": {
+        "name": "Hexagons"
+      }
+    },
+    "defaultLanguage": "en-US"
+  },
+  "scripts": {
+    "build": "fitbit-build",
+    "debug": "fitbit"
+  },
+  "dependencies": {}
+}
