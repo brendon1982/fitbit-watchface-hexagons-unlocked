@@ -5,30 +5,46 @@ import * as Honeycomb from "../libs/honeycomb/honeycomb";
 import document from "document";
 import * as fs from "fs";
 
-const tileFileNames = getTilePaths();
-
-const Hex = Honeycomb.extendHex({
+const hexOptions = {
     size: 34.5,
-    orientation: "pointy"
-});
-const Grid = Honeycomb.defineGrid(Hex);
+    orientation: "pointy",
+    render: function (tile) {
+        const hex = this;
+        const point = hex.toPoint();
+        const id = `${hex.x}${hex.y}`;
+    
+        const image = document.getElementById(id)
+        image.href = tile
+        image.width = 60;
+        image.height = 70;
+        image.x = point.x - (image.width / 2);
+        image.y = point.y + (Math.sqrt(34.5) - (image.width / 2));
+    }
+};
 
-const grid = Grid.rectangle({ width: 7, height: 6 });
-grid.forEach(render);
+const gridOptions = { 
+    width: 7, 
+    height: 6 
+};
 
-function render(hex) {
-    const point = hex.toPoint();
-    const id = `${hex.x}${hex.y}`;
+const grid = createGrid(gridOptions, hexOptions);
+populateGridWithUnlockedTiles(grid);
+// TODO add populateGridWithUnlockProgress, this might work like something like:
+//      const progressHexes = [{x: 4, y: 2}, {x: 5, y: 2}];
+//      populateGridWithUnlockedTiles(grid, progressHexes);
+//      populateGridWithUnlockProgress(progressHexes);
+// I'm not convinced the populate methods should take 2 paramaters.
+// The populateGridWithUnlockProgress will be called everytime progress needs to be updated,
+// it seems like we might need one more piece of info in the render function for this method,
+// the 'progress' of the tile.
 
-    const image = document.getElementById(id)
-    image.href = tileFileNames[Math.floor(Math.random() * (tileFileNames.length))];
-    image.width = 60;
-    image.height = 70;
-    image.x = point.x - (image.width / 2);
-    image.y = point.y + (Math.sqrt(34.5) - (image.width / 2));
+function createGrid(gridOptions, hexOptions){
+    const HexFactory = Honeycomb.extendHex(hexOptions);
+    const GridFactory = Honeycomb.defineGrid(HexFactory);
+    return GridFactory.rectangle(gridOptions);
 }
 
-function getTilePaths() {
+function populateGridWithUnlockedTiles(grid) {
     const listDir = fs.listDirSync("/mnt/assets/resources/Tiles/Terrain/Grass");
     const tiles = [];
     let dirIter = listDir.next();
@@ -36,7 +52,10 @@ function getTilePaths() {
         tiles.push(`Tiles/Terrain/Grass/${dirIter.value}`);
         dirIter = listDir.next();
     }
-    return tiles;
+
+    grid.forEach(hex => {
+        hex.render(tiles[Math.floor(Math.random() * (tiles.length))]);
+    });
 }
 
 clock.granularity = "minutes";
