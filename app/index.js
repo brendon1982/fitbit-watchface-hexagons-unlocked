@@ -28,23 +28,23 @@ const gridOptions = {
 };
 
 const grid = createGrid(gridOptions, hexOptions);
-populateGridWithUnlockedTiles(grid);
+populateGridWithTiles(grid);
 // TODO add populateGridWithUnlockProgress, this might work like something like:
 //      const progressHexes = [{x: 4, y: 2}, {x: 5, y: 2}];
-//      populateGridWithUnlockedTiles(grid, progressHexes);
-//      populateGridWithUnlockProgress(progressHexes);
-// I'm not convinced the populate methods should take 2 paramaters.
-// The populateGridWithUnlockProgress will be called everytime progress needs to be updated,
+//      populateGridWithTiles(grid, progressHexes); // TODO refactor out into 'random tile populator', later we'll make 'unlocked tile populator'
+//      populateGridWithProgress(progressHexes); // TODO refactor out into 'random tile progress populator', later we'll make 'locked tile progress populator'
+// The populateGridWithProgress will be called everytime progress needs to be updated,
 // it seems like we might need one more piece of info in the render function for this method,
 // the 'progress' of the tile.
 
+// TODO refactor out into 'rectangle grid factory'
 function createGrid(gridOptions, hexOptions){
     const HexFactory = Honeycomb.extendHex(hexOptions);
     const GridFactory = Honeycomb.defineGrid(HexFactory);
     return GridFactory.rectangle(gridOptions);
 }
 
-function populateGridWithUnlockedTiles(grid) {
+function populateGridWithTiles(grid) {
     const listDir = fs.listDirSync("/mnt/assets/resources/Tiles/Terrain/Grass");
     const tiles = [];
     let dirIter = listDir.next();
