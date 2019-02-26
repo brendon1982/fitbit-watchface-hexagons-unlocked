@@ -6,7 +6,12 @@
   "devDependencies": {
     "@fitbit/sdk": "~3.0.0",
     "@fitbit/sdk-cli": "^1.5.0",
-    "io-ts": "^1.8.2"
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.6",
+    "chai": "^4.2.0",
+    "esm": "^3.2.7",
+    "io-ts": "^1.8.2",
+    "mocha": "^6.0.2"
   },
   "fitbit": {
     "appUUID": "a6ed4a7f-45f7-4ed8-9961-b8ce660b86a3",
@@ -31,7 +36,8 @@
   },
   "scripts": {
     "build": "fitbit-build",
-    "debug": "fitbit"
+    "debug": "fitbit",
+    "test": "mocha test/**/*.js"
   },
   "dependencies": {}
 }
