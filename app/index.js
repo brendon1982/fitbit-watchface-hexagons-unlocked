@@ -8,13 +8,13 @@ import document from "document";
 const hexOptions = {
     size: 34.5,
     orientation: "pointy",
-    render: function (tile) {
+    render: function (image) {
         const hex = this;
         const point = hex.toPoint();
         const id = `${hex.x}${hex.y}`;
     
         const image = document.getElementById(id)
-        image.href = tile
+        image.href = image
         image.width = 60;
         image.height = 70;
         image.x = point.x - (image.width / 2);
@@ -36,4 +36,4 @@ clock.granularity = "minutes";
 clock.ontick = evt => {
     time.tick(evt.date);
     date.tick(evt.date);
-}
+};

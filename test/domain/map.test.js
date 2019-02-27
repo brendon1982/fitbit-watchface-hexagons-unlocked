@@ -3,6 +3,7 @@ const describe = require("mocha").describe;
 const it = require("mocha").it;
 const expect = require("chai").expect;
 const Map = require("../../domain/map").default;
+const faker = require("faker");
 
 describe("map", function () {
     it("should be a rectangle the size of width and height specified in the gridOptions", function () {
@@ -21,16 +22,25 @@ describe("map", function () {
             ]);
     });
 
-    // TODO should create hexes as specified in hexOptions
-    // - then -
-    // TODO get eslint working
-    // TODO write replacement randomTilePresenter that doesn't rely on scanning the FS, 
-    //      knows about all tiles (it will probably just have a known list of tiles, or have one injected),
-    //      and supports exclusion co-ordinates where it wont present any tiles.
-    // TODO write a tileUnlockProgressPresenter
+    it("should create hexes as specified in the hex options", function () {
+        // arrange
+        const hexOptions = {
+            size: 2,
+            orientation: "pointy",
+            customProperty: faker.random.alphaNumeric()
+        };
+        const presenter = RecordingPresenter.create();
+        const sut = createMap({ height: 1, width: 1 }, hexOptions);
+        // act
+        sut.render(presenter)
+        // assert
+        expect(presenter.hexes[0].size).to.equal(hexOptions.size);
+        expect(presenter.hexes[0].orientation).to.equal(hexOptions.orientation);
+        expect(presenter.hexes[0].customProperty).to.equal(hexOptions.customProperty);
+    });
 
-    function createMap(gridOptions) {
-        return new Map(gridOptions);
+    function createMap(gridOptions, hexOptions) {
+        return new Map(gridOptions, hexOptions);
     }
 
     function coordinate(x, y) {
