@@ -14,6 +14,10 @@ module.exports = class TileTestDataBuilder extends BuilderBase {
         return super.withProp(o => o.name = name);
     }
 
+    withImage(image) {
+        return super.withProp(o => o.image = image);
+    }
+
     withSets(...sets) {
         return super.withProp(o => o.sets = sets);
     }
@@ -21,7 +25,9 @@ module.exports = class TileTestDataBuilder extends BuilderBase {
     build() {
         return super.runActions({
             id: faker.random.number(),
-            image: faker.random.image()
+            image: faker.random.image(),
+            name: faker.random.words(),
+            sets: []
         });
     }
 }

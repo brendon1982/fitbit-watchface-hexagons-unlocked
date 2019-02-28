@@ -13,9 +13,9 @@ describe("randomTilePresenter", function () {
         it("should render one of the unlockedTiles images on the hex", function () {
             // arrange
             const availableTiles = [
-                TileTestDataBuilder.create().withName("Plain Grass").withSets("Medeival", "Nature").build(),
-                TileTestDataBuilder.create().withName("Plain Sand").withSets("Western", "Nature").build(),
-                TileTestDataBuilder.create().withName("Plain Dirt").withSets("Western", "Medeival", "Nature").build()
+                TileTestDataBuilder.create().withImage("grass.png").withSets("Nature").build(),
+                TileTestDataBuilder.create().withImage("trees.png").withSets("Nature").build(),
+                TileTestDataBuilder.create().withImage("stones.png").withSets("Nature").build()
             ];
             const unlockedTileIds = [availableTiles[0].id, availableTiles[1].id];
             const possibleImages = [availableTiles[0].image, availableTiles[1].image];
@@ -23,6 +23,25 @@ describe("randomTilePresenter", function () {
             const hex = CapturingHex.create()
 
             const sut = createPresenter(availableTiles, unlockedTileIds, "Nature");
+            // act
+            sut.present(hex)
+            // assert
+            expect(possibleImages).to.contain(hex.renderedImage);
+        });
+
+        it("should render one of the images from the set on the hex", function () {
+            // arrange
+            const availableTiles = [
+                TileTestDataBuilder.create().withImage("grass.png").withSets("Medeival", "Nature").build(),
+                TileTestDataBuilder.create().withImage("desert.png").withSets("Western", "Nature").build(),
+                TileTestDataBuilder.create().withImage("cactus.png").withSets("Western", "Medeival", "Nature").build()
+            ];
+            const unlockedTileIds = [availableTiles[0].id, availableTiles[1].id, , availableTiles[2].id];
+            const possibleImages = [availableTiles[1].image, availableTiles[2].image];
+
+            const hex = CapturingHex.create()
+
+            const sut = createPresenter(availableTiles, unlockedTileIds, "Western");
             // act
             sut.present(hex)
             // assert
