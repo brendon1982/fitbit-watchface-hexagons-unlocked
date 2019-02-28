@@ -30,15 +30,11 @@ describe("randomTilePresenter", function () {
         });
     })
 
-    // TODO update above test to run multiple times as it is a random test and with the current implementation will failv
     // TODO should only render tiles from tile set
     // TODO hex at ignoredCoordinates
     // TODO no unlocked tiles
     // TODO unlocked tile not in all tiles
 
-    // TODO write replacement randomTilePresenter that doesn't rely on scanning the FS, 
-    //      knows about all tiles (it will probably just have a known list of tiles, or have one injected),
-    //      and supports exclusion co-ordinates where it wont present any tiles.
     // TODO write a tileUnlockProgressPresenter
 
     function createPresenter(allTiles, unlockedTiles, tileSet, ignoredCoordinates) {
