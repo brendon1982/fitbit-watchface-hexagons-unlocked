@@ -11,25 +11,25 @@ describe("randomTilePresenter", function () {
         let renderedImage = undefined;
         let renderedUnlockProgress = undefined;
 
-        const allTiles = [{
-            id: faker.random.uuid(),
+        const availableTiles = [{
+            id: faker.random.number(),
             name: "Plain Grass",
             sets: ["Medeival", "Nature"],
             image: "/mnt/assets/resources/Tiles/Terrain/Grass/grass.png"
         }, {
-            id: faker.random.uuid(),
+            id: faker.random.number(),
             name: "Plain Sand",
             sets: ["Western", "Nature"],
             image: "/mnt/assets/resources/Tiles/Terrain/Grass/sand.png"
         },{
-            id: faker.random.uuid(),
+            id: faker.random.number(),
             name: "Plain Dirt",
             sets: ["Western", "Medeival", "Nature"],
             image: "/mnt/assets/resources/Tiles/Terrain/Grass/dirt.png"
         }];
-        const unlockedTiles = [allTiles[0].id, allTiles[1].id];
-        const possibleImages = [allTiles[0].image, allTiles[1].image];
-        const sut = createPresenter(allTiles, unlockedTiles, "Nature");
+        const unlockedTiles = [availableTiles[0].id, availableTiles[1].id];
+        const possibleImages = [availableTiles[0].image, availableTiles[1].image];
+        const sut = createPresenter(availableTiles, unlockedTiles, "Nature");
         // act
         sut.present({
             render: function (image, unlockProgress) {

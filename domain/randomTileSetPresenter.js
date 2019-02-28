@@ -1,10 +1,12 @@
 
 export default class RandomTileSetPresenter {
-    constructor(allTiles, unlockedTiles, tileSet, ignoredCoordinates) {
-        this.allTiles = allTiles;
+    constructor(availableTiles, unlockedTiles, tileSet, ignoredCoordinates) {
+        this.availableTiles = availableTiles;
     }
     
     present(hex) {
-        hex.render(this.allTiles[Math.floor(Math.random() * this.allTiles.length)].image, 100)
+        const tile = this.availableTiles[Math.floor(Math.random() * this.availableTiles.length)];
+        const image = tile.image;
+        hex.render(image, 100)
     }
 }
