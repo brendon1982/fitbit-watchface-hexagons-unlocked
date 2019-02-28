@@ -1,12 +1,13 @@
 
 export default class RandomTileSetPresenter {
-    constructor(availableTiles, unlockedTiles, tileSet, ignoredCoordinates) {
+    constructor(availableTiles, unlockedTileIds, tileSet, ignoredCoordinates) {
         this.availableTiles = availableTiles;
+        this.unlockedTileIds = unlockedTileIds;
     }
     
     present(hex) {
-        const tile = this.availableTiles[Math.floor(Math.random() * this.availableTiles.length)];
-        const image = tile.image;
-        hex.render(image, 100)
+        const unlockedTiles = this.availableTiles.filter(tile => this.unlockedTileIds.includes(tile.id));
+        const tile = unlockedTiles[Math.floor(Math.random() * unlockedTiles.length)];
+        hex.render(tile.image)
     }
 }

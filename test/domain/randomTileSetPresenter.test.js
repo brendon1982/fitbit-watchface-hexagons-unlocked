@@ -1,46 +1,34 @@
 require = require("esm")(module)
+
 const describe = require("mocha").describe;
 const it = require("mocha").it;
 const expect = require("chai").expect;
+const _ = require("lodash");
+
+const TileTestDataBuilder = require("./tileTestDataBuilder");
 const RandomTilePresenter = require("../../domain/randomTileSetPresenter").default;
-const faker = require("faker");
 
 describe("randomTilePresenter", function () {
-    it("should render one of the unlockedTiles images at 100 percent unlock progress", function () {
-        // arrange
-        let renderedImage = undefined;
-        let renderedUnlockProgress = undefined;
+    repeat(50, () => {
+        it("should render one of the unlockedTiles images on the hex", function () {
+            // arrange
+            const availableTiles = [
+                TileTestDataBuilder.create().withName("Plain Grass").withSets("Medeival", "Nature").build(),
+                TileTestDataBuilder.create().withName("Plain Sand").withSets("Western", "Nature").build(),
+                TileTestDataBuilder.create().withName("Plain Dirt").withSets("Western", "Medeival", "Nature").build()
+            ];
+            const unlockedTileIds = [availableTiles[0].id, availableTiles[1].id];
+            const possibleImages = [availableTiles[0].image, availableTiles[1].image];
 
-        const availableTiles = [{
-            id: faker.random.number(),
-            name: "Plain Grass",
-            sets: ["Medeival", "Nature"],
-            image: "/mnt/assets/resources/Tiles/Terrain/Grass/grass.png"
-        }, {
-            id: faker.random.number(),
-            name: "Plain Sand",
-            sets: ["Western", "Nature"],
-            image: "/mnt/assets/resources/Tiles/Terrain/Grass/sand.png"
-        },{
-            id: faker.random.number(),
-            name: "Plain Dirt",
-            sets: ["Western", "Medeival", "Nature"],
-            image: "/mnt/assets/resources/Tiles/Terrain/Grass/dirt.png"
-        }];
-        const unlockedTiles = [availableTiles[0].id, availableTiles[1].id];
-        const possibleImages = [availableTiles[0].image, availableTiles[1].image];
-        const sut = createPresenter(availableTiles, unlockedTiles, "Nature");
-        // act
-        sut.present({
-            render: function (image, unlockProgress) {
-                renderedImage = image;
-                renderedUnlockProgress = unlockProgress;
-            }
-        })
-        // assert
-        expect(possibleImages).to.contain(renderedImage);
-        expect(renderedUnlockProgress).to.equal(100);
-    });
+            const hex = CapturingHex.create()
+
+            const sut = createPresenter(availableTiles, unlockedTileIds, "Nature");
+            // act
+            sut.present(hex)
+            // assert
+            expect(possibleImages).to.contain(hex.renderedImage);
+        });
+    })
 
     // TODO update above test to run multiple times as it is a random test and with the current implementation will failv
     // TODO should only render tiles from tile set
@@ -57,5 +45,19 @@ describe("randomTilePresenter", function () {
         ignoredCoordinates = ignoredCoordinates || [];
 
         return new RandomTilePresenter(allTiles, unlockedTiles, tileSet, ignoredCoordinates);
+    }
+
+    function repeat(times, func) {
+        _.range(times).forEach(func);
+    }
+
+    class CapturingHex {
+        static create() {
+            return new CapturingHex();
+        }
+
+        render(image) {
+            this.renderedImage = image;
+        }
     }
 });
