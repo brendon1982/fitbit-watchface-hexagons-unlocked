@@ -51,13 +51,13 @@ describe("randomTilePresenter", function () {
         });
     });
 
-    it("should not render on a the hex if it at one of the ignored co-ordinated", function () {
+    it("should not render on the hex if it at one of the ignored co-ordinates", function () {
         // arrange
         const ignoredPoints = [createRandomPoint(), createRandomPoint(), createRandomPoint()]
         const availableTiles = [
-            TileTestDataBuilder.create().withImage("grass.png").withSets("Nature").build(),
-            TileTestDataBuilder.create().withImage("trees.png").withSets("Nature").build(),
-            TileTestDataBuilder.create().withImage("stones.png").withSets("Nature").build()
+            TileTestDataBuilder.create().withSets("Nature").build(),
+            TileTestDataBuilder.create().withSets("Nature").build(),
+            TileTestDataBuilder.create().withSets("Nature").build()
         ];
         const unlockedTileIds = [availableTiles[0].id, availableTiles[1].id, , availableTiles[2].id];
 
@@ -68,6 +68,25 @@ describe("randomTilePresenter", function () {
         sut.present(hex)
         // assert
         expect(hex.renderedImage).to.be.undefined;
+    });
+
+    it("should render on the hex if it is not at one of the ignored co-ordinates", function () {
+        // arrange
+        const ignoredPoints = [createPoint(1, 1), createPoint(2, 2), createPoint(3, 3)]
+        const availableTiles = [
+            TileTestDataBuilder.create().withSets("Nature").build(),
+            TileTestDataBuilder.create().withSets("Nature").build(),
+            TileTestDataBuilder.create().withSets("Nature").build()
+        ];
+        const unlockedTileIds = [availableTiles[0].id, availableTiles[1].id, , availableTiles[2].id];
+
+        const hex = FakeHex.create(createPoint(4, 4))
+
+        const sut = createPresenter(availableTiles, unlockedTileIds, "Nature", ignoredPoints);
+        // act
+        sut.present(hex)
+        // assert
+        expect(hex.renderedImage).not.to.be.undefined;
     });
 
     // TODO no unlocked tiles
@@ -90,5 +109,9 @@ describe("randomTilePresenter", function () {
             x: faker.random.number(),
             y: faker.random.number()
         }
+    }
+
+    function createPoint(x, y) {
+        return { x, y }
     }
 });
