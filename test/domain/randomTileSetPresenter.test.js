@@ -4,9 +4,11 @@ const describe = require("mocha").describe;
 const it = require("mocha").it;
 const expect = require("chai").expect;
 const _ = require("lodash");
+const faker = require("faker");
 
 const TileTestDataBuilder = require("./tileTestDataBuilder");
 const RandomTilePresenter = require("../../domain/randomTileSetPresenter").default;
+const FakeHex = require("./fakeHex");
 
 describe("randomTilePresenter", function () {
     repeat(50, () => {
@@ -20,7 +22,7 @@ describe("randomTilePresenter", function () {
             const unlockedTileIds = [availableTiles[0].id, availableTiles[1].id];
             const possibleImages = [availableTiles[0].image, availableTiles[1].image];
 
-            const hex = CapturingHex.create()
+            const hex = FakeHex.create()
 
             const sut = createPresenter(availableTiles, unlockedTileIds, "Nature");
             // act
@@ -39,7 +41,7 @@ describe("randomTilePresenter", function () {
             const unlockedTileIds = [availableTiles[0].id, availableTiles[1].id, , availableTiles[2].id];
             const possibleImages = [availableTiles[1].image, availableTiles[2].image];
 
-            const hex = CapturingHex.create()
+            const hex = FakeHex.create()
 
             const sut = createPresenter(availableTiles, unlockedTileIds, "Western");
             // act
@@ -47,10 +49,27 @@ describe("randomTilePresenter", function () {
             // assert
             expect(possibleImages).to.contain(hex.renderedImage);
         });
-    })
+    });
 
-    // TODO should only render tiles from tile set
-    // TODO hex at ignoredCoordinates
+    it("should not render on a the hex if it at one of the ignored co-ordinated", function () {
+        // arrange
+        const ignoredPoints = [createRandomPoint(), createRandomPoint(), createRandomPoint()]
+        const availableTiles = [
+            TileTestDataBuilder.create().withImage("grass.png").withSets("Nature").build(),
+            TileTestDataBuilder.create().withImage("trees.png").withSets("Nature").build(),
+            TileTestDataBuilder.create().withImage("stones.png").withSets("Nature").build()
+        ];
+        const unlockedTileIds = [availableTiles[0].id, availableTiles[1].id, , availableTiles[2].id];
+
+        const hex = FakeHex.create(ignoredPoints[1])
+
+        const sut = createPresenter(availableTiles, unlockedTileIds, "Nature", ignoredPoints);
+        // act
+        sut.present(hex)
+        // assert
+        expect(hex.renderedImage).to.be.undefined;
+    });
+
     // TODO no unlocked tiles
     // TODO unlocked tile not in all tiles
 
@@ -66,13 +85,10 @@ describe("randomTilePresenter", function () {
         _.range(times).forEach(func);
     }
 
-    class CapturingHex {
-        static create() {
-            return new CapturingHex();
-        }
-
-        render(image) {
-            this.renderedImage = image;
+    function createRandomPoint() {
+        return {
+            x: faker.random.number(),
+            y: faker.random.number()
         }
     }
 });

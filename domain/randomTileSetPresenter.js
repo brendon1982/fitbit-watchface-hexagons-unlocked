@@ -4,9 +4,15 @@ export default class RandomTileSetPresenter {
         this.availableTiles = availableTiles;
         this.unlockedTileIds = unlockedTileIds;
         this.tileSet = tileSet;
+        this.ignoredCoordinates = ignoredCoordinates || [];
     }
 
     present(hex) {
+        const hexPoint = hex.toPoint()
+        if (this.ignoredCoordinates.some(point => point.x === hexPoint.x && point.y === hexPoint.y)) {
+            return;
+        }
+
         const unlockedTiles = this.availableTiles
             .filter(tile => this.unlockedTileIds.some(id => tile.id === id))
             .filter(tile => tile.sets.some(set => this.tileSet === set));
