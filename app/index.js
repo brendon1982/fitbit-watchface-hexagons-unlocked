@@ -28,13 +28,14 @@ const gridOptions = {
 };
 
 const map = new Map(gridOptions, hexOptions);
-const presenter = new RandomTileSetPresenter(availableTiles, unlockedTiles, "Nature", [createPoint(4,1)]);
+const progressCoordinates = [createPoint(0,2), createPoint(0,1), createPoint(1,0), createPoint(0,0)]
+const presenter = new RandomTileSetPresenter(availableTiles, unlockedTiles, "Nature", progressCoordinates);
+map.render(presenter);
 
 function createPoint(x, y) {
     return {x, y};
 }
 
-map.render(presenter);
 
 clock.granularity = "minutes";
 clock.ontick = evt => {
