@@ -10,6 +10,10 @@ module.exports = class TileTestDataBuilder extends BuilderBase {
         super();
     }
 
+    withId(id) {
+        return super.withProp(o => o.id = id);
+    }
+
     withName(name) {
         return super.withProp(o => o.name = name);
     }

@@ -10,7 +10,7 @@ module.exports = class FakeHex {
         this.point = _.isUndefined(point) ? { x: faker.random.number(), y: faker.random.number() } : point;
     }
 
-    toPoint() {
+    coordinates() {
         return this.point;
     }
 

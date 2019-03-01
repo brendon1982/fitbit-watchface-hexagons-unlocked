@@ -8,8 +8,8 @@ export default class RandomTileSetPresenter {
     }
 
     present(hex) {
-        const hexPoint = hex.toPoint()
-        if (this.ignoredCoordinates.some(point => point.x === hexPoint.x && point.y === hexPoint.y)) {
+        const hexCoordinates = hex.coordinates()
+        if (this.ignoredCoordinates.some(coordinates => coordinates.x === hexCoordinates.x && coordinates.y === hexCoordinates.y)) {
             return;
         }
 
@@ -17,7 +17,12 @@ export default class RandomTileSetPresenter {
             .filter(tile => this.unlockedTileIds.some(id => tile.id === id))
             .filter(tile => tile.sets.some(set => this.tileSet === set));
 
-        const tile = unlockedTiles[Math.floor(Math.random() * unlockedTiles.length)];
+        if (unlockedTiles.length === 0) {
+            return;
+        }
+
+        const randomTileIndex = Math.floor(Math.random() * unlockedTiles.length);
+        const tile = unlockedTiles[randomTileIndex];
 
         hex.render(tile.image)
     }

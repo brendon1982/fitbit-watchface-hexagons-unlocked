@@ -3,7 +3,7 @@ import * as time from "../common/time";
 import * as date from "../common/date";
 import Map from "../domain/map";
 import RandomTileSetPresenter from "../domain/randomTileSetPresenter";
-import {availableTiles, unlockedTiles} from "../resources/tiles";
+import { availableTiles, unlockedTiles } from "../resources/tiles";
 import document from "document";
 
 const hexOptions = {
@@ -12,7 +12,7 @@ const hexOptions = {
     render: function (image) {
         const point = this.toPoint();
         const id = `${this.x}${this.y}`;
-    
+
         const imageElement = document.getElementById(id)
         imageElement.href = image
         imageElement.width = 60;
@@ -22,13 +22,17 @@ const hexOptions = {
     }
 };
 
-const gridOptions = { 
-    width: 7, 
-    height: 6 
+const gridOptions = {
+    width: 7,
+    height: 6
 };
 
 const map = new Map(gridOptions, hexOptions);
-const presenter = new RandomTileSetPresenter(availableTiles, unlockedTiles, "Nature", []);
+const presenter = new RandomTileSetPresenter(availableTiles, unlockedTiles, "Nature", [createPoint(4,1)]);
+
+function createPoint(x, y) {
+    return {x, y};
+}
 
 map.render(presenter);
 

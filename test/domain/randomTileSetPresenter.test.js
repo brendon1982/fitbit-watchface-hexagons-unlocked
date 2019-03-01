@@ -49,9 +49,46 @@ describe("randomTilePresenter", function () {
             // assert
             expect(possibleImages).to.contain(hex.renderedImage);
         });
+
+        it("should only render unlocked tiles that are in available tiles on the hex", function () {
+            // arrange
+            const availableTiles = [
+                TileTestDataBuilder.create().withId(1).withSets("Nature").build(),
+                TileTestDataBuilder.create().withId(2).withSets("Nature").build(),
+                TileTestDataBuilder.create().withId(3).withSets("Nature").build()
+            ];
+            const unlockedTileIds = [1, 4, 3, 2];
+            const possibleImages = [availableTiles[0].image, availableTiles[1].image, availableTiles[2].image];
+    
+            const hex = FakeHex.create()
+    
+            const sut = createPresenter(availableTiles, unlockedTileIds, "Nature");
+            // act
+            sut.present(hex)
+            // assert
+            expect(possibleImages).to.contain(hex.renderedImage);
+        });
     });
 
-    it("should not render on the hex if it at one of the ignored co-ordinates", function () {
+    it("should not render on the hex if there are no unlocked tiles", function () {
+        // arrange
+        const availableTiles = [
+            TileTestDataBuilder.create().withId(1).withSets("Nature").build(),
+            TileTestDataBuilder.create().withId(2).withSets("Nature").build(),
+            TileTestDataBuilder.create().withId(3).withSets("Nature").build()
+        ];
+        const unlockedTileIds = [];
+
+        const hex = FakeHex.create()
+
+        const sut = createPresenter(availableTiles, unlockedTileIds, "Nature");
+        // act
+        sut.present(hex)
+        // assert
+        expect(hex.renderedImage).to.be.undefined;
+    });
+
+    it("should not render on the hex if it is at one of the ignored co-ordinates", function () {
         // arrange
         const ignoredPoints = [createRandomPoint(), createRandomPoint(), createRandomPoint()]
         const availableTiles = [
@@ -89,7 +126,6 @@ describe("randomTilePresenter", function () {
         expect(hex.renderedImage).not.to.be.undefined;
     });
 
-    // TODO no unlocked tiles
     // TODO unlocked tile not in all tiles
 
     // TODO write a tileUnlockProgressPresenter
