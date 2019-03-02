@@ -9,7 +9,7 @@ export default class RandomTileSetPresenter {
 
     present(hex) {
         const hexCoordinates = hex.coordinates()
-        if (this.ignoredCoordinates.some(coordinates => coordinates.x === hexCoordinates.x && coordinates.y === hexCoordinates.y)) {
+        if (this.isIgnoredCoordinate(hexCoordinates)) {
             return;
         }
 
@@ -25,5 +25,9 @@ export default class RandomTileSetPresenter {
         const tile = unlockedTiles[randomTileIndex];
 
         hex.render(tile.image)
+    }
+
+    isIgnoredCoordinate(coordinate) {
+        return this.ignoredCoordinates.some(c => c.x === coordinate.x && c.y === coordinate.y);
     }
 }

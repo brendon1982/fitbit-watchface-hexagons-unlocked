@@ -17,4 +17,8 @@ module.exports = class FakeHex {
     render(image) {
         this.renderedImage = image;
     }
+
+    progress(percentage) {
+        this.progressPercentage = percentage;
+    }
 }

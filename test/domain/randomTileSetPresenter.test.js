@@ -7,7 +7,6 @@ const _ = require("lodash");
 const faker = require("faker");
 
 const TileTestDataBuilder = require("./tileTestDataBuilder");
-const RandomTilePresenter = require("../../domain/randomTileSetPresenter").default;
 const FakeHex = require("./fakeHex");
 
 describe("randomTilePresenter", function () {
@@ -126,14 +125,11 @@ describe("randomTilePresenter", function () {
         expect(hex.renderedImage).not.to.be.undefined;
     });
 
-    // TODO unlocked tile not in all tiles
-
-    // TODO write a tileUnlockProgressPresenter
-
     function createPresenter(allTiles, unlockedTiles, tileSet, ignoredCoordinates) {
         ignoredCoordinates = ignoredCoordinates || [];
-
-        return new RandomTilePresenter(allTiles, unlockedTiles, tileSet, ignoredCoordinates);
+        const RandomTileSetPresenter = require("../../domain/randomTileSetPresenter").default;
+        
+        return new RandomTileSetPresenter(allTiles, unlockedTiles, tileSet, ignoredCoordinates);
     }
 
     function repeat(times, func) {
