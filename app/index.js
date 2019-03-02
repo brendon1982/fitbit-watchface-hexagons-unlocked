@@ -25,8 +25,7 @@ const hexOptions = {
         const id = `${this.x}${this.y}`;
 
         const imageElement = document.getElementById(id);
-        // TODO figure out how to represent progress, opacity doesn't seem to be settable at runtime!
-        // imageElement.opacity = (percentage / 100).toString();
+        imageElement.style.opacity = percentage / 100;
     }
 };
 
