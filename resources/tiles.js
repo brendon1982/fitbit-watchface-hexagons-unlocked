@@ -45,7 +45,7 @@ const availableTiles = [{
     image: "/mnt/assets/resources/Tiles/Terrain/Grass/grass_17.png"
 }];
 
-const unlockedTiles = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const unlockedTiles = [1, 2, 3, 4, 5, 6, 7, 8];
 
 export {
     availableTiles,

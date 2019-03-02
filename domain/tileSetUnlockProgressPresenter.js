@@ -15,7 +15,7 @@ export default class RandomTileSetPresenter {
             return;
         }
 
-        const indexOfHexInProgressCoordinates = this.getIndexOhHexInProgressCoordinates(hex);
+        const indexOfHexInProgressCoordinates = this.getIndexOfHexInProgressCoordinates(hex);
         if (indexOfHexInProgressCoordinates < 0) {
             return;
         }
@@ -28,13 +28,32 @@ export default class RandomTileSetPresenter {
     }
 
     getNextTileToUnlock() {
-        return this.availableTiles
-            .filter(tile => tile.sets.some(set => this.tileSet === set))
-            .find(tile => !this.unlockedTileIds.some(id => tile.id === id));
+        const tileSet = this.availableTiles
+            .filter(tile => tile.sets.some(set => this.tileSet === set));
+
+        return this.find(tileSet, tile => !this.unlockedTileIds.some(id => tile.id === id));
     }
 
-    getIndexOhHexInProgressCoordinates(hex) {
+    getIndexOfHexInProgressCoordinates(hex) {
         const hexCoordinates = hex.coordinates();
-        return this.progressCoordinates.findIndex(c => c.x === hexCoordinates.x && c.y === hexCoordinates.y);
+
+        for (let index = 0; index < this.progressCoordinates.length; index++) {
+            const c = this.progressCoordinates[index];
+            if(c.x === hexCoordinates.x && c.y === hexCoordinates.y){
+                return index;
+            }
+        }
+
+        return -1;
+    }
+
+    find(list, predicate) {
+        for (const item of list) {
+            if (predicate(item)) {
+                return item;
+            }
+        }
+
+        return undefined;
     }
 }
