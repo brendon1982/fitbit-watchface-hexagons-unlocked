@@ -5,41 +5,21 @@ import Map from "../domain/map";
 import RandomTileSetPresenter from "../domain/randomTileSetPresenter";
 import TileSetUnlockProgressPresenter from "../domain/tileSetUnlockProgressPresenter";
 import { availableTiles, unlockedTiles } from "../resources/tiles";
-import document from "document";
+import { hexOptions, gridOptions } from "./mapOptions"
 
-const hexOptions = {
-    size: 34.5,
-    orientation: "pointy",
-    render: function (image) {
-        const point = this.toPoint();
-        const id = `${this.x}${this.y}`;
+const progressCoordinates = [createPoint(0, 2), createPoint(0, 1), createPoint(1, 0), createPoint(0, 0)];
+const tileSet = "Nature";
 
-        const imageElement = document.getElementById(id);
-        imageElement.href = image;
-        imageElement.width = 60;
-        imageElement.height = 70;
-        imageElement.x = point.x - (imageElement.width / 2);
-        imageElement.y = point.y + (Math.sqrt(34.5) - (imageElement.width / 2));
-    },
-    progress: function (percentage) {
-        const id = `${this.x}${this.y}`;
-
-        const imageElement = document.getElementById(id);
-        imageElement.style.opacity = percentage / 100;
-    }
-};
-
-const gridOptions = {
-    width: 7,
-    height: 6
-};
+const tileSetPresenter = new RandomTileSetPresenter(availableTiles, unlockedTiles, tileSet, progressCoordinates);
+const unlockProgressPresenter = new TileSetUnlockProgressPresenter(availableTiles, unlockedTiles, tileSet, progressCoordinates, getStepsProgress);
 
 const map = new Map(gridOptions, hexOptions);
-const progressCoordinates = [createPoint(0, 2), createPoint(0, 1), createPoint(1, 0), createPoint(0, 0)]
-const tileSetPresenter = new RandomTileSetPresenter(availableTiles, unlockedTiles, "Nature", progressCoordinates);
-const unlockPresenter = new TileSetUnlockProgressPresenter(availableTiles, unlockedTiles, "Nature", progressCoordinates, () => 37.5);
 map.render(tileSetPresenter);
-map.render(unlockPresenter);
+map.render(unlockProgressPresenter);
+
+function getStepsProgress() {
+    return 37.5;
+}
 
 function createPoint(x, y) {
     return { x, y };
