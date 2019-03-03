@@ -8,7 +8,7 @@ const hexOptions = {
         const id = `${this.x}${this.y}`;
 
         const imageElement = document.getElementById(id);
-        imageElement.href = image;
+        imageElement.href = `/mnt/assets${image}`;
         imageElement.width = 60;
         imageElement.height = 70;
         imageElement.x = point.x - (imageElement.width / 2);

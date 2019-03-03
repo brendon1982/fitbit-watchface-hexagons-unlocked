@@ -1,3 +1,7 @@
+import {availableTiles} from "./tilesWithEmbeddedImages";
+
+registerSettingsPage(settingsComponent);
+
 function settingsComponent(props) {
   return (
     <Page>
@@ -7,9 +11,11 @@ function settingsComponent(props) {
             App Settings
           </Text>
         }
-      />
+      >
+      {availableTiles.map(tile => 
+        <TextImageRow label={tile.name} sublabel={tile.sets} icon={tile.image} />
+      )}
+      </Section>
     </Page>
   );
 }
-
-registerSettingsPage(settingsComponent);
