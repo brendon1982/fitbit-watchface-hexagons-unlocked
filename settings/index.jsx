@@ -1,21 +1,35 @@
-import {availableTiles} from "./tilesWithEmbeddedImages";
+import { availableTiles } from "./tilesWithEmbeddedImages";
 
-registerSettingsPage(settingsComponent);
-
-function settingsComponent(props) {
+let props;
+function settingsComponent(p) {
+  props = p;
   return (
     <Page>
-      <Section
-        title={
-          <Text bold align="center">
-            App Settings
-          </Text>
-        }
-      >
-      {availableTiles.map(tile => 
-        <TextImageRow label={tile.name} sublabel={tile.sets} icon={tile.image} />
-      )}
+      <Section title={<Text bold align="center">Nature</Text>}>
+        {availableTiles.map(tile =>
+          <TextImageRow label={tile.name} sublabel={subLabel(tile)} icon={tileImage(tile)} />
+        )}
       </Section>
     </Page>
   );
 }
+
+function subLabel(tile) {
+  const status = props.settingsStorage.getItem(tile.id.toString());
+  if(status){
+    return `Unlocked on ${status}`;
+  }
+
+  return "Locked";
+}
+
+function tileImage(tile) {
+  const status = props.settingsStorage.getItem(tile.id.toString());
+  if (status) {
+    return tile.image;
+  }
+
+  return null;
+}
+
+registerSettingsPage(settingsComponent);
