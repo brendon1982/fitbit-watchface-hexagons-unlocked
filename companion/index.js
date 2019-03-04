@@ -6,6 +6,8 @@ setTimeout(() => {
     settingsStorage.setItem("2", new Date().toISOString());
 }, 3000);
 
+// TODO reduce image sizes, also update the generateTileForSettings to make images square
+//      so that they render in the settings correctly.
 // TODO store file on device containing unlocked tiles, this can just be an array of objects
 //      with each object containing the tile id and the date it was unlocked.
 // TODO push file with unlocked tiles to companion app, set unlocked tiles into settings.
