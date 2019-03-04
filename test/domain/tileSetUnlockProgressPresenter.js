@@ -21,7 +21,7 @@ describe("tileSetUnlockProgressPresenter", function () {
         { progress: 87.5, hex1Progress: 100, hex2Progress: 100, hex3Progress: 100, hex4Progress: 50 },
         { progress: 100, hex1Progress: 100, hex2Progress: 100, hex3Progress: 100, hex4Progress: 100 },
     ].forEach(function (data) {
-        it("should render next locked image to hexes on progress co-ordinates with proportional progress", function () {
+        it("should render progress to hexes in progress co-ordinates and next locked image last hex", function () {
             // arrange
             const availableTiles = [
                 TileTestDataBuilder.create().withId(1).withSets("Nature").build(),
@@ -39,14 +39,14 @@ describe("tileSetUnlockProgressPresenter", function () {
     
             const sut = createPresenter(availableTiles, unlockedTileIds, "Nature", progressCoordinates, () => data.progress);
             // act
-            sut.present(hex1)
-            sut.present(hex2)
-            sut.present(hex3)
-            sut.present(hex4)
+            sut.present(hex1);
+            sut.present(hex2);
+            sut.present(hex3);
+            sut.present(hex4);
             // assert
-            expectImageAndProgressToBeRenderedOn(hex1, availableTiles[2].image, data.hex1Progress);
-            expectImageAndProgressToBeRenderedOn(hex2, availableTiles[2].image, data.hex2Progress);
-            expectImageAndProgressToBeRenderedOn(hex3, availableTiles[2].image, data.hex3Progress);
+            expectOnlyProgressToBeRenderedOn(hex1, data.hex1Progress);
+            expectOnlyProgressToBeRenderedOn(hex2, data.hex2Progress);
+            expectOnlyProgressToBeRenderedOn(hex3, data.hex3Progress);
             expectImageAndProgressToBeRenderedOn(hex4, availableTiles[2].image, data.hex4Progress);
         });
     });
@@ -65,7 +65,7 @@ describe("tileSetUnlockProgressPresenter", function () {
 
         const sut = createPresenter(availableTiles, unlockedTileIds, "Western", progressCoordinates, () => 100);
         // act
-        sut.present(hex)
+        sut.present(hex);
         // assert
         expectImageAndProgressToBeRenderedOn(hex, availableTiles[2].image, 100);
     });
@@ -85,12 +85,12 @@ describe("tileSetUnlockProgressPresenter", function () {
 
         const sut = createPresenter(availableTiles, unlockedTileIds, "Western", progressCoordinates, () => 100);
         // act
-        sut.present(hex)
+        sut.present(hex);
         // assert
         expectNothingToBeRenderedOn(hex);
     });
 
-    it("should not render to hexes on progress co-ordinates when all tiles are unlocked", function () {
+    it("should only render progress to hexes on progress co-ordinates when all tiles are unlocked", function () {
         // arrange
         const availableTiles = [
             TileTestDataBuilder.create().withId(1).withSets("Western").build(),
@@ -104,11 +104,11 @@ describe("tileSetUnlockProgressPresenter", function () {
 
         const sut = createPresenter(availableTiles, unlockedTileIds, "Western", progressCoordinates, () => 100);
         // act
-        sut.present(hex1)
-        sut.present(hex2)
+        sut.present(hex1);
+        sut.present(hex2);
         // assert
-        expectNothingToBeRenderedOn(hex1);
-        expectNothingToBeRenderedOn(hex2);
+        expectOnlyProgressToBeRenderedOn(hex1, 100);
+        expectOnlyProgressToBeRenderedOn(hex2, 100);
     });
 
     it("should not render to hexes when there are no progress co-ordinates", function () {
@@ -125,8 +125,8 @@ describe("tileSetUnlockProgressPresenter", function () {
 
         const sut = createPresenter(availableTiles, unlockedTileIds, "Modern", progressCoordinates, () => 100);
         // act
-        sut.present(hex1)
-        sut.present(hex2)
+        sut.present(hex1);
+        sut.present(hex2);
         // assert
         expectNothingToBeRenderedOn(hex1);
         expectNothingToBeRenderedOn(hex2);
@@ -137,7 +137,12 @@ describe("tileSetUnlockProgressPresenter", function () {
         expect(hex.progressPercentage).to.equal(expectedProgressPercentage);
     }
 
-    function expectNothingToBeRenderedOn(hex, expectedImage, expectedProgressPercentage) {
+    function expectOnlyProgressToBeRenderedOn(hex, expectedProgressPercentage) {
+        expect(hex.renderedImage).to.be.undefined;
+        expect(hex.progressPercentage).to.equal(expectedProgressPercentage);
+    }
+
+    function expectNothingToBeRenderedOn(hex) {
         expect(hex.renderedImage).to.be.undefined;
         expect(hex.progressPercentage).to.be.undefined;
     }

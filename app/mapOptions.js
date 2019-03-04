@@ -1,7 +1,13 @@
 import document from "document";
 
+const hexSize = 33.4;
+const imageWidth = 58;
+const imageHeight = 67.66666666666666;
+const xOffset = (imageWidth / 2) + imageWidth / 4;
+const yOffset = (Math.sqrt(hexSize) - (imageWidth / 2));
+
 const hexOptions = {
-    size: 34.5,
+    size: hexSize,
     orientation: "pointy",
     render: function (image) {
         const point = this.toPoint();
@@ -9,10 +15,10 @@ const hexOptions = {
 
         const imageElement = document.getElementById(id);
         imageElement.href = `/mnt/assets${image}`;
-        imageElement.width = 60;
-        imageElement.height = 70;
-        imageElement.x = point.x - (imageElement.width / 2);
-        imageElement.y = point.y + (Math.sqrt(34.5) - (imageElement.width / 2));
+        imageElement.width = imageWidth;
+        imageElement.height = imageHeight;
+        imageElement.x = point.x - xOffset;
+        imageElement.y = point.y + yOffset;
     },
     progress: function (percentage) {
         const id = `${this.x}${this.y}`;
