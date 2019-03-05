@@ -1,9 +1,8 @@
 import { alea } from "../libs/alea/alea";
 
 export default class RandomTileSetPresenter {
-    constructor(tiles, tileSet, ignoredCoordinates) {
+    constructor(tiles, ignoredCoordinates) {
         this.tiles = tiles;
-        this.tileSet = tileSet;
         this.ignoredCoordinates = ignoredCoordinates || [];
     }
 
@@ -13,7 +12,7 @@ export default class RandomTileSetPresenter {
             return;
         }
 
-        const unlockedTiles = this.tiles.getUnlockedTiles(this.tileSet);
+        const unlockedTiles = this.tiles.getUnlockedTiles();
         if (unlockedTiles.length === 0) {
             return;
         }

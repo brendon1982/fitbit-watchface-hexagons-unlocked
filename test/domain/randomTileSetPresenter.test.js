@@ -131,9 +131,10 @@ describe("randomTilePresenter", function () {
         const RandomTileSetPresenter = require("../../domain/randomTileSetPresenter").default;
         
         const tiles = new Tiles(allTiles);
+        tiles.changeTileSet(tileSet);
         unlockedTiles.forEach(id => {tiles.unlockTile(id)});
 
-        return new RandomTileSetPresenter(tiles, tileSet, ignoredCoordinates);
+        return new RandomTileSetPresenter(tiles, ignoredCoordinates);
     }
 
     function repeat(times, func) {

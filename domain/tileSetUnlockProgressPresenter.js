@@ -1,12 +1,9 @@
 
 export default class TileSetUnlockProgressPresenter {
-    constructor(tiles, tileSet, progressCoordinates, progressAccessor) {
+    constructor(tiles, progressCoordinates, progressAccessor) {
         this.tiles = tiles;
-        this.tileSet = tileSet;
         this.progressCoordinates = progressCoordinates || [];
         this.progressAccessor = progressAccessor;
-
-        this.tileBeingUnlocked = tiles.getNextTileToUnlock(this.tileSet);
     }
 
     present(hex) {
@@ -20,13 +17,10 @@ export default class TileSetUnlockProgressPresenter {
 
         hex.progress(hexProgress);
 
-        if (this.shouldRenderTileBeingUnlocked(indexOfHexInProgressCoordinates)) {
-            hex.render(this.tileBeingUnlocked.image);
+        const tileBeingUnlocked = this.tiles.getNextTileToUnlock();
+        if (tileBeingUnlocked && indexOfHexInProgressCoordinates === this.progressCoordinates.length - 1) {
+            hex.render(tileBeingUnlocked.image);
         }
-    }
-
-    shouldRenderTileBeingUnlocked(indexOfHexInProgressCoordinates) {
-        return this.tileBeingUnlocked && indexOfHexInProgressCoordinates === this.progressCoordinates.length - 1;
     }
 
     getIndexOfHexInProgressCoordinates(hex) {

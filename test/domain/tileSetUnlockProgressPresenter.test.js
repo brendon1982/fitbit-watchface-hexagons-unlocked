@@ -153,9 +153,10 @@ describe("tileSetUnlockProgressPresenter", function () {
         const TileSetUnlockProgressPresenter = require("../../domain/tileSetUnlockProgressPresenter").default;
 
         const tiles = new Tiles(allTiles);
+        tiles.changeTileSet(tileSet);
         unlockedTiles.forEach(id => {tiles.unlockTile(id)});
 
-        return new TileSetUnlockProgressPresenter(tiles, tileSet, progressCoordinates, progressAccessor);
+        return new TileSetUnlockProgressPresenter(tiles, progressCoordinates, progressAccessor);
     }
 
     function createPoint(x, y) {

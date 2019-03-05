@@ -8,15 +8,15 @@ import Tiles from "../domain/tiles";
 import { hexOptions, gridOptions } from "./mapOptions"
 
 const tiles = new Tiles();
+tiles.changeTileSet("Nature");
 tiles.unlockTile(1);
 tiles.unlockTile(2);
 
-const tileSet = "Nature";
 const map = new Map(gridOptions, hexOptions);
 const progressCoordinates = map.spiral();
 
-const tileSetPresenter = new RandomTileSetPresenter(tiles, tileSet, []);
-const unlockProgressPresenter = new TileSetUnlockProgressPresenter(tiles, tileSet, progressCoordinates, getStepsProgress);
+const tileSetPresenter = new RandomTileSetPresenter(tiles, []);
+const unlockProgressPresenter = new TileSetUnlockProgressPresenter(tiles, progressCoordinates, getStepsProgress);
 
 map.render(unlockProgressPresenter);
 map.render(tileSetPresenter);
