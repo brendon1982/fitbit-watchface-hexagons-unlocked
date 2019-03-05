@@ -8,6 +8,7 @@ const faker = require("faker");
 
 const TileTestDataBuilder = require("./tileTestDataBuilder");
 const FakeHex = require("./fakeHex");
+const Tiles = require("../../domain/tiles").default;
 
 describe("tileSetUnlockProgressPresenter", function () {
     [
@@ -151,7 +152,10 @@ describe("tileSetUnlockProgressPresenter", function () {
         progressCoordinates = progressCoordinates || [];
         const TileSetUnlockProgressPresenter = require("../../domain/tileSetUnlockProgressPresenter").default;
 
-        return new TileSetUnlockProgressPresenter(allTiles, unlockedTiles, tileSet, progressCoordinates, progressAccessor);
+        const tiles = new Tiles(allTiles);
+        unlockedTiles.forEach(id => {tiles.unlockTile(id)});
+
+        return new TileSetUnlockProgressPresenter(tiles, tileSet, progressCoordinates, progressAccessor);
     }
 
     function createPoint(x, y) {

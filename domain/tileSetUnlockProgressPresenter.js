@@ -1,13 +1,12 @@
 
 export default class TileSetUnlockProgressPresenter {
-    constructor(availableTiles, unlockedTileIds, tileSet, progressCoordinates, progressAccessor) {
-        this.availableTiles = availableTiles;
-        this.unlockedTileIds = unlockedTileIds;
+    constructor(tiles, tileSet, progressCoordinates, progressAccessor) {
+        this.tiles = tiles;
         this.tileSet = tileSet;
         this.progressCoordinates = progressCoordinates || [];
         this.progressAccessor = progressAccessor;
 
-        this.tileBeingUnlocked = this.getNextTileToUnlock();
+        this.tileBeingUnlocked = tiles.getNextTileToUnlock(this.tileSet);
     }
 
     present(hex) {
@@ -30,13 +29,6 @@ export default class TileSetUnlockProgressPresenter {
         return this.tileBeingUnlocked && indexOfHexInProgressCoordinates === this.progressCoordinates.length - 1;
     }
 
-    getNextTileToUnlock() {
-        const tileSet = this.availableTiles
-            .filter(tile => tile.sets.some(set => this.tileSet === set));
-
-        return this.find(tileSet, tile => !this.unlockedTileIds.some(id => tile.id === id));
-    }
-
     getIndexOfHexInProgressCoordinates(hex) {
         const hexCoordinates = hex.coordinates();
 
@@ -48,15 +40,5 @@ export default class TileSetUnlockProgressPresenter {
         }
 
         return -1;
-    }
-
-    find(list, predicate) {
-        for (const item of list) {
-            if (predicate(item)) {
-                return item;
-            }
-        }
-
-        return undefined;
     }
 }

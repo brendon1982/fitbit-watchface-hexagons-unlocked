@@ -45,9 +45,6 @@ const availableTiles = [{
     image: "/resources/Tiles/Terrain/Grass/grass_17.png"
 }];
 
-const unlockedTiles = [1, 2, 3];
-
 export {
-    availableTiles,
-    unlockedTiles
+    availableTiles
 }

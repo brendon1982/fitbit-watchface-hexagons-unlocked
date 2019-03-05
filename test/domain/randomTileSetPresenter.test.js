@@ -8,6 +8,7 @@ const faker = require("faker");
 
 const TileTestDataBuilder = require("./tileTestDataBuilder");
 const FakeHex = require("./fakeHex");
+const Tiles = require("../../domain/tiles").default;
 
 describe("randomTilePresenter", function () {
     repeat(50, () => {
@@ -129,7 +130,10 @@ describe("randomTilePresenter", function () {
         ignoredCoordinates = ignoredCoordinates || [];
         const RandomTileSetPresenter = require("../../domain/randomTileSetPresenter").default;
         
-        return new RandomTileSetPresenter(allTiles, unlockedTiles, tileSet, ignoredCoordinates);
+        const tiles = new Tiles(allTiles);
+        unlockedTiles.forEach(id => {tiles.unlockTile(id)});
+
+        return new RandomTileSetPresenter(tiles, tileSet, ignoredCoordinates);
     }
 
     function repeat(times, func) {

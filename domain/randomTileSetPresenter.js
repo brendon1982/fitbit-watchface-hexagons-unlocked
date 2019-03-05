@@ -1,25 +1,10 @@
 import { alea } from "../libs/alea/alea";
 
 export default class RandomTileSetPresenter {
-    constructor(availableTiles, unlockedTileIds, tileSet, ignoredCoordinates) {
-        this.availableTiles = availableTiles;
-        this.unlockedTileIds = unlockedTileIds;
+    constructor(tiles, tileSet, ignoredCoordinates) {
+        this.tiles = tiles;
         this.tileSet = tileSet;
         this.ignoredCoordinates = ignoredCoordinates || [];
-    }
-
-    randomTile(tiles) {
-        const date = new Date();
-        const seed = `${date.getFullYear()}${date.getMonth()}${date.getDate()}`
-        
-        if(seed !== this.lastSeed){
-            this.lastSeed = seed;
-            this.random = new alea(seed);
-        }
-
-        const randomIndex = Math.floor(this.random() * tiles.length);
-
-        return tiles[randomIndex];
     }
 
     present(hex) {
@@ -28,10 +13,7 @@ export default class RandomTileSetPresenter {
             return;
         }
 
-        const unlockedTiles = this.availableTiles
-            .filter(tile => this.unlockedTileIds.some(id => tile.id === id))
-            .filter(tile => tile.sets.some(set => this.tileSet === set));
-
+        const unlockedTiles = this.tiles.getUnlockedTiles(this.tileSet);
         if (unlockedTiles.length === 0) {
             return;
         }
@@ -43,5 +25,19 @@ export default class RandomTileSetPresenter {
 
     isIgnoredCoordinate(coordinate) {
         return this.ignoredCoordinates.some(c => c.x === coordinate.x && c.y === coordinate.y);
+    }
+
+    randomTile(tiles) {
+        const date = new Date();
+        const seed = `${date.getFullYear()}${date.getMonth()}${date.getDate()}`
+
+        if (seed !== this.lastSeed) {
+            this.lastSeed = seed;
+            this.random = new alea(seed);
+        }
+
+        const randomIndex = Math.floor(this.random() * tiles.length);
+
+        return tiles[randomIndex];
     }
 }
