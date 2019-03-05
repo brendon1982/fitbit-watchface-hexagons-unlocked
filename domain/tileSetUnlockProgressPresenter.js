@@ -1,5 +1,5 @@
 
-export default class RandomTileSetPresenter {
+export default class TileSetUnlockProgressPresenter {
     constructor(availableTiles, unlockedTileIds, tileSet, progressCoordinates, progressAccessor) {
         this.availableTiles = availableTiles;
         this.unlockedTileIds = unlockedTileIds;

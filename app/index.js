@@ -14,8 +14,8 @@ const progressCoordinates = map.spiral();
 const tileSetPresenter = new RandomTileSetPresenter(availableTiles, unlockedTiles, tileSet, []);
 const unlockProgressPresenter = new TileSetUnlockProgressPresenter(availableTiles, unlockedTiles, tileSet, progressCoordinates, getStepsProgress);
 
-map.render(tileSetPresenter);
 map.render(unlockProgressPresenter);
+map.render(tileSetPresenter);
 
 let progress = 0;
 for (let index = 1; index < 101; index++) {

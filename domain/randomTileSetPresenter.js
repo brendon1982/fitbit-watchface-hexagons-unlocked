@@ -1,3 +1,4 @@
+import { alea } from "../libs/alea/alea";
 
 export default class RandomTileSetPresenter {
     constructor(availableTiles, unlockedTileIds, tileSet, ignoredCoordinates) {
@@ -5,6 +6,20 @@ export default class RandomTileSetPresenter {
         this.unlockedTileIds = unlockedTileIds;
         this.tileSet = tileSet;
         this.ignoredCoordinates = ignoredCoordinates || [];
+    }
+
+    randomTile(tiles) {
+        const date = new Date();
+        const seed = `${date.getFullYear()}${date.getMonth()}${date.getDate()}`
+        
+        if(seed !== this.lastSeed){
+            this.lastSeed = seed;
+            this.random = new alea(seed);
+        }
+
+        const randomIndex = Math.floor(this.random() * tiles.length);
+
+        return tiles[randomIndex];
     }
 
     present(hex) {
@@ -21,8 +36,7 @@ export default class RandomTileSetPresenter {
             return;
         }
 
-        const randomTileIndex = Math.floor(Math.random() * unlockedTiles.length);
-        const tile = unlockedTiles[randomTileIndex];
+        const tile = this.randomTile(unlockedTiles);
 
         hex.render(tile.image)
     }
