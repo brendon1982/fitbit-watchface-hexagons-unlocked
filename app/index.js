@@ -21,17 +21,9 @@ const unlockProgressPresenter = new TileSetUnlockProgressPresenter(tiles, progre
 map.render(unlockProgressPresenter);
 map.render(tileSetPresenter);
 
-let progress = 0;
-for (let index = 1; index < 101; index++) {
-    setTimeout(() => {
-        progress = index;
-        map.render(unlockProgressPresenter);
-    }, index * 100);
-}
-
 // TODO real implementation that gets steps
 function getStepsProgress() {
-    return progress;
+    return 100;
 }
 
 clock.granularity = "minutes";

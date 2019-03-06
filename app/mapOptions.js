@@ -1,8 +1,8 @@
 import document from "document";
 
 const hexSize = 33.4;
-const imageWidth = 58;
-const imageHeight = 68;
+const imageWidth = 60;
+const imageHeight = 70;
 const xOffset = (imageWidth / 2) + imageWidth / 4;
 const yOffset = (Math.sqrt(hexSize) - (imageWidth / 2));
 
