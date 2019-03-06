@@ -1,4 +1,4 @@
-import { availableTiles } from "../resources/availableTiles";
+import { availableTiles } from "./availableTiles";
 
 // TODO refactored out of the two presenters, so currently is only tested through their tests
 export default class Tiles {

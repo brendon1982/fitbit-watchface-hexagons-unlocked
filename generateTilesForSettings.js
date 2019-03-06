@@ -1,6 +1,6 @@
 require = require("esm")(module)
 const datauri = require("datauri").sync;
-const availableTiles = require("./resources/availableTiles").availableTiles;
+const availableTiles = require("./domain/availableTiles").availableTiles;
 const fs = require("fs");
 const jimp = require("jimp");
 
