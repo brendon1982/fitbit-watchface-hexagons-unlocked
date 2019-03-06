@@ -5,6 +5,7 @@ const it = require("mocha").it;
 const expect = require("chai").expect;
 const _ = require("lodash");
 const faker = require("faker");
+const sinon = require("sinon");
 
 const TileTestDataBuilder = require("./tileTestDataBuilder");
 const FakeHex = require("./fakeHex");
@@ -59,9 +60,9 @@ describe("randomTilePresenter", function () {
             ];
             const unlockedTileIds = [1, 4, 3, 2];
             const possibleImages = [availableTiles[0].image, availableTiles[1].image, availableTiles[2].image];
-    
+
             const hex = FakeHex.create()
-    
+
             const sut = createPresenter(availableTiles, unlockedTileIds, "Nature");
             // act
             sut.present(hex)
@@ -126,13 +127,23 @@ describe("randomTilePresenter", function () {
         expect(hex.renderedImage).not.to.be.undefined;
     });
 
+    // TODO add test that checks if a tile has been unlocked on the current date that that tile is the only
+    //      one rendered in the last hex, even if multiple renders happen.
+    // TODO add test that checks if a tile has been unlocked on the current date but it is not part of the
+    //      current tile set that no image is rendered for the last tile.
+    //
+    // const clock = sinon.useFakeTimers(new Date());
+    // clock.tick(24*60*60*1000*-1);
+    // clock.restore();
+
     function createPresenter(allTiles, unlockedTiles, tileSet, ignoredCoordinates) {
         ignoredCoordinates = ignoredCoordinates || [];
         const RandomTileSetPresenter = require("../../domain/randomTileSetPresenter").default;
-        
+
         const tiles = new Tiles(allTiles);
         tiles.changeTileSet(tileSet);
-        unlockedTiles.forEach(id => {tiles.unlockTile(id)});
+
+        unlockedTiles.forEach(id => { tiles.unlockTile(id) });
 
         return new RandomTileSetPresenter(tiles, ignoredCoordinates);
     }

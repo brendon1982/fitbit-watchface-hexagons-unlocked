@@ -8,8 +8,6 @@ setTimeout(() => {
 
 // TODO store file on device containing unlocked tiles & current tileSet.
 //      Domain/tiles.js has been refactored out to handle this stuff, add a load/save method on it.
-// TODO reduce image sizes, also update the generateTileForSettings to make images square
-//      so that they render in the settings correctly.
 // TODO push file with unlocked tiles to companion app, set unlocked tiles into settings.
 // TODO update settings to render the tile sets changing the image to a hex with a question mark in it for
 //      tiles that are not unlocked in those sets.

@@ -12,12 +12,14 @@ export default class Tiles {
         this.unlockedTiles.push(id);
         this.cachedUnlockedTiles = undefined
         this.cachedNextTileToUnlocked = undefined;
+        return this;
     }
 
     changeTileSet(tileSet) {
         this.tileSet = tileSet;
         this.cachedUnlockedTiles = undefined
         this.cachedNextTileToUnlocked = undefined;
+        return this;
     }
 
     getUnlockedTiles() {
@@ -41,11 +43,6 @@ export default class Tiles {
 
         const tiles = this.allTiles
             .filter(tile => tile.sets.some(set => this.tileSet === set));
-
-        // TODO before looking through 'tiles' for the next tile that is not in 'unlockedTiles',
-        //      check if a tile was already unlocked today, if there was one, search for it in 'tiles' instead.
-        //      This can be driven from the tileSetUnlockProgressPresenter tests.
-        //      This will also handle the case where someone unlocks a tile from one set and then swaps to another.
 
         const nextTileToBeUnlocked = this.find(tiles, tile => !this.unlockedTiles.some(id => tile.id === id));
 
