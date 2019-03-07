@@ -7,10 +7,10 @@ import TileSetUnlockProgressPresenter from "../domain/tileSetUnlockProgressPrese
 import Tiles from "../domain/tiles";
 import { hexOptions, gridOptions } from "./mapOptions"
 
-const tiles = new Tiles();
-tiles.changeTileSet("Nature");
-tiles.unlockTile(1);
-tiles.unlockTile(2);
+const tiles = new Tiles()
+    .changeTileSet("Nature")
+    .unlockTile(1, new Date(2019, 2, 5))
+    .unlockTile(2, new Date(2019, 2, 6));
 
 const map = new Map(gridOptions, hexOptions);
 const progressCoordinates = map.spiral();
@@ -18,8 +18,8 @@ const progressCoordinates = map.spiral();
 const tileSetPresenter = new RandomTileSetPresenter(tiles, []);
 const unlockProgressPresenter = new TileSetUnlockProgressPresenter(tiles, progressCoordinates, getStepsProgress);
 
-map.render(unlockProgressPresenter);
 map.render(tileSetPresenter);
+map.render(unlockProgressPresenter);
 
 // TODO real implementation that gets steps
 function getStepsProgress() {

@@ -8,17 +8,19 @@ export default class Tiles {
         this.allTiles = allTiles || availableTiles;
     }
 
-    unlockTile(id) {
-        this.unlockedTiles.push(id);
+    // TODO should probably check if the tile has already been unlocked ... it seems like making unlockedTiles a dictionary would make this much easier.
+    unlockTile(id, date) {
+        date = date || new Date();
+        this.unlockedTiles.push(new UnlockedTile(id, date));
         this.cachedUnlockedTiles = undefined
-        this.cachedNextTileToUnlocked = undefined;
+        this.cachedTileBeingUnlockedToday = undefined;
         return this;
     }
 
     changeTileSet(tileSet) {
         this.tileSet = tileSet;
         this.cachedUnlockedTiles = undefined
-        this.cachedNextTileToUnlocked = undefined;
+        this.cachedTileBeingUnlockedToday = undefined;
         return this;
     }
 
@@ -29,28 +31,35 @@ export default class Tiles {
 
         this.cachedUnlockedTiles = {
             value: this.allTiles
-                .filter(tile => this.unlockedTiles.some(id => tile.id === id))
+                .filter(tile => this.unlockedTiles.some(unlockedTile => tile.id === unlockedTile.id))
                 .filter(tile => tile.sets.some(set => this.tileSet === set))
         };
 
         return this.cachedUnlockedTiles.value;
     }
 
-    getNextTileToUnlock() {
-        if (this.cachedNextTileToUnlocked) {
-            return this.cachedNextTileToUnlocked.value;
+    getTileBeingUnlockedToday() {
+        if (this.cachedTileBeingUnlockedToday) {
+            return this.cachedTileBeingUnlockedToday.value;
         }
 
-        const tiles = this.allTiles
+        const tilesInSet = this.allTiles
             .filter(tile => tile.sets.some(set => this.tileSet === set));
 
-        const nextTileToBeUnlocked = this.find(tiles, tile => !this.unlockedTiles.some(id => tile.id === id));
+        const currentDate = formatDateAsString(new Date());
+        const todaysUnlockedTile = this.find(this.unlockedTiles, unlockedTile => unlockedTile.date === currentDate);
 
-        this.cachedNextTileToUnlocked = {
-            value: nextTileToBeUnlocked
+        if (todaysUnlockedTile) {
+            return this.find(tilesInSet, tile => tile.id === todaysUnlockedTile.id);
+        }
+
+        const tileBeingUnlockedToday = this.find(tilesInSet, tile => !this.unlockedTiles.some(unlockedTile => tile.id === unlockedTile.id));
+
+        this.cachedTileBeingUnlockedToday = {
+            value: tileBeingUnlockedToday
         };
 
-        return this.cachedNextTileToUnlocked.value;
+        return this.cachedTileBeingUnlockedToday.value;
     }
 
     find(list, predicate) {
@@ -62,4 +71,15 @@ export default class Tiles {
 
         return undefined;
     }
+}
+
+class UnlockedTile {
+    constructor(id, date) {
+        this.id = id;
+        this.date = formatDateAsString(date);
+    }
+}
+
+function formatDateAsString(date) {
+    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 }
