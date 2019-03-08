@@ -5,12 +5,12 @@ const it = require("mocha").it;
 const expect = require("chai").expect;
 const faker = require("faker");
 
-const TileTestDataBuilder = require("./tileTestDataBuilder");
-const FakeHex = require("./fakeHex");
-const FakeClock = require("./fakeClock");
+const TileTestDataBuilder = require("./builders/tileTestDataBuilder");
+const FakeHex = require("./fakes/fakeHex");
+const FakeClock = require("./fakes/fakeClock");
 const Tiles = require("../../domain/tiles").default;
 const Progress = require("../../domain/progress").default;
-const ProgressTestDataBuilder = require("./progressTestDataBuilder");
+const ProgressTestDataBuilder = require("./builders/progressTestDataBuilder");
 
 describe("tileSetUnlockProgressPresenter", function () {
     it("should not render to hexes at non progress co-ordinates", function () {

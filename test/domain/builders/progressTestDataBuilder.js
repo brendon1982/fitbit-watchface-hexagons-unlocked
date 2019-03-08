@@ -1,9 +1,9 @@
 require = require("esm")(module)
 
-const BuilderBase = require("../builderBase");
+const BuilderBase = require("../../builderBase");
 const faker = require("faker");
-const Progress = require("../../domain/progress").default;
-const UnlockedTile = require("../../domain/unlockedTile").default;
+const Progress = require("../../../domain/progress").default;
+const UnlockedTile = require("../../../domain/unlockedTile").default;
 
 module.exports = class TileTestDataBuilder extends BuilderBase {
     static create() {

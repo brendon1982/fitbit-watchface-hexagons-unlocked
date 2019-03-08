@@ -6,8 +6,8 @@ const expect = require("chai").expect;
 const _ = require("lodash");
 const faker = require("faker");
 
-const TileTestDataBuilder = require("./tileTestDataBuilder");
-const FakeHex = require("./fakeHex");
+const TileTestDataBuilder = require("./builders/tileTestDataBuilder");
+const FakeHex = require("./fakes/fakeHex");
 const Tiles = require("../../domain/tiles").default;
 
 describe("randomTilePresenter", function () {

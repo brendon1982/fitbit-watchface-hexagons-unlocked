@@ -1,6 +1,6 @@
 require = require("esm")(module)
 
-const BuilderBase = require("../builderBase");
+const BuilderBase = require("../../builderBase");
 const faker = require("faker");
 
 module.exports = class TileTestDataBuilder extends BuilderBase {
