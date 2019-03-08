@@ -51,6 +51,13 @@ export default class TileSet {
         return this;
     }
 
+    loadProgressUsing(progressReader) {
+        const progress = progressReader();
+        this.currentTileSet = progress.tileSet;
+        this.unlockedTiles = progress.unlockedTiles;
+        return this;
+    }
+
     getUnlockedTiles() {
         if (this.cachedUnlockedTiles) {
             return this.cachedUnlockedTiles.value;

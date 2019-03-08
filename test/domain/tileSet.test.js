@@ -111,4 +111,35 @@ describe("tileSet", function () {
             expect(actualProgress).to.deep.equal(expectedProgress);
         });
     });
+
+    describe("loadProgressUsing", function () {
+        it("should populate progress with the result of given progress reader", function () {
+            // arrange
+            const tileSet = faker.random.word();
+            const unlockDate1 = new Date();
+            const unlockDate2 = new Date();
+            const tileAreadyUnlocked = TileTestDataBuilder.create().withId(1).build();
+            const tileBeingUnlocked = TileTestDataBuilder.create().withId(2).build();
+            const savedProgress = ProgressTestDataBuilder.create()
+                .withTileSet(tileSet)
+                .withUnlockedTile(tileAreadyUnlocked, unlockDate1)
+                .build();
+            const expectedProgress = ProgressTestDataBuilder.create()
+                .withTileSet(tileSet)
+                .withUnlockedTile(tileAreadyUnlocked, unlockDate1)
+                .withUnlockedTile(tileBeingUnlocked, unlockDate2)
+                .build();
+
+            let actualProgress = new Progress();
+            const sut = new TileSet()
+                .savesProgressUsing(progress => actualProgress = progress);
+            // act
+            sut.loadProgressUsing(() => {
+                return savedProgress;
+            });
+            // assert
+            sut.unlockTile(tileBeingUnlocked, unlockDate2);
+            expect(actualProgress).to.deep.equal(expectedProgress);
+        });
+    });
 });
