@@ -1,16 +1,22 @@
 import clock from "clock";
 import * as time from "../common/time";
 import * as date from "../common/date";
+
 import Map from "../domain/map";
+import Progress from "../domain/progress";
 import TileSetRandomImagePresenter from "../domain/tileSetRandomImagePresenter";
 import TileSetUnlockProgressPresenter from "../domain/tileSetUnlockProgressPresenter";
 import TileSet from "../domain/tilesSet";
 import { hexOptions, gridOptions } from "./mapOptions"
+import UnlockedTile from '../domain/unlockedTile';
 
 const tiles = new TileSet()
-    .changeTileSet("Nature")
-    .unlockTile(1, new Date(2019, 2, 5))
-    .unlockTile(2, new Date(2019, 2, 6));
+    .loadProgressUsing(() => {
+        return new Progress("Nature", [
+            new UnlockedTile(1, new Date(2019, 3, 5)),
+            new UnlockedTile(2, new Date(2019, 3, 6))
+        ])
+    });
 
 const map = new Map(gridOptions, hexOptions);
 const progressCoordinates = map.spiral();
