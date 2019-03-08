@@ -129,14 +129,14 @@ describe("randomTilePresenter", function () {
 
     function createPresenter(allTiles, unlockedTiles, tileSet, ignoredCoordinates) {
         ignoredCoordinates = ignoredCoordinates || [];
-        const RandomTileSetPresenter = require("../../domain/tileSetRandomImagePresenter").default;
+        const TileSetRandomImagePresenter = require("../../domain/tileSetRandomImagePresenter").default;
 
         const tiles = new Tiles(allTiles);
         tiles.changeTileSet(tileSet);
 
         unlockedTiles.forEach(tile => { tiles.unlockTile(tile) });
 
-        return new RandomTileSetPresenter(tiles, ignoredCoordinates);
+        return new TileSetRandomImagePresenter(tiles, ignoredCoordinates);
     }
 
     function repeat(times, func) {

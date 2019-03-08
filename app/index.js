@@ -2,7 +2,7 @@ import clock from "clock";
 import * as time from "../common/time";
 import * as date from "../common/date";
 import Map from "../domain/map";
-import RandomTileSetPresenter from "../domain/tileSetRandomImagePresenter";
+import TileSetRandomImagePresenter from "../domain/tileSetRandomImagePresenter";
 import TileSetUnlockProgressPresenter from "../domain/tileSetUnlockProgressPresenter";
 import TileSet from "../domain/tilesSet";
 import { hexOptions, gridOptions } from "./mapOptions"
@@ -15,17 +15,17 @@ const tiles = new TileSet()
 const map = new Map(gridOptions, hexOptions);
 const progressCoordinates = map.spiral();
 
-const tileSetPresenter = new RandomTileSetPresenter(tiles, []);
-const unlockProgressPresenter = new TileSetUnlockProgressPresenter(tiles, progressCoordinates, getStepsProgress);
+const tileSetPresenter = new TileSetRandomImagePresenter(tiles, []);
+const progressPresenter = new TileSetUnlockProgressPresenter(tiles, progressCoordinates, getStepsProgress);
 
 map.render(tileSetPresenter);
-map.render(unlockProgressPresenter);
+map.render(progressPresenter);
 
 clock.granularity = "minutes";
 clock.ontick = evt => {
     time.tick(evt.date);
     date.tick(evt.date);
-    map.render(unlockProgressPresenter);
+    map.render(progressPresenter);
 };
 
 // TODO real implementation that gets steps
