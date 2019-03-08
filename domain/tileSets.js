@@ -2,7 +2,7 @@ const natureTileSet = "Nature";
 const terainGrass = "/resources/Tiles/Terrain/Grass";
 const terainDirt = "/resources/Tiles/Terrain/Dirt";
 
-const availableTiles = [{
+const tileSets = [{
     id: 1,
     name: "Plain grass",
     sets: [natureTileSet],
@@ -95,5 +95,5 @@ const availableTiles = [{
 }];
 
 export {
-    availableTiles
+    tileSets
 }

@@ -1,11 +1,11 @@
 require = require("esm")(module)
 const datauri = require("datauri").sync;
-const availableTiles = require("./domain/tileSets").availableTiles;
+const tileSets = require("./domain/tileSets").tileSets;
 const fs = require("fs");
 const jimp = require("jimp");
 
 jimp.read("./settingsTileTemplate.png").then(template => {
-    const promises = availableTiles.map(tile => {
+    const promises = tileSets.map(tile => {
         return jimp.read(`.${tile.image}`).then(image => {
             return template.composite(image, 5, 0).getBase64Async(image.getMIME())
                 .then(base64 => {
@@ -16,10 +16,10 @@ jimp.read("./settingsTileTemplate.png").then(template => {
 
     Promise.all(promises)
         .then(() => {
-            const data = `const availableTiles = ${JSON.stringify(availableTiles)};
+            const data = `const tileSets = ${JSON.stringify(tileSets)};
 
             export {
-                availableTiles
+                tileSets
             }`;
 
             fs.writeFileSync("./settings/tilesWithEmbeddedImages.js", data);
