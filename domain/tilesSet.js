@@ -1,5 +1,5 @@
 import { formatDateAsString } from "../common/utils";
-import { tileSets } from "./tileSets";
+import { tiles } from "./tiles";
 import Progress from "./progress";
 import UnlockedTile from "./unlockedTile";
 
@@ -8,7 +8,7 @@ export default class TileSet {
     constructor(overrideTileSets) {
         this.unlockedTiles = [];
         this.currentTileSet = "";
-        this.allTiles = overrideTileSets || tileSets;
+        this.allTiles = overrideTileSets || tiles;
         this.progressWriter = () => { };
     }
 

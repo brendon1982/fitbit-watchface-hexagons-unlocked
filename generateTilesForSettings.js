@@ -1,6 +1,6 @@
 require = require("esm")(module)
 const datauri = require("datauri").sync;
-const tileSets = require("./domain/tileSets").tileSets;
+const tileSets = require("./domain/tiles").tiles;
 const fs = require("fs");
 const jimp = require("jimp");
 
