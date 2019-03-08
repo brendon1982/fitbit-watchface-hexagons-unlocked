@@ -5,10 +5,10 @@ import UnlockedTile from "./unlockedTile";
 
 // TODO refactored out of the two presenters, so currently is only tested through their tests
 export default class TileSet {
-    constructor(overrideTileSets) {
+    constructor(overrideTiles) {
         this.unlockedTiles = [];
         this.currentTileSet = "";
-        this.allTiles = overrideTileSets || tiles;
+        this.allTiles = overrideTiles || tiles;
         this.progressWriter = () => { };
     }
 

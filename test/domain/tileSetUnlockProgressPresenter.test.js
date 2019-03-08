@@ -3,30 +3,27 @@ require = require("esm")(module)
 const describe = require("mocha").describe;
 const it = require("mocha").it;
 const expect = require("chai").expect;
-const faker = require("faker");
 
 const TileTestDataBuilder = require("./builders/tileTestDataBuilder");
 const FakeHex = require("./fakes/fakeHex");
 const FakeClock = require("./fakes/fakeClock");
-const Tiles = require("../../domain/tilesSet").default;
-const Progress = require("../../domain/progress").default;
-const ProgressTestDataBuilder = require("./builders/progressTestDataBuilder");
+const TileSet = require("../../domain/tilesSet").default;
 
 describe("tileSetUnlockProgressPresenter", function () {
     it("should not render to hexes at non progress co-ordinates", function () {
         // arrange
-        const tileSets = [
+        const tiles = [
             TileTestDataBuilder.create().withId(1).withSets("Western").build(),
             TileTestDataBuilder.create().withId(2).withSets("Western").build(),
             TileTestDataBuilder.create().withId(3).withSets("Western").build(),
             TileTestDataBuilder.create().withId(4).withSets("Western").build(),
         ];
-        const unlockedTiles = [tileSets[0], tileSets[1]];
+        const unlockedTiles = [tiles[0], tiles[1]];
         const progressCoordinates = [createPoint(0, 0), createPoint(0, 1), createPoint(0, 2), createPoint(0, 3)];
 
         const hex = FakeHex.create(createPoint(0, 4));
 
-        const sut = createPresenterWithoutUnlockedTileForToday(tileSets, unlockedTiles, "Western", progressCoordinates, () => 100);
+        const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Western", progressCoordinates, () => 100);
         // act
         sut.present(hex);
         // assert
@@ -35,17 +32,17 @@ describe("tileSetUnlockProgressPresenter", function () {
 
     it("should not render to hexes when there are no progress co-ordinates", function () {
         // arrange
-        const tileSets = [
+        const tiles = [
             TileTestDataBuilder.create().withId(1).withSets("Modern").build(),
             TileTestDataBuilder.create().withId(2).withSets("Modern").build()
         ];
-        const unlockedTiles = [tileSets[0], tileSets[1]];
+        const unlockedTiles = [tiles[0], tiles[1]];
         const progressCoordinates = [];
 
         const hex1 = FakeHex.create(createPoint(0, 0));
         const hex2 = FakeHex.create(createPoint(0, 1));
 
-        const sut = createPresenterWithoutUnlockedTileForToday(tileSets, unlockedTiles, "Modern", progressCoordinates, () => 100);
+        const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Modern", progressCoordinates, () => 100);
         // act
         sut.present(hex1);
         sut.present(hex2);
@@ -57,17 +54,17 @@ describe("tileSetUnlockProgressPresenter", function () {
     describe("all tiles are unlocked", function () {
         it("should not render any image", function () {
             // arrange
-            const tileSets = [
+            const tiles = [
                 TileTestDataBuilder.create().withId(1).withSets("Western").build(),
                 TileTestDataBuilder.create().withId(2).withSets("Western").build()
             ];
-            const unlockedTiles = [tileSets[0], tileSets[1]];
+            const unlockedTiles = [tiles[0], tiles[1]];
             const progressCoordinates = [createPoint(0, 0), createPoint(0, 1)];
 
             const hex1 = FakeHex.create(progressCoordinates[0]);
             const hex2 = FakeHex.create(progressCoordinates[1]);
 
-            const sut = createPresenterWithoutUnlockedTileForToday(tileSets, unlockedTiles, "Western", progressCoordinates, () => 100);
+            const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Western", progressCoordinates, () => 100);
             // act
             sut.present(hex1);
             sut.present(hex2);
@@ -92,13 +89,13 @@ describe("tileSetUnlockProgressPresenter", function () {
             ].forEach(function (data) {
                 it("should render progress to hexes in progress co-ordinates and next locked image to the last hex", function () {
                     // arrange
-                    const tileSets = [
+                    const tiles = [
                         TileTestDataBuilder.create().withId(1).withSets("Nature").build(),
                         TileTestDataBuilder.create().withId(2).withSets("Nature").build(),
                         TileTestDataBuilder.create().withId(3).withImage("stones.png").withSets("Nature").build(),
                         TileTestDataBuilder.create().withId(4).withSets("Nature").build(),
                     ];
-                    const unlockedTiles = [tileSets[0], tileSets[1]];
+                    const unlockedTiles = [tiles[0], tiles[1]];
                     const progressCoordinates = [createPoint(0, 0), createPoint(0, 1), createPoint(0, 2), createPoint(0, 3)];
 
                     const hex1 = FakeHex.create(progressCoordinates[0]);
@@ -106,7 +103,7 @@ describe("tileSetUnlockProgressPresenter", function () {
                     const hex3 = FakeHex.create(progressCoordinates[2]);
                     const hex4 = FakeHex.create(progressCoordinates[3]);
 
-                    const sut = createPresenterWithoutUnlockedTileForToday(tileSets, unlockedTiles, "Nature", progressCoordinates, () => data.progress);
+                    const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Nature", progressCoordinates, () => data.progress);
                     // act
                     sut.present(hex1);
                     sut.present(hex2);
@@ -116,27 +113,27 @@ describe("tileSetUnlockProgressPresenter", function () {
                     expectOnlyProgressToBeRenderedOn(hex1, data.hex1Progress);
                     expectOnlyProgressToBeRenderedOn(hex2, data.hex2Progress);
                     expectOnlyProgressToBeRenderedOn(hex3, data.hex3Progress);
-                    expectImageAndProgressToBeRenderedOn(hex4, tileSets[2].image, data.hex4Progress);
+                    expectImageAndProgressToBeRenderedOn(hex4, tiles[2].image, data.hex4Progress);
                 });
             });
 
             it("should only select next locked tile from specified tile set", function () {
                 // arrange
-                const tileSets = [
+                const tiles = [
                     TileTestDataBuilder.create().withId(1).withImage("saloon.png").withSets("Western").build(),
                     TileTestDataBuilder.create().withId(2).withImage("grass.png").withSets("Nature").build(),
                     TileTestDataBuilder.create().withId(3).withImage("desert.png").withSets("Desert", "Western").build()
                 ];
-                const unlockedTiles = [tileSets[0]];
+                const unlockedTiles = [tiles[0]];
                 const progressCoordinates = [createPoint(1, 0)];
 
                 const hex = FakeHex.create(progressCoordinates[0]);
 
-                const sut = createPresenterWithoutUnlockedTileForToday(tileSets, unlockedTiles, "Western", progressCoordinates, () => 100);
+                const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Western", progressCoordinates, () => 100);
                 // act
                 sut.present(hex);
                 // assert
-                expectImageAndProgressToBeRenderedOn(hex, tileSets[2].image, 100);
+                expectImageAndProgressToBeRenderedOn(hex, tiles[2].image, 100);
             });
         });
 
@@ -144,26 +141,26 @@ describe("tileSetUnlockProgressPresenter", function () {
             it("should render image for that tile", function () {
                 // arrange
                 const clock = FakeClock.create();
-                const tileSets = [
+                const tiles = [
                     TileTestDataBuilder.create().withSets("Nature").build(),
                     TileTestDataBuilder.create().withSets("Nature").build(),
                     TileTestDataBuilder.create().withSets("Nature").build()
                 ];
 
-                const tiles = new Tiles(tileSets)
+                const tileSet = new TileSet(tiles)
                     .changeTileSet("Nature")
-                    .unlockTile(tileSets[0]);
+                    .unlockTile(tiles[0]);
                 clock.advanceOneDay();
-                tiles.unlockTile(tileSets[1]);
+                tileSet.unlockTile(tiles[1]);
 
                 const progressCoordinates = [createPoint(0, 0)];
                 const hex = FakeHex.create(progressCoordinates[0]);
 
-                const sut = createPresenter(tiles, progressCoordinates, () => 100);
+                const sut = createPresenter(tileSet, progressCoordinates, () => 100);
                 // act
                 sut.present(hex)
                 // assert
-                expectImageAndProgressToBeRenderedOn(hex, tileSets[1].image, 100);
+                expectImageAndProgressToBeRenderedOn(hex, tiles[1].image, 100);
             });
         });
     });
@@ -192,7 +189,7 @@ describe("tileSetUnlockProgressPresenter", function () {
 
         const clock = FakeClock.create()
 
-        const tiles = new Tiles(allTiles);
+        const tiles = new TileSet(allTiles);
         tiles.changeTileSet(tileSet);
         unlockedTiles.forEach(tile => {
             tiles.unlockTile(tile);
@@ -212,107 +209,4 @@ describe("tileSetUnlockProgressPresenter", function () {
     function createPoint(x, y) {
         return { x, y }
     }
-});
-
-describe("Tiles", function () {
-    describe("changeTileSet", function () {
-        it("should save progress", function () {
-            // arrange
-            const tileSet = faker.random.word();
-            const unlockDate1 = new Date(2019, 01, 01);
-            const unlockDate2 = new Date(2019, 01, 02);
-            const tileSets = [
-                TileTestDataBuilder.create().withId(1).withSets(tileSet).build(),
-                TileTestDataBuilder.create().withId(2).withSets(tileSet).build(),
-                TileTestDataBuilder.create().withId(3).withSets(tileSet).build()
-            ];
-            const expectedProgress = ProgressTestDataBuilder.create()
-                .withTileSet(tileSet)
-                .withUnlockedTile(tileSets[0], unlockDate1)
-                .withUnlockedTile(tileSets[1], unlockDate2)
-                .build();
-
-            let actualProgress = new Progress();
-            const sut = new Tiles(tileSets)
-                .savesProgressUsing(progress => actualProgress = progress)
-                .unlockTile(tileSets[0], unlockDate1)
-                .unlockTile(tileSets[1], unlockDate2);
-            // act
-            sut.changeTileSet(tileSet);
-            // assert
-            expect(actualProgress).to.deep.equal(expectedProgress);
-        });
-    });
-
-    describe("unlockTile", function () {
-        it("should save progress", function () {
-            // arrange
-            const tileSet = faker.random.word();
-            const unlockDate1 = new Date(2019, 01, 01);
-            const unlockDate2 = new Date(2019, 01, 02);
-            const tileSets = [
-                TileTestDataBuilder.create().withId(1).withSets(tileSet).build(),
-                TileTestDataBuilder.create().withId(2).withSets(tileSet).build(),
-                TileTestDataBuilder.create().withId(3).withSets(tileSet).build()
-            ];
-            const expectedProgress = ProgressTestDataBuilder.create()
-                .withTileSet(tileSet)
-                .withUnlockedTile(tileSets[0], unlockDate1)
-                .withUnlockedTile(tileSets[1], unlockDate2)
-                .build();
-
-            let actualProgress = new Progress();
-            const sut = new Tiles(tileSets)
-                .changeTileSet(tileSet)
-                .unlockTile(tileSets[0], unlockDate1)
-                .savesProgressUsing(progress => actualProgress = progress);
-            // act
-            sut.unlockTile(tileSets[1], unlockDate2);
-            // assert
-            expect(actualProgress).to.deep.equal(expectedProgress);
-        });
-
-        it("should support unlocking tiles with a tile id", function () {
-            // arrange
-            const tileSet = faker.random.word();
-            const unlockDate1 = new Date();
-            const tileSets = [
-                TileTestDataBuilder.create().withId(1).withSets(tileSet).build()
-            ];
-            const expectedProgress = ProgressTestDataBuilder.create()
-                .withTileSet(tileSet)
-                .withUnlockedTile(tileSets[0], unlockDate1)
-                .build();
-
-            let actualProgress = new Progress();
-            const sut = new Tiles(tileSets)
-                .changeTileSet(tileSet)
-                .savesProgressUsing(progress => actualProgress = progress);
-            // act
-            sut.unlockTile(1, unlockDate1);
-            // assert
-            expect(actualProgress).to.deep.equal(expectedProgress);
-        });
-
-        it("should ignore a tile if it is already unlocked", function () {
-            // arrange
-            const tileSet = faker.random.word();
-            const unlockDate = new Date();
-            const tileBeingUnlocked = TileTestDataBuilder.create().withId(1).build();
-            const expectedProgress = ProgressTestDataBuilder.create()
-                .withTileSet(tileSet)
-                .withUnlockedTile(tileBeingUnlocked, unlockDate)
-                .build();
-
-            let actualProgress = new Progress();
-            const sut = new Tiles()
-                .changeTileSet(tileSet)
-                .savesProgressUsing(progress => actualProgress = progress);
-            // act
-            sut.unlockTile(tileBeingUnlocked, unlockDate);
-            sut.unlockTile(tileBeingUnlocked, unlockDate);
-            // assert
-            expect(actualProgress).to.deep.equal(expectedProgress);
-        });
-    });
 });

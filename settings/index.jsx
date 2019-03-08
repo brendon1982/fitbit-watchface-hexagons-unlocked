@@ -1,4 +1,4 @@
-import { tileSets } from "./tilesWithEmbeddedImages";
+import { tiles } from "./tilesWithEmbeddedImages";
 
 let props;
 function settingsComponent(p) {
@@ -6,7 +6,7 @@ function settingsComponent(p) {
   return (
     <Page>
       <Section title={<Text bold align="center">Nature</Text>}>
-        {tileSets.map(tile =>
+        {tiles.map(tile =>
           <TextImageRow label={tile.name} sublabel={subLabel(tile)} icon={tileImage(tile)} />
         )}
       </Section>
