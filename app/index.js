@@ -21,15 +21,16 @@ const unlockProgressPresenter = new TileSetUnlockProgressPresenter(tiles, progre
 map.render(tileSetPresenter);
 map.render(unlockProgressPresenter);
 
-// TODO real implementation that gets steps
-function getStepsProgress() {
-    return 100;
-}
-
 clock.granularity = "minutes";
 clock.ontick = evt => {
     time.tick(evt.date);
     date.tick(evt.date);
+    map.render(unlockProgressPresenter);
 };
+
+// TODO real implementation that gets steps
+function getStepsProgress() {
+    return 100;
+}
 
 // TODO hook into on goal reached event to update unlocked tiles & ship them off to companion.
