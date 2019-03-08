@@ -4,7 +4,7 @@ import Progress from "./progress";
 import UnlockedTile from "./unlockedTile";
 
 // TODO refactored out of the two presenters, so currently is only tested through their tests
-export default class Tiles {
+export default class TileSet {
     constructor(allTiles) {
         this.unlockedTiles = [];
         this.tileSet = "";

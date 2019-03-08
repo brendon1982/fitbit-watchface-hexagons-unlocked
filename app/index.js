@@ -4,10 +4,10 @@ import * as date from "../common/date";
 import Map from "../domain/map";
 import RandomTileSetPresenter from "../domain/tileSetRandomImagePresenter";
 import TileSetUnlockProgressPresenter from "../domain/tileSetUnlockProgressPresenter";
-import Tiles from "../domain/tiles";
+import TileSet from "../domain/tilesSet";
 import { hexOptions, gridOptions } from "./mapOptions"
 
-const tiles = new Tiles()
+const tiles = new TileSet()
     .changeTileSet("Nature")
     .unlockTile(1, new Date(2019, 2, 5))
     .unlockTile(2, new Date(2019, 2, 6));

@@ -8,7 +8,7 @@ const faker = require("faker");
 
 const TileTestDataBuilder = require("./builders/tileTestDataBuilder");
 const FakeHex = require("./fakes/fakeHex");
-const Tiles = require("../../domain/tiles").default;
+const Tiles = require("../../domain/tilesSet").default;
 
 describe("randomTilePresenter", function () {
     repeat(50, () => {

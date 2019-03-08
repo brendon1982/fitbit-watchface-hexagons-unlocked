@@ -8,7 +8,7 @@ const faker = require("faker");
 const TileTestDataBuilder = require("./builders/tileTestDataBuilder");
 const FakeHex = require("./fakes/fakeHex");
 const FakeClock = require("./fakes/fakeClock");
-const Tiles = require("../../domain/tiles").default;
+const Tiles = require("../../domain/tilesSet").default;
 const Progress = require("../../domain/progress").default;
 const ProgressTestDataBuilder = require("./builders/progressTestDataBuilder");
 
