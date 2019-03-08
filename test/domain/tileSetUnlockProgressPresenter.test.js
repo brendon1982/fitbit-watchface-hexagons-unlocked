@@ -244,7 +244,7 @@ describe("Tiles", function () {
         });
     });
 
-    describe("unlockTile", function() {
+    describe("unlockTile", function () {
         it("should save progress", function () {
             // arrange
             const tileSet = faker.random.word();
@@ -297,22 +297,20 @@ describe("Tiles", function () {
         it("should ignore a tile if it is already unlocked", function () {
             // arrange
             const tileSet = faker.random.word();
-            const unlockDate1 = new Date();
-            const tileSets = [
-                TileTestDataBuilder.create().withId(1).withSets(tileSet).build()
-            ];
+            const unlockDate = new Date();
+            const tileBeingUnlocked = TileTestDataBuilder.create().withId(1).build();
             const expectedProgress = ProgressTestDataBuilder.create()
                 .withTileSet(tileSet)
-                .withUnlockedTile(tileSets[0], unlockDate1)
+                .withUnlockedTile(tileBeingUnlocked, unlockDate)
                 .build();
 
             let actualProgress = new Progress();
-            const sut = new Tiles(tileSets)
+            const sut = new Tiles()
                 .changeTileSet(tileSet)
                 .savesProgressUsing(progress => actualProgress = progress);
             // act
-            sut.unlockTile(tileSets[0], unlockDate1);
-            sut.unlockTile(tileSets[0], unlockDate1);
+            sut.unlockTile(tileBeingUnlocked, unlockDate);
+            sut.unlockTile(tileBeingUnlocked, unlockDate);
             // assert
             expect(actualProgress).to.deep.equal(expectedProgress);
         });

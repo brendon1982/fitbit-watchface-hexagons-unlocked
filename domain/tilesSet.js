@@ -31,8 +31,7 @@ export default class TileSet {
     }
 
     isTileUnlocked(tileId) {
-        const alreadyUnlockedTiles = this.getUnlockedTiles();
-        if (alreadyUnlockedTiles.some(t => t.id === tileId)) {
+        if (this.unlockedTiles.some(t => t.id === tileId)) {
             return this;
         }
     }
