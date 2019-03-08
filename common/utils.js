@@ -18,3 +18,7 @@ export function calcXTranslation(remainingProgress) {
 export function calcYTranslation(remainingProgress) {
   return 144 * remainingProgress / 2;
 }
+
+export function formatDateAsString(date) {
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+}

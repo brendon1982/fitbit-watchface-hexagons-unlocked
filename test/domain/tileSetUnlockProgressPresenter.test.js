@@ -3,11 +3,14 @@ require = require("esm")(module)
 const describe = require("mocha").describe;
 const it = require("mocha").it;
 const expect = require("chai").expect;
+const faker = require("faker");
 
 const TileTestDataBuilder = require("./tileTestDataBuilder");
 const FakeHex = require("./fakeHex");
 const FakeClock = require("./fakeClock");
 const Tiles = require("../../domain/tiles").default;
+const Progress = require("../../domain/progress").default;
+const ProgressTestDataBuilder = require("./progressTestDataBuilder");
 
 describe("tileSetUnlockProgressPresenter", function () {
     it("should not render to hexes at non progress co-ordinates", function () {
@@ -18,12 +21,12 @@ describe("tileSetUnlockProgressPresenter", function () {
             TileTestDataBuilder.create().withId(3).withSets("Western").build(),
             TileTestDataBuilder.create().withId(4).withSets("Western").build(),
         ];
-        const unlockedTileIds = [availableTiles[0].id, availableTiles[1].id];
+        const unlockedTiles = [availableTiles[0], availableTiles[1]];
         const progressCoordinates = [createPoint(0, 0), createPoint(0, 1), createPoint(0, 2), createPoint(0, 3)];
 
         const hex = FakeHex.create(createPoint(0, 4));
 
-        const sut = createPresenterWithoutUnlockedTileForToday(availableTiles, unlockedTileIds, "Western", progressCoordinates, () => 100);
+        const sut = createPresenterWithoutUnlockedTileForToday(availableTiles, unlockedTiles, "Western", progressCoordinates, () => 100);
         // act
         sut.present(hex);
         // assert
@@ -36,13 +39,13 @@ describe("tileSetUnlockProgressPresenter", function () {
             TileTestDataBuilder.create().withId(1).withSets("Modern").build(),
             TileTestDataBuilder.create().withId(2).withSets("Modern").build()
         ];
-        const unlockedTileIds = [availableTiles[0].id, availableTiles[1].id];
+        const unlockedTiles = [availableTiles[0], availableTiles[1]];
         const progressCoordinates = [];
 
         const hex1 = FakeHex.create(createPoint(0, 0));
         const hex2 = FakeHex.create(createPoint(0, 1));
 
-        const sut = createPresenterWithoutUnlockedTileForToday(availableTiles, unlockedTileIds, "Modern", progressCoordinates, () => 100);
+        const sut = createPresenterWithoutUnlockedTileForToday(availableTiles, unlockedTiles, "Modern", progressCoordinates, () => 100);
         // act
         sut.present(hex1);
         sut.present(hex2);
@@ -58,13 +61,13 @@ describe("tileSetUnlockProgressPresenter", function () {
                 TileTestDataBuilder.create().withId(1).withSets("Western").build(),
                 TileTestDataBuilder.create().withId(2).withSets("Western").build()
             ];
-            const unlockedTileIds = [availableTiles[0].id, availableTiles[1].id];
+            const unlockedTiles = [availableTiles[0], availableTiles[1]];
             const progressCoordinates = [createPoint(0, 0), createPoint(0, 1)];
 
             const hex1 = FakeHex.create(progressCoordinates[0]);
             const hex2 = FakeHex.create(progressCoordinates[1]);
 
-            const sut = createPresenterWithoutUnlockedTileForToday(availableTiles, unlockedTileIds, "Western", progressCoordinates, () => 100);
+            const sut = createPresenterWithoutUnlockedTileForToday(availableTiles, unlockedTiles, "Western", progressCoordinates, () => 100);
             // act
             sut.present(hex1);
             sut.present(hex2);
@@ -95,15 +98,15 @@ describe("tileSetUnlockProgressPresenter", function () {
                         TileTestDataBuilder.create().withId(3).withImage("stones.png").withSets("Nature").build(),
                         TileTestDataBuilder.create().withId(4).withSets("Nature").build(),
                     ];
-                    const unlockedTileIds = [availableTiles[0].id, availableTiles[1].id];
+                    const unlockedTiles = [availableTiles[0], availableTiles[1]];
                     const progressCoordinates = [createPoint(0, 0), createPoint(0, 1), createPoint(0, 2), createPoint(0, 3)];
-    
+
                     const hex1 = FakeHex.create(progressCoordinates[0]);
                     const hex2 = FakeHex.create(progressCoordinates[1]);
                     const hex3 = FakeHex.create(progressCoordinates[2]);
                     const hex4 = FakeHex.create(progressCoordinates[3]);
-    
-                    const sut = createPresenterWithoutUnlockedTileForToday(availableTiles, unlockedTileIds, "Nature", progressCoordinates, () => data.progress);
+
+                    const sut = createPresenterWithoutUnlockedTileForToday(availableTiles, unlockedTiles, "Nature", progressCoordinates, () => data.progress);
                     // act
                     sut.present(hex1);
                     sut.present(hex2);
@@ -116,7 +119,7 @@ describe("tileSetUnlockProgressPresenter", function () {
                     expectImageAndProgressToBeRenderedOn(hex4, availableTiles[2].image, data.hex4Progress);
                 });
             });
-    
+
             it("should only select next locked tile from specified tile set", function () {
                 // arrange
                 const availableTiles = [
@@ -124,19 +127,19 @@ describe("tileSetUnlockProgressPresenter", function () {
                     TileTestDataBuilder.create().withId(2).withImage("grass.png").withSets("Nature").build(),
                     TileTestDataBuilder.create().withId(3).withImage("desert.png").withSets("Desert", "Western").build()
                 ];
-                const unlockedTileIds = [availableTiles[0].id];
+                const unlockedTiles = [availableTiles[0]];
                 const progressCoordinates = [createPoint(1, 0)];
-    
+
                 const hex = FakeHex.create(progressCoordinates[0]);
-    
-                const sut = createPresenterWithoutUnlockedTileForToday(availableTiles, unlockedTileIds, "Western", progressCoordinates, () => 100);
+
+                const sut = createPresenterWithoutUnlockedTileForToday(availableTiles, unlockedTiles, "Western", progressCoordinates, () => 100);
                 // act
                 sut.present(hex);
                 // assert
                 expectImageAndProgressToBeRenderedOn(hex, availableTiles[2].image, 100);
             });
         });
-    
+
         describe("tile already unlocked for today", function () {
             it("should render image for that tile", function () {
                 // arrange
@@ -146,21 +149,52 @@ describe("tileSetUnlockProgressPresenter", function () {
                     TileTestDataBuilder.create().withSets("Nature").build(),
                     TileTestDataBuilder.create().withSets("Nature").build()
                 ];
-    
+
                 const tiles = new Tiles(availableTiles)
                     .changeTileSet("Nature")
-                    .unlockTile(availableTiles[0].id);
+                    .unlockTile(availableTiles[0]);
                 clock.advanceOneDay();
-                tiles.unlockTile(availableTiles[1].id);
-    
+                tiles.unlockTile(availableTiles[1]);
+
                 const progressCoordinates = [createPoint(0, 0)];
                 const hex = FakeHex.create(progressCoordinates[0]);
-    
+
                 const sut = createPresenter(tiles, progressCoordinates, () => 100);
                 // act
                 sut.present(hex)
                 // assert
                 expectImageAndProgressToBeRenderedOn(hex, availableTiles[1].image, 100);
+            });
+        });
+    });
+
+    describe("Tiles", function () {
+        describe("changeTileSet", function () {
+            it("should save progress when tile set is changed", function () {
+                // arrange
+                const tileSet = faker.random.word();
+                const unlockDate1 = new Date(2019, 01, 01);
+                const unlockDate2 = new Date(2019, 01, 02);
+                const availableTiles = [
+                    TileTestDataBuilder.create().withId(1).withSets(tileSet).build(),
+                    TileTestDataBuilder.create().withId(2).withSets(tileSet).build(),
+                    TileTestDataBuilder.create().withId(3).withSets(tileSet).build()
+                ];
+                const expectedProgress = ProgressTestDataBuilder.create()
+                    .withTileSet(tileSet)
+                    .withUnlockedTile(availableTiles[0], unlockDate1)
+                    .withUnlockedTile(availableTiles[1], unlockDate2)
+                    .build();
+
+                let actualProgress = new Progress();
+                const sut = new Tiles(availableTiles)
+                    .savesUsing(progress => actualProgress = progress)
+                    .unlockTile(availableTiles[0], unlockDate1)
+                    .unlockTile(availableTiles[1], unlockDate2);
+                // act
+                sut.changeTileSet(tileSet);
+                // assert
+                expect(actualProgress).to.deep.equal(expectedProgress);
             });
         });
     });
@@ -191,8 +225,8 @@ describe("tileSetUnlockProgressPresenter", function () {
 
         const tiles = new Tiles(allTiles);
         tiles.changeTileSet(tileSet);
-        unlockedTiles.forEach(id => {
-            tiles.unlockTile(id);
+        unlockedTiles.forEach(tile => {
+            tiles.unlockTile(tile);
             clock.advanceOneDay();
         });
 

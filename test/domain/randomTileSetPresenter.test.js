@@ -19,12 +19,12 @@ describe("randomTilePresenter", function () {
                 TileTestDataBuilder.create().withImage("trees.png").withSets("Nature").build(),
                 TileTestDataBuilder.create().withImage("stones.png").withSets("Nature").build()
             ];
-            const unlockedTileIds = [availableTiles[0].id, availableTiles[1].id];
+            const unlockedTiles = [availableTiles[0], availableTiles[1]];
             const possibleImages = [availableTiles[0].image, availableTiles[1].image];
 
             const hex = FakeHex.create()
 
-            const sut = createPresenter(availableTiles, unlockedTileIds, "Nature");
+            const sut = createPresenter(availableTiles, unlockedTiles, "Nature");
             // act
             sut.present(hex)
             // assert
@@ -38,12 +38,12 @@ describe("randomTilePresenter", function () {
                 TileTestDataBuilder.create().withImage("desert.png").withSets("Western", "Nature").build(),
                 TileTestDataBuilder.create().withImage("cactus.png").withSets("Western", "Medeival", "Nature").build()
             ];
-            const unlockedTileIds = [availableTiles[0].id, availableTiles[1].id, , availableTiles[2].id];
+            const unlockedTiles = [availableTiles[0], availableTiles[1], availableTiles[2]];
             const possibleImages = [availableTiles[1].image, availableTiles[2].image];
 
             const hex = FakeHex.create()
 
-            const sut = createPresenter(availableTiles, unlockedTileIds, "Western");
+            const sut = createPresenter(availableTiles, unlockedTiles, "Western");
             // act
             sut.present(hex)
             // assert
@@ -57,12 +57,13 @@ describe("randomTilePresenter", function () {
                 TileTestDataBuilder.create().withId(2).withSets("Nature").build(),
                 TileTestDataBuilder.create().withId(3).withSets("Nature").build()
             ];
-            const unlockedTileIds = [1, 4, 3, 2];
+            const otherTile = TileTestDataBuilder.create().withId(4).withSets("Nature").build();
+            const unlockedTiles = [availableTiles[0], otherTile, availableTiles[2], availableTiles[1]];
             const possibleImages = [availableTiles[0].image, availableTiles[1].image, availableTiles[2].image];
 
             const hex = FakeHex.create()
 
-            const sut = createPresenter(availableTiles, unlockedTileIds, "Nature");
+            const sut = createPresenter(availableTiles, unlockedTiles, "Nature");
             // act
             sut.present(hex)
             // assert
@@ -77,11 +78,11 @@ describe("randomTilePresenter", function () {
             TileTestDataBuilder.create().withId(2).withSets("Nature").build(),
             TileTestDataBuilder.create().withId(3).withSets("Nature").build()
         ];
-        const unlockedTileIds = [];
+        const unlockedTiles = [];
 
         const hex = FakeHex.create()
 
-        const sut = createPresenter(availableTiles, unlockedTileIds, "Nature");
+        const sut = createPresenter(availableTiles, unlockedTiles, "Nature");
         // act
         sut.present(hex)
         // assert
@@ -96,11 +97,11 @@ describe("randomTilePresenter", function () {
             TileTestDataBuilder.create().withSets("Nature").build(),
             TileTestDataBuilder.create().withSets("Nature").build()
         ];
-        const unlockedTileIds = [availableTiles[0].id, availableTiles[1].id, , availableTiles[2].id];
+        const unlockedTiles = [availableTiles[0], availableTiles[1], availableTiles[2]];
 
         const hex = FakeHex.create(ignoredPoints[1])
 
-        const sut = createPresenter(availableTiles, unlockedTileIds, "Nature", ignoredPoints);
+        const sut = createPresenter(availableTiles, unlockedTiles, "Nature", ignoredPoints);
         // act
         sut.present(hex)
         // assert
@@ -115,11 +116,11 @@ describe("randomTilePresenter", function () {
             TileTestDataBuilder.create().withSets("Nature").build(),
             TileTestDataBuilder.create().withSets("Nature").build()
         ];
-        const unlockedTileIds = [availableTiles[0].id, availableTiles[1].id, , availableTiles[2].id];
+        const unlockedTiles = [availableTiles[0], availableTiles[1] , availableTiles[2]];
 
         const hex = FakeHex.create(createPoint(4, 4))
 
-        const sut = createPresenter(availableTiles, unlockedTileIds, "Nature", ignoredPoints);
+        const sut = createPresenter(availableTiles, unlockedTiles, "Nature", ignoredPoints);
         // act
         sut.present(hex)
         // assert
@@ -133,7 +134,7 @@ describe("randomTilePresenter", function () {
         const tiles = new Tiles(allTiles);
         tiles.changeTileSet(tileSet);
 
-        unlockedTiles.forEach(id => { tiles.unlockTile(id) });
+        unlockedTiles.forEach(tile => { tiles.unlockTile(tile) });
 
         return new RandomTileSetPresenter(tiles, ignoredCoordinates);
     }

@@ -1,4 +1,7 @@
+import { formatDateAsString } from "../common/utils";
 import { availableTiles } from "./availableTiles";
+import Progress from "./progress";
+import UnlockedTile from "./unlockedTile";
 
 // TODO refactored out of the two presenters, so currently is only tested through their tests
 export default class Tiles {
@@ -6,14 +9,16 @@ export default class Tiles {
         this.unlockedTiles = [];
         this.tileSet = "";
         this.allTiles = allTiles || availableTiles;
+        this.progressWriter = () => {};
     }
 
     // TODO should probably check if the tile has already been unlocked ... it seems like making unlockedTiles a dictionary would make this much easier.
-    unlockTile(id, date) {
+    unlockTile(tile, date) {
         date = date || new Date();
-        this.unlockedTiles.push(new UnlockedTile(id, date));
+        this.unlockedTiles.push(new UnlockedTile(tile.id, date));
         this.cachedUnlockedTiles = undefined
         this.cachedTileBeingUnlockedToday = undefined;
+
         return this;
     }
 
@@ -21,6 +26,14 @@ export default class Tiles {
         this.tileSet = tileSet;
         this.cachedUnlockedTiles = undefined
         this.cachedTileBeingUnlockedToday = undefined;
+
+        this.progressWriter(new Progress(this.tileSet, this.unlockedTiles));
+
+        return this;
+    }
+
+    savesUsing(progressWriter) {
+        this.progressWriter = progressWriter;
         return this;
     }
 
@@ -47,13 +60,13 @@ export default class Tiles {
             .filter(tile => tile.sets.some(set => this.tileSet === set));
 
         const currentDate = formatDateAsString(new Date());
-        const todaysUnlockedTile = this.find(this.unlockedTiles, unlockedTile => unlockedTile.date === currentDate);
+        const todaysUnlockedTile = find(this.unlockedTiles, unlockedTile => unlockedTile.date === currentDate);
 
         if (todaysUnlockedTile) {
-            return this.find(tilesInSet, tile => tile.id === todaysUnlockedTile.id);
+            return find(tilesInSet, tile => tile.id === todaysUnlockedTile.id);
         }
 
-        const tileBeingUnlockedToday = this.find(tilesInSet, tile => !this.unlockedTiles.some(unlockedTile => tile.id === unlockedTile.id));
+        const tileBeingUnlockedToday = find(tilesInSet, tile => !this.unlockedTiles.some(unlockedTile => tile.id === unlockedTile.id));
 
         this.cachedTileBeingUnlockedToday = {
             value: tileBeingUnlockedToday
@@ -61,25 +74,14 @@ export default class Tiles {
 
         return this.cachedTileBeingUnlockedToday.value;
     }
+}
 
-    find(list, predicate) {
-        for (const item of list) {
-            if (predicate(item)) {
-                return item;
-            }
+function find(list, predicate) {
+    for (const item of list) {
+        if (predicate(item)) {
+            return item;
         }
-
-        return undefined;
     }
-}
 
-class UnlockedTile {
-    constructor(id, date) {
-        this.id = id;
-        this.date = formatDateAsString(date);
-    }
-}
-
-function formatDateAsString(date) {
-    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+    return undefined;
 }

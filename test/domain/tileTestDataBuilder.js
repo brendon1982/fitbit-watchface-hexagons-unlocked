@@ -1,3 +1,5 @@
+require = require("esm")(module)
+
 const BuilderBase = require("../builderBase");
 const faker = require("faker");
 
