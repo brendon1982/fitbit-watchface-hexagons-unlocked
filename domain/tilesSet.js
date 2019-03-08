@@ -9,13 +9,18 @@ export default class TileSet {
         this.unlockedTiles = [];
         this.currentTileSet = "";
         this.allTiles = overrideTileSets || tileSets;
-        this.progressWriter = () => {};
+        this.progressWriter = () => { };
     }
 
     // TODO should probably check if the tile has already been unlocked ... it seems like making unlockedTiles a dictionary would make this much easier.
     unlockTile(tile, date) {
         date = date || new Date();
         const tileId = tile.id || tile;
+
+        if (this.isTileUnlocked(tileId)) {
+            return this;
+        }
+
         this.unlockedTiles.push(new UnlockedTile(tileId, date));
         this.cachedUnlockedTiles = undefined
         this.cachedTileBeingUnlockedToday = undefined;
@@ -23,6 +28,13 @@ export default class TileSet {
         this.progressWriter(new Progress(this.currentTileSet, this.unlockedTiles));
 
         return this;
+    }
+
+    isTileUnlocked(tileId) {
+        const alreadyUnlockedTiles = this.getUnlockedTiles();
+        if (alreadyUnlockedTiles.some(t => t.id === tileId)) {
+            return this;
+        }
     }
 
     changeTileSet(tileSet) {
