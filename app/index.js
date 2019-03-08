@@ -2,7 +2,7 @@ import clock from "clock";
 import * as time from "../common/time";
 import * as date from "../common/date";
 import Map from "../domain/map";
-import RandomTileSetPresenter from "../domain/randomTileSetPresenter";
+import RandomTileSetPresenter from "../domain/tileSetRandomImagePresenter";
 import TileSetUnlockProgressPresenter from "../domain/tileSetUnlockProgressPresenter";
 import Tiles from "../domain/tiles";
 import { hexOptions, gridOptions } from "./mapOptions"

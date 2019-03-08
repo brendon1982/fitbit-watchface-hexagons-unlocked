@@ -188,7 +188,7 @@ describe("tileSetUnlockProgressPresenter", function () {
 
                 let actualProgress = new Progress();
                 const sut = new Tiles(availableTiles)
-                    .savesUsing(progress => actualProgress = progress)
+                    .savesProgressUsing(progress => actualProgress = progress)
                     .unlockTile(availableTiles[0], unlockDate1)
                     .unlockTile(availableTiles[1], unlockDate2);
                 // act

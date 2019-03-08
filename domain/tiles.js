@@ -1,5 +1,5 @@
 import { formatDateAsString } from "../common/utils";
-import { availableTiles } from "./availableTiles";
+import { availableTiles } from "./tileSets";
 import Progress from "./progress";
 import UnlockedTile from "./unlockedTile";
 
@@ -32,7 +32,7 @@ export default class Tiles {
         return this;
     }
 
-    savesUsing(progressWriter) {
+    savesProgressUsing(progressWriter) {
         this.progressWriter = progressWriter;
         return this;
     }
