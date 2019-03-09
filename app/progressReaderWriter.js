@@ -7,8 +7,8 @@ const fileName = "progress.cbor";
 function progressReader() {
     let progress;
     try {
-        progress = fs.readFileSync(fileName);
-    } catch {}
+        progress = fs.readFileSync(fileName, "cbor");
+    } catch { }
 
     if (!progress) {
         return seedProgress();
