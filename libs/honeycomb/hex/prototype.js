@@ -1,7 +1,7 @@
 import { EPSILON } from './constants'
 import { offsetFromZero } from '../utils'
 
-import assign from '../../lodash.assign/index'
+import copyProperties from '../../copyProperties';
 
 const sqrt3 = Math.sqrt(3)
 
@@ -21,7 +21,7 @@ export function setFactory({ Hex }) {
      * hex === updatedHex                                   // true: hex is updated in-place
      */
     return function set(...args) {
-        return assign(this, Hex(...args))
+        return copyProperties(this, Hex(...args))
     }
 }
 

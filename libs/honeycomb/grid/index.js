@@ -4,7 +4,7 @@ import { signedModulo, compassToNumberDirection } from '../utils'
 import * as statics from './statics'
 import * as methods from './prototype'
 
-import assign from '../../lodash.assign/index'
+import copyProperties from '../../copyProperties';
 
 export default function defineGridFactory({ extendHex, Grid, Point }) {
     const { isValidHex } = Grid
@@ -39,7 +39,7 @@ export default function defineGridFactory({ extendHex, Grid, Point }) {
      */
     return function defineGrid(Hex = extendHex()) {
         // static properties
-        assign(GridFactory, {
+        copyProperties(GridFactory, {
             /**
              * The {@link Hex} factory the Grid factory was created with.
              * @memberof Grid
@@ -72,7 +72,7 @@ export default function defineGridFactory({ extendHex, Grid, Point }) {
         })
 
         // prototype properties
-        assign(
+        copyProperties(
             Grid.prototype,
             {
                 // methods

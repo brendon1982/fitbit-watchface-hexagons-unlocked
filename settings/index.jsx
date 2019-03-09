@@ -15,8 +15,8 @@ function settingsComponent(p) {
 }
 
 function subLabel(tile) {
-  const status = props.settingsStorage.getItem(tile.id.toString());
-  if(status){
+  const status = props.settingsStorage.getItem(getUnlockedTileKey(tile));
+  if (status) {
     return `Unlocked on ${status}`;
   }
 
@@ -24,12 +24,16 @@ function subLabel(tile) {
 }
 
 function tileImage(tile) {
-  const status = props.settingsStorage.getItem(tile.id.toString());
+  const status = props.settingsStorage.getItem(getUnlockedTileKey(tile));
   if (status) {
     return tile.image;
   }
 
   return null;
+}
+
+function getUnlockedTileKey(tile) {
+  return `unlockedTile-${tile.id}`;
 }
 
 registerSettingsPage(settingsComponent);

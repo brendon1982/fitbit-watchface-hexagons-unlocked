@@ -1,10 +1,9 @@
-import * as Honeycomb from "../libs/honeycomb/honeycomb";
-const Point = Honeycomb.Point;
+import {extendHex, defineGrid, Point} from "../libs/honeycomb/honeycomb";
 
 export default class Map {
     constructor(gridOptions, hexOptions) {
-        const HexFactory = Honeycomb.extendHex(hexOptions);
-        const GridFactory = Honeycomb.defineGrid(HexFactory);
+        const HexFactory = extendHex(hexOptions);
+        const GridFactory = defineGrid(HexFactory);
         this.grid = GridFactory.rectangle(gridOptions);
         this.gridOptions = gridOptions;
     }

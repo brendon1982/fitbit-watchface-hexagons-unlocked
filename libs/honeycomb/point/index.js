@@ -1,7 +1,7 @@
 import { isNumber, isArray, isObject } from '../../axis.js/axis'
 import * as methods from './prototype'
 
-import assign from '../../lodash.assign/index'
+import copyProperties from '../../copyProperties';
 
 /**
  * See {@link Point}.
@@ -76,11 +76,8 @@ export default function PointFactory({ ensureXY }) {
         } else {
             coordinates = ensureXY(0)
         }
-
-        return assign(
-            Object.create(prototype),
-            coordinates
-        )
+        
+        return copyProperties(Object.create(prototype), coordinates);
     }
 
     return Point

@@ -3,7 +3,7 @@ import { isObject, isNumber, isArray } from '../../axis.js/axis'
 import * as statics from './statics'
 import * as methods from './prototype'
 
-import assign from '../../lodash.assign/index'
+import copyProperties from '../../copyProperties';
 
 export const staticMethods = {
     thirdCoordinate: statics.thirdCoordinate
@@ -168,12 +168,12 @@ export default function extendHexFactory({ ensureXY, Point }) {
             toString: methods.toString,
             width: methods.width
         }
-        const finalPrototype = assign(defaultPrototype, prototype)
+        const finalPrototype = copyProperties(defaultPrototype, prototype)
 
         // ensure origin is a point
         finalPrototype.origin = Point(finalPrototype.origin)
 
-        assign(Hex, staticMethods)
+        copyProperties(Hex, staticMethods)
 
         /**
          * @function Hex
@@ -258,10 +258,10 @@ export default function extendHexFactory({ ensureXY, Point }) {
              * @property {number} x Cartesian x coordinate.
              * @property {number} y Cartesian y coordinate.
              */
-            return assign(
+            return copyProperties(
                 // the prototype has to be attached here, else Grid's shape methods break 🙁
                 Object.create(finalPrototype),
-                assign(customProps, ensureXY(x, y))
+                copyProperties(customProps, ensureXY(x, y))
             )
         }
 
