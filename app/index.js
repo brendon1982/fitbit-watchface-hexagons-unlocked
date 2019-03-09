@@ -3,26 +3,21 @@ import * as time from "../common/time";
 import * as date from "../common/date";
 
 import Map from "../domain/map";
-import Progress from "../domain/progress";
+import TileSet from "../domain/tilesSet";
 import TileSetRandomImagePresenter from "../domain/tileSetRandomImagePresenter";
 import TileSetUnlockProgressPresenter from "../domain/tileSetUnlockProgressPresenter";
-import TileSet from "../domain/tilesSet";
 import { hexOptions, gridOptions } from "./mapOptions"
-import UnlockedTile from '../domain/unlockedTile';
+import { progressReader, progressWriter } from "./progressReaderWriter";
+import { goals, today } from "user-activity";
 
-const tiles = new TileSet()
-    .loadProgressUsing(() => {
-        return new Progress("Nature", [
-            new UnlockedTile(1, new Date(2019, 3, 5)),
-            new UnlockedTile(2, new Date(2019, 3, 6))
-        ])
-    });
+const tileSet = new TileSet()
+    .loadProgressUsing(progressReader)
+    .savesProgressUsing(progressWriter);
 
 const map = new Map(gridOptions, hexOptions);
-const progressCoordinates = map.spiral();
 
-const tileSetPresenter = new TileSetRandomImagePresenter(tiles, []);
-const progressPresenter = new TileSetUnlockProgressPresenter(tiles, progressCoordinates, getStepsProgress);
+const tileSetPresenter = new TileSetRandomImagePresenter(tileSet, []);
+const progressPresenter = new TileSetUnlockProgressPresenter(tileSet, map.spiral(), getStepsProgress);
 
 map.render(tileSetPresenter);
 map.render(progressPresenter);
@@ -34,9 +29,14 @@ clock.ontick = evt => {
     map.render(progressPresenter);
 };
 
-// TODO real implementation that gets steps
-function getStepsProgress() {
-    return 100;
+goals.onreachgoal = function (goal) {
+    if (today.adjusted.steps >= goal.steps) {
+        map.render(progressPresenter);
+        tileSet.unlockTile(tileSet.getTileBeingUnlockedToday());
+    }
 }
 
-// TODO hook into on goal reached event to update unlocked tiles & ship them off to companion.
+function getStepsProgress() {
+    const stepsGoal = goals.steps || 10000;
+    return today.adjusted.steps / stepsGoal * 100;
+}
