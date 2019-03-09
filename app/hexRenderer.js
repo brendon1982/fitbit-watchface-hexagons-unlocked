@@ -1,41 +1,34 @@
 import document from "document";
 
-const size = 33.4;
+const hexSize = 33.4;
 const imageWidth = 60;
 const imageHeight = 70;
 const offset = -1;
 const xOffset = (imageWidth / 2) + imageWidth / 4;
-const yOffset = (Math.sqrt(size) - (imageWidth / 2));
+const yOffset = (Math.sqrt(hexSize) - (imageWidth / 2));
 const sqrt3 = Math.sqrt(3);
 
-export default function FastHex() {
+export default class HexRenderer {
+    render(coordinates, image) {
+        const point = coordinatesToElementPoint(coordinates);
+
+        const imageElement = document.getElementById(coordinatesToElementId(coordinates));
+        imageElement.href = `/mnt/assets${image}`;
+        imageElement.width = imageWidth;
+        imageElement.height = imageHeight;
+        imageElement.x = point.x - xOffset;
+        imageElement.y = point.y + yOffset;
+    };
+
+    progress(coordinates, percentage) {
+        const imageElement = document.getElementById(coordinatesToElementId(coordinates));
+        imageElement.style.opacity = percentage / 100;
+    };
 }
 
-FastHex.prototype.render = function (coordinates, image) {
-    const id = `${coordinates.x}${coordinates.y}`;
-    const cube = cartesianToCube(coordinates.x, coordinates.y);
-    const point = toPoint(cube.q, cube.r, size);
-
-    const imageElement = document.getElementById(id);
-    imageElement.href = `/mnt/assets${image}`;
-    imageElement.width = imageWidth;
-    imageElement.height = imageHeight;
-    imageElement.x = point.x - xOffset;
-    imageElement.y = point.y + yOffset;
-};
-
-FastHex.prototype.progress = function (coordinates, percentage) {
-    const id = `${coordinates.x}${coordinates.y}`;
-
-    const imageElement = document.getElementById(id);
-    imageElement.style.opacity = percentage / 100;
-};
-
-function toPoint(q, r, size) {
-    const x = size * sqrt3 * (q + r / 2);
-    const y = size * 3 / 2 * r;
-
-    return { x: x, y: y };
+function coordinatesToElementPoint(coordinates) {
+    const cubeCoordinates = cartesianToCube(coordinates.x, coordinates.y);
+    return toPoint(cubeCoordinates.q, cubeCoordinates.r, hexSize);
 }
 
 function cartesianToCube(x, y) {
@@ -47,4 +40,15 @@ function cartesianToCube(x, y) {
 
 function offsetFromZero(offset, distance) {
     return (distance + offset * (distance & 1)) >> 1
+}
+
+function toPoint(q, r, size) {
+    const x = size * sqrt3 * (q + r / 2);
+    const y = size * 3 / 2 * r;
+
+    return { x: x, y: y };
+}
+
+function coordinatesToElementId(coordinates) {
+    return `${coordinates.x}${coordinates.y}`;
 }
