@@ -1,14 +1,23 @@
 import { settingsStorage } from "settings";
-settingsStorage.setItem("1", new Date().toISOString());
-settingsStorage.removeItem("2");
+import { inbox } from "file-transfer";
 
-setTimeout(() => {
-    settingsStorage.setItem("2", new Date().toISOString());
-}, 3000);
+async function processFiles() {
+    let file;
+    while (file = await inbox.pop()) {
+        const content = await file.json();
+        // TODO handle missing properties gracefully
+        // TODO add current tile set to settings
+        console.log(content);
+        content.unlockedTiles.forEach(unlockedTile => {
+            settingsStorage.setItem(`unlockedTile-${unlockedTile.id}`, unlockedTile.date);
+        });
+    }
+};
 
-// TODO store file on device containing unlocked tiles & current tileSet.
-//      Domain/tiles.js has been refactored out to handle this stuff, add a load/save method on it.
-// TODO push file with unlocked tiles to companion app, set unlocked tiles into settings.
+inbox.onnewfile = processFiles;
+
+processFiles();
+
 // TODO update settings to render the tile sets changing the image to a hex with a question mark in it for
 //      tiles that are not unlocked in those sets.
 // TODO add more tile sets.

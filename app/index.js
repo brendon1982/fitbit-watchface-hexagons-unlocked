@@ -37,12 +37,10 @@ goals.onreachgoal = function () {
 checkSteps();
 
 function checkSteps() {
-    setTimeout(() => {
-        if (today.adjusted.steps >= goals.steps) {
-            tileSet.unlockTile(tileSet.getTileBeingUnlockedToday());
-            renderMap();
-        }
-    }, 0);
+    if (today.adjusted.steps >= goals.steps) {
+        tileSet.unlockTile(tileSet.getTileBeingUnlockedToday());
+        renderMap();
+    }
 }
 
 function renderMap() {

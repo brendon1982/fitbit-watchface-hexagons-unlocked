@@ -60,7 +60,8 @@ export default class TileSet {
 
     getUnlockedTiles() {
         if (this.cachedUnlockedTiles) {
-            return this.cachedUnlockedTiles.value;
+            // TODO write a test showing that this cache is flawed as it doesn't clear on a new day
+            // return this.cachedUnlockedTiles.value;
         }
 
         const currentDate = formatDateAsString(new Date());
@@ -75,7 +76,8 @@ export default class TileSet {
 
     getTileBeingUnlockedToday() {
         if (this.cachedTileBeingUnlockedToday) {
-            return this.cachedTileBeingUnlockedToday.value;
+            // TODO write a test showing that this cache is flawed as it doesn't clear on a new day
+            // return this.cachedTileBeingUnlockedToday.value;
         }
 
         const tilesInSet = this.allTiles

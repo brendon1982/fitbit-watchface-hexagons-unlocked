@@ -1,5 +1,6 @@
 const sinon = require("sinon");
 const beforeEach = require("mocha").beforeEach;
+const faker = require("faker");
 
 beforeEach(function() {
     sinon.restore();
@@ -12,7 +13,7 @@ module.exports = class FakeClock {
     }
 
     constructor(date) {
-        date = date || new Date();
+        date = date || faker.date.recent(30);
         this.clock = sinon.useFakeTimers(date);
     }
 

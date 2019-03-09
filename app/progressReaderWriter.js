@@ -1,13 +1,14 @@
 import Progress from "../domain/progress";
 import UnlockedTile from '../domain/unlockedTile';
-import * as fs from "fs";
+import { readFileSync, writeFileSync } from "fs";
+import { outbox } from "file-transfer";
 
-const fileName = "progress.cbor";
+const fileName = "progress.json";
 
-function progressReader() {
+export function progressReader() {
     let progress;
     try {
-        progress = fs.readFileSync(fileName, "cbor");
+        progress = readFileSync(fileName, "json");
     } catch { }
 
     if (!progress) {
@@ -17,21 +18,17 @@ function progressReader() {
     return progress;
 }
 
-function progressWriter(progress) {
-    fs.writeFileSync(fileName, progress, "cbor");
+export function progressWriter(progress) {
+    writeFileSync(fileName, progress, "json");
+    outbox.enqueueFile(`/private/data/${fileName}`);
 }
 
 function seedProgress() {
     const seedData = new Progress("Nature", [
-        new UnlockedTile(1, new Date(2019, 3, 5)),
-        new UnlockedTile(2, new Date(2019, 3, 6))
+        new UnlockedTile(1, new Date(2019, 0, 1)),
+        new UnlockedTile(2, new Date(2019, 0, 1))
     ]);
     progressWriter(seedData);
 
     return seedData;
-}
-
-export {
-    progressReader,
-    progressWriter
 }

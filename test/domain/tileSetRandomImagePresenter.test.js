@@ -8,6 +8,7 @@ const faker = require("faker");
 
 const TileTestDataBuilder = require("./builders/tileTestDataBuilder");
 const FakeHexRenderer = require("./fakes/fakeHexRenderer");
+const FakeClock = require("./fakes/fakeClock");
 const TileSet = require("../../domain/tilesSet").default;
 
 describe("randomTilePresenter", function () {
@@ -24,7 +25,7 @@ describe("randomTilePresenter", function () {
 
             const hexRenderer = FakeHexRenderer.create();
 
-            const sut = createPresenter(tiles, unlockedTiles, "Nature", [], hexRenderer);
+            const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Nature", [], hexRenderer);
             // act
             sut.present(cooridnates);
             // assert
@@ -43,11 +44,38 @@ describe("randomTilePresenter", function () {
 
             const hexRenderer = FakeHexRenderer.create();
 
-            const sut = createPresenter(tiles, unlockedTiles, "Nature", [], hexRenderer);
+            const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Nature", [], hexRenderer);
             // act
             sut.present(createRandomPoint());
             // assert
             expect(possibleImages).to.contain(hexRenderer.renderedImages[0]);
+        });
+
+        it("should not render unlockedTile image on the hex if it was unlocked today", function () {
+            // arrange
+            const tiles = [
+                TileTestDataBuilder.create().withImage("grass.png").withSets("Nature").build(),
+                TileTestDataBuilder.create().withImage("trees.png").withSets("Nature").build(),
+                TileTestDataBuilder.create().withImage("stones.png").withSets("Nature").build()
+            ];
+
+            const clock = FakeClock.create()
+
+            const tileSet = new TileSet(tiles)
+                .changeTileSet("Nature")
+                .unlockTile(tiles[0]);
+            clock.advanceOneDay();
+            tileSet.unlockTile(tiles[1])
+            clock.advanceOneDay();
+            tileSet.unlockTile(tiles[2])
+
+            const hexRenderer = FakeHexRenderer.create();
+
+            const sut = createPresenter(tileSet, [], hexRenderer);
+            // act
+            sut.present(createRandomPoint());
+            // assert
+            expect(hexRenderer.renderedImages[0]).not.to.equal(tiles[2].image);
         });
 
         it("should render one of the images from the set on the hex", function () {
@@ -62,7 +90,7 @@ describe("randomTilePresenter", function () {
 
             const hexRenderer = FakeHexRenderer.create();
 
-            const sut = createPresenter(tiles, unlockedTiles, "Western", [], hexRenderer);
+            const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Western", [], hexRenderer);
             // act
             sut.present(createRandomPoint());
             // assert
@@ -82,7 +110,7 @@ describe("randomTilePresenter", function () {
 
             const hexRenderer = FakeHexRenderer.create();
 
-            const sut = createPresenter(tiles, unlockedTiles, "Nature", [], hexRenderer);
+            const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Nature", [], hexRenderer);
             // act
             sut.present(createRandomPoint());
             // assert
@@ -101,7 +129,7 @@ describe("randomTilePresenter", function () {
 
         const hexRenderer = FakeHexRenderer.create()
 
-        const sut = createPresenter(tiles, unlockedTiles, "Nature", [], hexRenderer);
+        const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Nature", [], hexRenderer);
         // act
         sut.present(createRandomPoint())
         // assert
@@ -120,7 +148,7 @@ describe("randomTilePresenter", function () {
 
         const hexRenderer = FakeHexRenderer.create()
 
-        const sut = createPresenter(tiles, unlockedTiles, "Nature", ignoredPoints, hexRenderer);
+        const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Nature", ignoredPoints, hexRenderer);
         // act
         sut.present(ignoredPoints[1])
         // assert
@@ -139,21 +167,32 @@ describe("randomTilePresenter", function () {
 
         const hexRenderer = FakeHexRenderer.create()
 
-        const sut = createPresenter(tiles, unlockedTiles, "Nature", ignoredPoints, hexRenderer);
+        const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Nature", ignoredPoints, hexRenderer);
         // act
         sut.present(createPoint(4, 4))
         // assert
         expect(hexRenderer.renderedImages).not.to.be.empty;
     });
 
-    function createPresenter(allTiles, unlockedTiles, tileSet, ignoredCoordinates, hexRenderer) {
+    function createPresenterWithoutUnlockedTileForToday(allTiles, unlockedTiles, tileSet, ignoredCoordinates, hexRenderer) {
         ignoredCoordinates = ignoredCoordinates || [];
         const TileSetRandomImagePresenter = require("../../domain/tileSetRandomImagePresenter").default;
 
+        const clock = FakeClock.create()
+
         const tiles = new TileSet(allTiles);
         tiles.changeTileSet(tileSet);
+        unlockedTiles.forEach(tile => { 
+            tiles.unlockTile(tile);
+            clock.advanceOneDay();
+        });
 
-        unlockedTiles.forEach(tile => { tiles.unlockTile(tile) });
+        return new TileSetRandomImagePresenter(tiles, ignoredCoordinates, hexRenderer);
+    }
+
+    function createPresenter(tiles, ignoredCoordinates, hexRenderer) {
+        ignoredCoordinates = ignoredCoordinates || [];
+        const TileSetRandomImagePresenter = require("../../domain/tileSetRandomImagePresenter").default;
 
         return new TileSetRandomImagePresenter(tiles, ignoredCoordinates, hexRenderer);
     }
@@ -169,6 +208,7 @@ describe("randomTilePresenter", function () {
         }
     }
 
+    // TODO refactored out as it is duplicated else where
     function createPoint(x, y) {
         return { x, y }
     }
