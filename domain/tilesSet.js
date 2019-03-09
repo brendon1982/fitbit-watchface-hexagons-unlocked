@@ -63,9 +63,10 @@ export default class TileSet {
             return this.cachedUnlockedTiles.value;
         }
 
+        const currentDate = formatDateAsString(new Date());
         this.cachedUnlockedTiles = {
             value: this.allTiles
-                .filter(tile => this.unlockedTiles.some(unlockedTile => tile.id === unlockedTile.id))
+                .filter(tile => this.unlockedTiles.some(unlockedTile => tile.id === unlockedTile.id && currentDate !== unlockedTile.date))
                 .filter(tile => tile.sets.some(set => this.currentTileSet === set))
         };
 

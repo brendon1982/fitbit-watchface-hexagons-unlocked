@@ -30,11 +30,19 @@ clock.ontick = evt => {
     renderMap();
 };
 
-goals.onreachgoal = function (goal) {
-    if (today.adjusted.steps >= goal.steps) {
-        tileSet.unlockTile(tileSet.getTileBeingUnlockedToday());
-        renderMap();
-    }
+goals.onreachgoal = function () {
+    checkSteps();
+}
+
+checkSteps();
+
+function checkSteps() {
+    setTimeout(() => {
+        if (today.adjusted.steps >= goals.steps) {
+            tileSet.unlockTile(tileSet.getTileBeingUnlockedToday());
+            renderMap();
+        }
+    }, 0);
 }
 
 function renderMap() {
