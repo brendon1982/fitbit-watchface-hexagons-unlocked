@@ -5,7 +5,7 @@ const it = require("mocha").it;
 const expect = require("chai").expect;
 
 const TileTestDataBuilder = require("./builders/tileTestDataBuilder");
-const FakeHex = require("./fakes/fakeHex");
+const FakeHexRenderer = require("./fakes/fakeHexRenderer");
 const FakeClock = require("./fakes/fakeClock");
 const TileSet = require("../../domain/tilesSet").default;
 
@@ -21,13 +21,13 @@ describe("tileSetUnlockProgressPresenter", function () {
         const unlockedTiles = [tiles[0], tiles[1]];
         const progressCoordinates = [createPoint(0, 0), createPoint(0, 1), createPoint(0, 2), createPoint(0, 3)];
 
-        const hex = FakeHex.create(createPoint(0, 4));
+        const hexRenderer = FakeHexRenderer.create();
 
-        const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Western", progressCoordinates, () => 100);
+        const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Western", progressCoordinates, () => 100, hexRenderer);
         // act
-        sut.present(hex);
+        sut.present(createPoint(0, 4));
         // assert
-        expectNothingToBeRenderedOn(hex);
+        expectNothingToBeRenderedOn(hexRenderer);
     });
 
     it("should not render to hexes when there are no progress co-ordinates", function () {
@@ -39,16 +39,14 @@ describe("tileSetUnlockProgressPresenter", function () {
         const unlockedTiles = [tiles[0], tiles[1]];
         const progressCoordinates = [];
 
-        const hex1 = FakeHex.create(createPoint(0, 0));
-        const hex2 = FakeHex.create(createPoint(0, 1));
+        const hexRenderer = FakeHexRenderer.create();
 
-        const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Modern", progressCoordinates, () => 100);
+        const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Modern", progressCoordinates, () => 100, hexRenderer);
         // act
-        sut.present(hex1);
-        sut.present(hex2);
+        sut.present(createPoint(0, 0));
+        sut.present(createPoint(0, 1));
         // assert
-        expectNothingToBeRenderedOn(hex1);
-        expectNothingToBeRenderedOn(hex2);
+        expectNothingToBeRenderedOn(hexRenderer);
     });
 
     describe("all tiles are unlocked", function () {
@@ -61,16 +59,15 @@ describe("tileSetUnlockProgressPresenter", function () {
             const unlockedTiles = [tiles[0], tiles[1]];
             const progressCoordinates = [createPoint(0, 0), createPoint(0, 1)];
 
-            const hex1 = FakeHex.create(progressCoordinates[0]);
-            const hex2 = FakeHex.create(progressCoordinates[1]);
+            const hexRenderer = FakeHexRenderer.create();
 
-            const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Western", progressCoordinates, () => 100);
+            const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Western", progressCoordinates, () => 100, hexRenderer);
             // act
-            sut.present(hex1);
-            sut.present(hex2);
+            sut.present(progressCoordinates[0]);
+            sut.present(progressCoordinates[1]);
             // assert
-            expectOnlyProgressToBeRenderedOn(hex1, 100);
-            expectOnlyProgressToBeRenderedOn(hex2, 100);
+            expectOnlyProgressToBeRenderedOn(hexRenderer, 100);
+            expectOnlyProgressToBeRenderedOn(hexRenderer, 100);
         });
     });
 
@@ -98,22 +95,19 @@ describe("tileSetUnlockProgressPresenter", function () {
                     const unlockedTiles = [tiles[0], tiles[1]];
                     const progressCoordinates = [createPoint(0, 0), createPoint(0, 1), createPoint(0, 2), createPoint(0, 3)];
 
-                    const hex1 = FakeHex.create(progressCoordinates[0]);
-                    const hex2 = FakeHex.create(progressCoordinates[1]);
-                    const hex3 = FakeHex.create(progressCoordinates[2]);
-                    const hex4 = FakeHex.create(progressCoordinates[3]);
+                    const hexRenderer = FakeHexRenderer.create();
 
-                    const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Nature", progressCoordinates, () => data.progress);
+                    const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Nature", progressCoordinates, () => data.progress, hexRenderer);
                     // act
-                    sut.present(hex1);
-                    sut.present(hex2);
-                    sut.present(hex3);
-                    sut.present(hex4);
+                    sut.present(progressCoordinates[0]);
+                    sut.present(progressCoordinates[1]);
+                    sut.present(progressCoordinates[2]);
+                    sut.present(progressCoordinates[3]);
                     // assert
-                    expectOnlyProgressToBeRenderedOn(hex1, data.hex1Progress);
-                    expectOnlyProgressToBeRenderedOn(hex2, data.hex2Progress);
-                    expectOnlyProgressToBeRenderedOn(hex3, data.hex3Progress);
-                    expectImageAndProgressToBeRenderedOn(hex4, tiles[2].image, data.hex4Progress);
+                    expect(hexRenderer.renderedImages).to.contain.members([tiles[2].image]);
+                    expect(hexRenderer.progressPercentages).to.contain.members([
+                        data.hex1Progress, data.hex2Progress, data.hex3Progress, data.hex4Progress
+                    ]);
                 });
             });
 
@@ -127,13 +121,13 @@ describe("tileSetUnlockProgressPresenter", function () {
                 const unlockedTiles = [tiles[0]];
                 const progressCoordinates = [createPoint(1, 0)];
 
-                const hex = FakeHex.create(progressCoordinates[0]);
+                const hexRenderer = FakeHexRenderer.create();
 
-                const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Western", progressCoordinates, () => 100);
+                const sut = createPresenterWithoutUnlockedTileForToday(tiles, unlockedTiles, "Western", progressCoordinates, () => 100, hexRenderer);
                 // act
-                sut.present(hex);
+                sut.present(progressCoordinates[0]);
                 // assert
-                expectImageAndProgressToBeRenderedOn(hex, tiles[2].image, 100);
+                expectImageAndProgressToBeRenderedOn(hexRenderer, tiles[2].image, 100);
             });
         });
 
@@ -154,13 +148,13 @@ describe("tileSetUnlockProgressPresenter", function () {
                 tileSet.unlockTile(tiles[1]);
 
                 const progressCoordinates = [createPoint(0, 0)];
-                const hex = FakeHex.create(progressCoordinates[0]);
+                const hexRenderer = FakeHexRenderer.create();
 
-                const sut = createPresenter(tileSet, progressCoordinates, () => 100);
+                const sut = createPresenter(tileSet, progressCoordinates, () => 100, hexRenderer);
                 // act
-                sut.present(hex)
+                sut.present(progressCoordinates[0])
                 // assert
-                expectImageAndProgressToBeRenderedOn(hex, tiles[1].image, 100);
+                expectImageAndProgressToBeRenderedOn(hexRenderer, tiles[1].image, 100);
             });
         });
     });
@@ -169,21 +163,21 @@ describe("tileSetUnlockProgressPresenter", function () {
     //      current tile set that no image is rendered for the last tile.
 
     function expectImageAndProgressToBeRenderedOn(hex, expectedImage, expectedProgressPercentage) {
-        expect(hex.renderedImage).to.equal(expectedImage);
-        expect(hex.progressPercentage).to.equal(expectedProgressPercentage);
+        expect(hex.renderedImages).to.contain.members([expectedImage]);
+        expect(hex.progressPercentages).to.contain.members([expectedProgressPercentage]);
     }
 
     function expectOnlyProgressToBeRenderedOn(hex, expectedProgressPercentage) {
-        expect(hex.renderedImage).to.be.undefined;
-        expect(hex.progressPercentage).to.equal(expectedProgressPercentage);
+        expect(hex.renderedImages).to.be.empty;
+        expect(hex.progressPercentages).to.contain.members([expectedProgressPercentage]);
     }
 
     function expectNothingToBeRenderedOn(hex) {
-        expect(hex.renderedImage).to.be.undefined;
-        expect(hex.progressPercentage).to.be.undefined;
+        expect(hex.renderedImages).to.be.empty;
+        expect(hex.progressPercentages).to.be.empty;
     }
 
-    function createPresenterWithoutUnlockedTileForToday(allTiles, unlockedTiles, tileSet, progressCoordinates, progressAccessor) {
+    function createPresenterWithoutUnlockedTileForToday(allTiles, unlockedTiles, tileSet, progressCoordinates, progressAccessor, hexRenderer) {
         progressCoordinates = progressCoordinates || [];
         const TileSetUnlockProgressPresenter = require("../../domain/tileSetUnlockProgressPresenter").default;
 
@@ -196,14 +190,14 @@ describe("tileSetUnlockProgressPresenter", function () {
             clock.advanceOneDay();
         });
 
-        return new TileSetUnlockProgressPresenter(tiles, progressCoordinates, progressAccessor);
+        return new TileSetUnlockProgressPresenter(tiles, progressCoordinates, progressAccessor, hexRenderer);
     }
 
-    function createPresenter(tiles, progressCoordinates, progressAccessor) {
+    function createPresenter(tiles, progressCoordinates, progressAccessor, hexRenderer) {
         progressCoordinates = progressCoordinates || [];
         const TileSetUnlockProgressPresenter = require("../../domain/tileSetUnlockProgressPresenter").default;
 
-        return new TileSetUnlockProgressPresenter(tiles, progressCoordinates, progressAccessor);
+        return new TileSetUnlockProgressPresenter(tiles, progressCoordinates, progressAccessor, hexRenderer);
     }
 
     function createPoint(x, y) {

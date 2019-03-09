@@ -3,8 +3,6 @@ const describe = require("mocha").describe;
 const it = require("mocha").it;
 const expect = require("chai").expect;
 const Map = require("../../domain/map").default;
-const faker = require("faker");
-const Point = require("../../libs/honeycomb/honeycomb").Point;
 
 describe("map", function () {
     describe("render", function () {
@@ -17,28 +15,11 @@ describe("map", function () {
             // assert
             expect(presenter.coordinates)
                 .to.have.deep.members([
-                    coordinate(0, 0), coordinate(1, 0), coordinate(2, 0),
-                    coordinate(0, 1), coordinate(1, 1), coordinate(2, 1),
-                    coordinate(0, 2), coordinate(1, 2), coordinate(2, 2),
-                    coordinate(0, 3), coordinate(1, 3), coordinate(2, 3),
+                    creatPoint(0, 0), creatPoint(1, 0), creatPoint(2, 0),
+                    creatPoint(0, 1), creatPoint(1, 1), creatPoint(2, 1),
+                    creatPoint(0, 2), creatPoint(1, 2), creatPoint(2, 2),
+                    creatPoint(0, 3), creatPoint(1, 3), creatPoint(2, 3),
                 ]);
-        });
-
-        it("should create hexes as specified in the hex options", function () {
-            // arrange
-            const hexOptions = {
-                size: 2,
-                orientation: "pointy",
-                customProperty: faker.random.alphaNumeric()
-            };
-            const presenter = RecordingPresenter.create();
-            const sut = createMap({ height: 1, width: 1 }, hexOptions);
-            // act
-            sut.render(presenter)
-            // assert
-            expect(presenter.hexes[0].size).to.equal(hexOptions.size);
-            expect(presenter.hexes[0].orientation).to.equal(hexOptions.orientation);
-            expect(presenter.hexes[0].customProperty).to.equal(hexOptions.customProperty);
         });
     });
 
@@ -46,10 +27,10 @@ describe("map", function () {
         it("should return the points of the grid in an order that makes a clockwise inward spiral", function () {
             // arrange
             const expectedPath = [
-                Point(0, 0), Point(1, 0), Point(2, 0),
-                Point(2, 1), Point(2, 2), Point(2, 3),
-                Point(1, 3), Point(0, 3), Point(0, 2),
-                Point(0, 1), Point(1, 1), Point(1, 2),
+                creatPoint(0, 0), creatPoint(1, 0), creatPoint(2, 0),
+                creatPoint(2, 1), creatPoint(2, 2), creatPoint(2, 3),
+                creatPoint(1, 3), creatPoint(0, 3), creatPoint(0, 2),
+                creatPoint(0, 1), creatPoint(1, 1), creatPoint(1, 2),
             ];
 
             const sut = createMap({ height: 4, width: 3 });
@@ -64,13 +45,12 @@ describe("map", function () {
         return new Map(gridOptions, hexOptions);
     }
 
-    function coordinate(x, y) {
+    function creatPoint(x, y) {
         return { x, y };
     }
 
     class RecordingPresenter {
         constructor() {
-            this.hexes = [];
             this.coordinates = [];
         }
 
@@ -78,9 +58,8 @@ describe("map", function () {
             return new RecordingPresenter();
         }
 
-        present(hex) {
-            this.hexes.push(hex);
-            this.coordinates.push(hex.coordinates());
+        present(coordinates) {
+            this.coordinates.push(coordinates);
         }
     }
 });

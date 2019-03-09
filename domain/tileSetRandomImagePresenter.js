@@ -1,14 +1,14 @@
 import { alea } from "../libs/alea/alea";
 
 export default class TileSetRandomImagePresenter {
-    constructor(tileSet, ignoredCoordinates) {
+    constructor(tileSet, ignoredCoordinates, hexRenderer) {
         this.tileSet = tileSet;
         this.ignoredCoordinates = ignoredCoordinates || [];
+        this.hexRenderer = hexRenderer;
     }
 
-    present(hex) {
-        const hexCoordinates = hex.coordinates()
-        if (this.isIgnoredCoordinate(hexCoordinates)) {
+    present(coordinates) {
+        if (this.isIgnoredCoordinate(coordinates)) {
             return;
         }
 
@@ -18,7 +18,7 @@ export default class TileSetRandomImagePresenter {
         }
 
         const tile = this.randomTile(unlockedTiles);
-        hex.render(tile.image)
+        this.hexRenderer.render(coordinates, tile.image)
     }
 
     isIgnoredCoordinate(coordinate) {
