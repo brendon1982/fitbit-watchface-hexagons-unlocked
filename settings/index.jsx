@@ -4,6 +4,7 @@ import locked from "./locked.png"
 function settingsComponent(props) {
   return (
     <Page>
+      {/* TODO generate list of tile sets from tiles */}
       {tileSetSection(props, "Nature")}
     </Page>
   );

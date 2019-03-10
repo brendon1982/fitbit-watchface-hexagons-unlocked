@@ -5,27 +5,30 @@ async function processFiles() {
     let file;
     while (file = await inbox.pop()) {
         const progress = await file.json();
-        // TODO handle missing properties gracefully
-        // TODO add current tile set to settings
-        if (progress && progress.unlockedTiles) {
-            progress.unlockedTiles.forEach(unlockedTile => {
-                settingsStorage.setItem(`unlockedTile-${unlockedTile.id}`, unlockedTile.date);
-            });
-        }
 
-        if (progress && progress.tileSet) {
-            settingsStorage.setItem("tileSet", progress.tileSet)
-        }
+        addUnlockedTilesToSettings(progress);
+        addTileSetToSetting(progress);
     }
 };
+
+function addUnlockedTilesToSettings(progress) {
+    if (progress && progress.unlockedTiles) {
+        progress.unlockedTiles.forEach(unlockedTile => {
+            settingsStorage.setItem(`unlockedTile-${unlockedTile.id}`, unlockedTile.date);
+        });
+    }
+}
+
+function addTileSetToSetting(progress) {
+    if (progress && progress.tileSet) {
+        settingsStorage.setItem("tileSet", progress.tileSet)
+    }
+}
 
 inbox.onnewfile = processFiles;
 
 processFiles();
 
-// TODO update settings to render the tile sets changing the image to a hex with a question mark in it for
-//      tiles that are not unlocked in those sets.
 // TODO add more tile sets.
 // TODO add option to choose which tile set is currently being displayed/progressed through on the watch.
-// TODO decide if it is worth allowing users to disable a tile.
 // TODO decide if it is worth adding the ability for users to sync their progress somewhere.
