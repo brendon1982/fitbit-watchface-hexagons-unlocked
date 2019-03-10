@@ -157,6 +157,34 @@ describe("tileSetUnlockProgressPresenter", function () {
                 expectImageAndProgressToBeRenderedOn(hexRenderer, tiles[1].image, 100);
             });
         });
+
+        describe("tile unlocked and rendered yesterday", function() {
+            it("should render image for today's tile today", function () {
+                // arrange
+                const tiles = [
+                    TileTestDataBuilder.create().withId(1).withSets("Nature").withImage("sand.png").build(),
+                    TileTestDataBuilder.create().withId(2).withSets("Nature").withImage("panda.png").build(),
+                ];
+                const progressCoordinates = [createPoint(0, 0)];
+                const clock = FakeClock.create();
+                const tileSet = new TileSet(tiles)
+                    .changeTileSet("Nature");
+
+                const hexRenderer = FakeHexRenderer.create();
+
+                const sut = createPresenter(tileSet, progressCoordinates, () => 100, hexRenderer);
+                // act
+                sut.present(progressCoordinates[0]);
+                tileSet.unlockTile(tiles[0]);
+                sut.present(progressCoordinates[0]);
+                clock.advanceOneDay();
+                sut.present(progressCoordinates[0]);
+                // assert
+                expect(hexRenderer.renderedImages).to.have.members([
+                    tiles[0].image, tiles[0].image, tiles[1].image
+                ]);
+            });
+        });
     });
 
     // TODO add test that checks if a tile has been unlocked on the current date but it is not part of the

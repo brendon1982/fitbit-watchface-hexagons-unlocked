@@ -23,7 +23,6 @@ export default class TileSet {
 
         this.unlockedTiles.push(new UnlockedTile(tileId, date));
         this.cachedUnlockedTiles = undefined
-        this.cachedTileBeingUnlockedToday = undefined;
 
         this.progressWriter(new Progress(this.currentTileSet, this.unlockedTiles));
 
@@ -39,7 +38,6 @@ export default class TileSet {
     changeTileSet(tileSet) {
         this.currentTileSet = tileSet;
         this.cachedUnlockedTiles = undefined
-        this.cachedTileBeingUnlockedToday = undefined;
 
         this.progressWriter(new Progress(this.currentTileSet, this.unlockedTiles));
 
@@ -75,11 +73,6 @@ export default class TileSet {
     }
 
     getTileBeingUnlockedToday() {
-        if (this.cachedTileBeingUnlockedToday) {
-            // TODO write a test showing that this cache is flawed as it doesn't clear on a new day
-            // return this.cachedTileBeingUnlockedToday.value;
-        }
-
         const tilesInSet = this.allTiles
             .filter(tile => tile.sets.some(set => this.currentTileSet === set));
 
@@ -92,11 +85,7 @@ export default class TileSet {
 
         const tileBeingUnlockedToday = find(tilesInSet, tile => !this.unlockedTiles.some(unlockedTile => tile.id === unlockedTile.id));
 
-        this.cachedTileBeingUnlockedToday = {
-            value: tileBeingUnlockedToday
-        };
-
-        return this.cachedTileBeingUnlockedToday.value;
+        return tileBeingUnlockedToday;
     }
 }
 

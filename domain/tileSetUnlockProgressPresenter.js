@@ -14,13 +14,17 @@ export default class TileSetUnlockProgressPresenter {
         }
 
         const progress = this.progressAccessor();
-        const individualHexProgress = Math.min(Math.max((progress * this.progressCoordinates.length) - (indexOfHexInProgressCoordinates * 100), 0), 100);
+        const individualHexProgressPercentage = Math.min(Math.max((progress * this.progressCoordinates.length) - (indexOfHexInProgressCoordinates * 100), 0), 100);
 
-        this.hexRenderer.progress(coordinates, individualHexProgress);
+        this.hexRenderer.progress(coordinates, individualHexProgressPercentage);
+
+        const isHexAtLastProgressCoordinate = indexOfHexInProgressCoordinates === this.progressCoordinates.length - 1;
+        if (!isHexAtLastProgressCoordinate) {
+            return;
+        }
 
         const tileBeingUnlockedToday = this.tiles.getTileBeingUnlockedToday();
-        const isHexAtLastProgressCoordinate = indexOfHexInProgressCoordinates === this.progressCoordinates.length - 1;
-        if (tileBeingUnlockedToday && isHexAtLastProgressCoordinate) {
+        if (tileBeingUnlockedToday) {
             this.hexRenderer.render(coordinates, tileBeingUnlockedToday.image);
         }
     }
