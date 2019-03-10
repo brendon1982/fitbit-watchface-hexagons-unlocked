@@ -1,20 +1,39 @@
 import { tiles } from "./tilesWithEmbeddedImages";
+import locked from "./locked.png"
 
-let props;
-function settingsComponent(p) {
-  props = p;
+function settingsComponent(props) {
   return (
     <Page>
-      <Section title={<Text bold align="center">Nature</Text>}>
-        {tiles.map(tile =>
-          <TextImageRow label={tile.name} sublabel={subLabel(tile)} icon={tileImage(tile)} />
-        )}
-      </Section>
+      {tileSetSection(props, "Nature")}
     </Page>
   );
 }
 
-function subLabel(tile) {
+function tileSetSection(props, tileSet) {
+  return (
+    <Section title={<Text bold align="center">{tileSet}</Text>}>
+      {selectTileSetButton(props, tileSet)}
+      {tiles.filter(inTileSet(tileSet)).map(tile =>
+        <TextImageRow label={tile.name} sublabel={subLabel(props, tile)} icon={tileImage(props, tile)} />
+      )}
+    </Section>
+  )
+}
+
+function inTileSet(tileSet) {
+  return function (tile) {
+    return tile.sets.some(set => set === tileSet);
+  }
+}
+
+function selectTileSetButton(props, tileSet) {
+  const currentTileSet = props.settingsStorage.getItem("tileSet");
+  if (currentTileSet !== tileSet) {
+    return (<Button>tileSet</Button>);
+  }
+}
+
+function subLabel(props, tile) {
   const status = props.settingsStorage.getItem(getUnlockedTileKey(tile));
   if (status) {
     return `Unlocked on ${status}`;
@@ -23,13 +42,13 @@ function subLabel(tile) {
   return "Locked";
 }
 
-function tileImage(tile) {
+function tileImage(props, tile) {
   const status = props.settingsStorage.getItem(getUnlockedTileKey(tile));
   if (status) {
     return tile.image;
   }
 
-  return null;
+  return locked;
 }
 
 function getUnlockedTileKey(tile) {

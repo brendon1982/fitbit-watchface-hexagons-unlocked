@@ -4,12 +4,18 @@ import { inbox } from "file-transfer";
 async function processFiles() {
     let file;
     while (file = await inbox.pop()) {
-        const content = await file.json();
+        const progress = await file.json();
         // TODO handle missing properties gracefully
         // TODO add current tile set to settings
-        content.unlockedTiles.forEach(unlockedTile => {
-            settingsStorage.setItem(`unlockedTile-${unlockedTile.id}`, unlockedTile.date);
-        });
+        if (progress && progress.unlockedTiles) {
+            progress.unlockedTiles.forEach(unlockedTile => {
+                settingsStorage.setItem(`unlockedTile-${unlockedTile.id}`, unlockedTile.date);
+            });
+        }
+
+        if (progress && progress.tileSet) {
+            settingsStorage.setItem("tileSet", progress.tileSet)
+        }
     }
 };
 
