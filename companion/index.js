@@ -7,7 +7,6 @@ async function processFiles() {
         const content = await file.json();
         // TODO handle missing properties gracefully
         // TODO add current tile set to settings
-        console.log(content);
         content.unlockedTiles.forEach(unlockedTile => {
             settingsStorage.setItem(`unlockedTile-${unlockedTile.id}`, unlockedTile.date);
         });

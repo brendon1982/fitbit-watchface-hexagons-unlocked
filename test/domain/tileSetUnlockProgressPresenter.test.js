@@ -187,9 +187,6 @@ describe("tileSetUnlockProgressPresenter", function () {
         });
     });
 
-    // TODO add test that checks if a tile has been unlocked on the current date but it is not part of the
-    //      current tile set that no image is rendered for the last tile.
-
     function expectImageAndProgressToBeRenderedOn(hex, expectedImage, expectedProgressPercentage) {
         expect(hex.renderedImages).to.contain.members([expectedImage]);
         expect(hex.progressPercentages).to.contain.members([expectedProgressPercentage]);

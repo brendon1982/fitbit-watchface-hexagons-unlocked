@@ -97,7 +97,7 @@ describe("randomTilePresenter", function () {
             expect(possibleImages).to.contain(hexRenderer.renderedImages[0]);
         });
 
-        it("should only render unlocked tiles that are in available tiles on the hex", function () {
+        it("should not render unlocked tiles that are not in the master tile list", function () {
             // arrange
             const tiles = [
                 TileTestDataBuilder.create().withId(1).withSets("Nature").build(),

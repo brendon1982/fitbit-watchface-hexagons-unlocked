@@ -4,12 +4,16 @@ const describe = require("mocha").describe;
 const it = require("mocha").it;
 const expect = require("chai").expect;
 const faker = require("faker");
+const FakeClock = require("./fakes/fakeClock");
 
 const TileTestDataBuilder = require("./builders/tileTestDataBuilder");
 const TileSet = require("../../domain/tilesSet").default;
 const Progress = require("../../domain/progress").default;
 const ProgressTestDataBuilder = require("./builders/progressTestDataBuilder");
 
+// TODO tileSet was refactored our of the presenters, most of it therefore tested
+//      through the presenter tests. These tests grew organically for things added
+//      to tileSet after it was refactored out.
 describe("tileSet", function () {
     describe("changeTileSet", function () {
         it("should save progress", function () {
@@ -141,5 +145,35 @@ describe("tileSet", function () {
             sut.unlockTile(tileBeingUnlocked, unlockDate2);
             expect(actualProgress).to.deep.equal(expectedProgress);
         });
+    });
+
+    describe("getUnlockedTiles", function () {
+        it("should only start returning unlocked tiles the day after they're unlocked", function () {
+            // arrange
+            const tileSet = faker.random.word();
+            const tiles = [
+                TileTestDataBuilder.create().withId(1).withSets(tileSet).build(),
+                TileTestDataBuilder.create().withId(2).withSets(tileSet).build(),
+                TileTestDataBuilder.create().withId(3).withSets(tileSet).build()
+            ];
+            const clock = FakeClock.create();
+            const sut = new TileSet(tiles)
+                .changeTileSet(tileSet)
+                .unlockTile(tiles[0]);
+
+            clock.advanceOneDay();
+
+            const unlockedTilesOnDay1BeforeNewUnlock = sut.getUnlockedTiles();
+            sut.unlockTile(tiles[1]);
+            const unlockedTilesOnDay1AfterNewUnlock = sut.getUnlockedTiles();
+
+            clock.advanceOneDay();
+            // pre-assert
+            expect(unlockedTilesOnDay1BeforeNewUnlock).to.have.deep.members(unlockedTilesOnDay1AfterNewUnlock)
+            // act
+            const unlockedTilesOnDay2 = sut.getUnlockedTiles();
+            // assert
+            expect(unlockedTilesOnDay2).to.have.deep.members([tiles[0], tiles[1]]);
+        })
     });
 });

@@ -57,27 +57,28 @@ export default class TileSet {
     }
 
     getUnlockedTiles() {
-        if (this.cachedUnlockedTiles) {
+        const today = formatDateAsString(new Date());
+
+        if (this.cachedUnlockedTiles && this.cachedUnlockedTiles[today]) {
             // TODO write a test showing that this cache is flawed as it doesn't clear on a new day
-            // return this.cachedUnlockedTiles.value;
+            return this.cachedUnlockedTiles[today];
         }
 
-        const currentDate = formatDateAsString(new Date());
         this.cachedUnlockedTiles = {
-            value: this.allTiles
-                .filter(tile => this.unlockedTiles.some(unlockedTile => tile.id === unlockedTile.id && currentDate !== unlockedTile.date))
+            [today]: this.allTiles
+                .filter(tile => this.unlockedTiles.some(unlockedTile => tile.id === unlockedTile.id && today !== unlockedTile.date))
                 .filter(tile => tile.sets.some(set => this.currentTileSet === set))
         };
 
-        return this.cachedUnlockedTiles.value;
+        return this.cachedUnlockedTiles[today];
     }
 
     getTileBeingUnlockedToday() {
         const tilesInSet = this.allTiles
             .filter(tile => tile.sets.some(set => this.currentTileSet === set));
 
-        const currentDate = formatDateAsString(new Date());
-        const todaysUnlockedTile = find(this.unlockedTiles, unlockedTile => unlockedTile.date === currentDate);
+        const today = formatDateAsString(new Date());
+        const todaysUnlockedTile = find(this.unlockedTiles, unlockedTile => unlockedTile.date === today);
 
         if (todaysUnlockedTile) {
             return find(tilesInSet, tile => tile.id === todaysUnlockedTile.id);
