@@ -12,7 +12,6 @@ export default class TileSet {
         this.progressWriter = () => { };
     }
 
-    // TODO should probably check if the tile has already been unlocked ... it seems like making unlockedTiles a dictionary would make this much easier.
     unlockTile(tile, date) {
         date = date || new Date();
         const tileId = tile.id || tile;
@@ -30,9 +29,7 @@ export default class TileSet {
     }
 
     isTileUnlocked(tileId) {
-        if (this.unlockedTiles.some(t => t.id === tileId)) {
-            return this;
-        }
+        return find(this.unlockedTiles, withId(tileId));
     }
 
     changeTileSet(tileSet) {
@@ -60,14 +57,13 @@ export default class TileSet {
         const today = formatDateAsString(new Date());
 
         if (this.cachedUnlockedTiles && this.cachedUnlockedTiles[today]) {
-            // TODO write a test showing that this cache is flawed as it doesn't clear on a new day
             return this.cachedUnlockedTiles[today];
         }
 
         this.cachedUnlockedTiles = {
             [today]: this.allTiles
-                .filter(tile => this.unlockedTiles.some(unlockedTile => tile.id === unlockedTile.id && today !== unlockedTile.date))
-                .filter(tile => tile.sets.some(set => this.currentTileSet === set))
+                .filter(inButNotOn(this.unlockedTiles, today))
+                .filter(withSet(this.currentTileSet))
         };
 
         return this.cachedUnlockedTiles[today];
@@ -75,19 +71,43 @@ export default class TileSet {
 
     getTileBeingUnlockedToday() {
         const tilesInSet = this.allTiles
-            .filter(tile => tile.sets.some(set => this.currentTileSet === set));
+            .filter(withSet(this.currentTileSet));
 
         const today = formatDateAsString(new Date());
-        const todaysUnlockedTile = find(this.unlockedTiles, unlockedTile => unlockedTile.date === today);
+        const todaysUnlockedTile = find(this.unlockedTiles, on(today));
 
         if (todaysUnlockedTile) {
-            return find(tilesInSet, tile => tile.id === todaysUnlockedTile.id);
+            return find(tilesInSet, withId(todaysUnlockedTile.id));
         }
 
-        const tileBeingUnlockedToday = find(tilesInSet, tile => !this.unlockedTiles.some(unlockedTile => tile.id === unlockedTile.id));
-
-        return tileBeingUnlockedToday;
+        return find(tilesInSet, notIn(this.unlockedTiles));
     }
+}
+
+function withId(id) {
+    return (tile) => tile.id === id;
+}
+
+function inButNotOn(tiles, today) {
+    return (inputTile) => {
+        return tiles.some(tile => inputTile.id === tile.id && today !== tile.date);
+    }
+}
+
+function on(today) {
+    return (inputTile) => {
+        return inputTile.date === today;
+    }
+}
+
+function notIn(tiles) {
+    return (inputTile) => {
+        return !tiles.some(tile => inputTile.id === tile.id);
+    }
+}
+
+function withSet(tileSet) {
+    return tile => tile.sets.some(set => tileSet === set);
 }
 
 function find(list, predicate) {
