@@ -88,15 +88,15 @@ function withId(id) {
     return (tile) => tile.id === id;
 }
 
-function inButNotOn(tiles, today) {
+function inButNotOn(tiles, day) {
     return (inputTile) => {
-        return tiles.some(tile => inputTile.id === tile.id && today !== tile.date);
+        return tiles.some(tile => inputTile.id === tile.id && day !== tile.date);
     }
 }
 
-function on(today) {
+function on(day) {
     return (inputTile) => {
-        return inputTile.date === today;
+        return inputTile.date === day;
     }
 }
 
@@ -106,8 +106,8 @@ function notIn(tiles) {
     }
 }
 
-function withSet(tileSet) {
-    return tile => tile.sets.some(set => tileSet === set);
+function withSet(inputSet) {
+    return tile => tile.sets.some(set => inputSet === set);
 }
 
 function find(list, predicate) {
