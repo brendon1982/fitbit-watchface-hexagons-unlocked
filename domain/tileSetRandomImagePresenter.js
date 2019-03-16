@@ -11,7 +11,7 @@ export default class TileSetRandomImagePresenter {
         if (this.isIgnoredCoordinate(coordinates)) {
             return;
         }
-
+        
         const unlockedTiles = this.tileSet.getUnlockedTiles();
         if (unlockedTiles.length === 0) {
             return;

@@ -33,6 +33,8 @@ export default class TileSet {
     }
 
     changeTileSet(tileSet) {
+        // todo if tile set is the same as the current tile set then do nothing
+        // todo check if tile set exists, if it doesn't don't change
         this.currentTileSet = tileSet;
         this.cachedUnlockedTiles = undefined
 

@@ -1,6 +1,8 @@
 import clock from "clock";
+import * as messaging from "messaging";
 import * as time from "../common/time";
 import * as date from "../common/date";
+import * as commands from "../common/commands";
 
 import Map from "../domain/map";
 import TileSet from "../domain/tilesSet";
@@ -30,37 +32,49 @@ clock.ontick = evt => {
     renderMap();
 };
 
-goals.onreachgoal = function () {
+goals.onreachgoal = () => {
     checkSteps();
+}
+
+messaging.peerSocket.onmessage = (evt) => {
+    if (evt.data.command === commands.changeTileSet) {
+        tileSet.changeTileSet(evt.data.tileSet);
+        renderMap();
+    }
 }
 
 checkSteps();
 
 function checkSteps() {
-    if (today.adjusted.steps >= goals.steps) {
-        tileSet.unlockTile(tileSet.getTileBeingUnlockedToday());
+    const tileBeingUnlockedToday = tileSet.getTileBeingUnlockedToday();
+    if (tileBeingUnlockedToday && today.adjusted.steps >= goals.steps) {
+        tileSet.unlockTile(tileBeingUnlockedToday);
         renderMap();
     }
 }
 
 function renderMap() {
-    setTimeout(() => {
-        if (isNewDay()) {
+    allowRuntimeToCollectMemoryThen(() => {
+        if (isNewDayOrTileSet()) {
             map.render(tileSetPresenter);
         }
         map.render(progressPresenter);
+    });
+}
+
+function allowRuntimeToCollectMemoryThen(then) {
+    setTimeout(() => {
+        then();
     }, 0);
 }
 
-let lastRenderedDay;
-function isNewDay() {
-    const currentDay = formatDateAsString(new Date());
-    if (currentDay !== lastRenderedDay) {
-        lastRenderedDay = currentDay;
-        return true;
-    }
+let lastRenderedCombination;
+function isNewDayOrTileSet() {
+    const currentCombination = `${formatDateAsString(new Date())}-${tileSet.currentTileSet}`;
+    const shouldRerender = currentCombination !== lastRenderedCombination;
+    lastRenderedCombination = currentCombination;
 
-    return false;
+    return shouldRerender;
 }
 
 function getStepsProgress() {
