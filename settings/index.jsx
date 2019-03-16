@@ -4,10 +4,22 @@ import locked from "./locked.png"
 function settingsComponent(props) {
   return (
     <Page>
-      {/* TODO generate list of tile sets from tiles */}
-      {tileSetSection(props, "Nature")}
+      {tileSets().map(set => tileSetSection(props, set))}
     </Page>
   );
+}
+
+function tileSets() {
+  const sets = [];
+  tiles.forEach((tile) => {
+    tile.sets.forEach((set) => {
+      if (!sets.includes(set)) {
+        sets.push(set);
+      }
+    })
+  });
+
+  return sets;
 }
 
 function tileSetSection(props, tileSet) {
@@ -30,8 +42,12 @@ function inTileSet(tileSet) {
 function selectTileSetButton(props, tileSet) {
   const currentTileSet = props.settingsStorage.getItem("tileSet");
   if (currentTileSet !== tileSet) {
-    return (<Button>tileSet</Button>);
+    return (<Button label="Switch to this tile set" onClick={() => switchToTileSet(props, tileSet)}></Button>);
   }
+}
+
+function switchToTileSet(props, tileSet) {
+  props.settingsStorage.setItem("tileSet", tileSet);
 }
 
 function subLabel(props, tile) {

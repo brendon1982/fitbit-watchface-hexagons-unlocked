@@ -2,6 +2,7 @@ import { settingsStorage } from "settings";
 import { inbox } from "file-transfer";
 
 async function processFiles() {
+    console.log("processing file");
     let file;
     while (file = await inbox.pop()) {
         const progress = await file.json();
@@ -25,7 +26,12 @@ function addTileSetToSetting(progress) {
     }
 }
 
+function processSetting(evt) {
+    console.log(evt);
+}
+
 inbox.onnewfile = processFiles;
+settingsStorage.onchange = processSetting
 
 processFiles();
 
