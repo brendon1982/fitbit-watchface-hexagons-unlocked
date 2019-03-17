@@ -21,9 +21,8 @@ const tileSet = new TileSet()
     .savesProgressUsing(progressWriter);
 
 const map = new Map({ width: 7, height: 6 });
+const progressCoordinates = map.spiral();
 const hexRenderer = new HexRenderer();
-const tileSetPresenter = new TileSetRandomImagePresenter(tileSet, [], hexRenderer);
-const progressPresenter = new TileSetUnlockProgressPresenter(tileSet, map.spiral(), getStepsProgress, hexRenderer);
 
 clock.granularity = "minutes";
 clock.ontick = evt => {
@@ -56,9 +55,14 @@ function checkSteps() {
 function renderMap() {
     allowRuntimeToCollectMemoryThen(() => {
         if (isNewDayOrTileSet()) {
-            map.render(tileSetPresenter);
+            map.render(
+                new TileSetRandomImagePresenter(tileSet, [], hexRenderer)
+            );
         }
-        map.render(progressPresenter);
+
+        map.render(
+            new TileSetUnlockProgressPresenter(tileSet, map.spiral(), getStepsProgress, hexRenderer)
+        );
     });
 }
 
