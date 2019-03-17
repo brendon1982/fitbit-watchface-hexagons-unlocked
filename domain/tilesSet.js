@@ -35,11 +35,20 @@ export default class TileSet {
     changeTileSet(tileSet) {
         // todo if tile set is the same as the current tile set then do nothing
         // todo check if tile set exists, if it doesn't don't change
+
+        if (!find(this.allTiles, withSet(tileSet))) {
+            return this;
+        }
+
+        if (this.currentTileSet === tileSet) {
+            return this;
+        }
+
         this.currentTileSet = tileSet;
         this.cachedUnlockedTiles = undefined
 
         this.progressWriter(new Progress(this.currentTileSet, this.unlockedTiles));
-
+        1
         return this;
     }
 
