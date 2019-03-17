@@ -5,9 +5,47 @@ import locked from "./locked.png"
 function settingsComponent(props) {
   return (
     <Page>
+      {backupSection(props)}
       {tileSets().map(set => tileSetSection(props, set))}
     </Page>
   );
+}
+
+function backupSection(props) {
+  if (!props.settingsStorage.getItem(settingsKeys.backupAccessToken())) {
+    return (
+      <Section title={<Text bold align="center">Backup</Text>}>
+        <Oauth
+          settingsKey={settingsKeys.backupAccessToken()}
+          title="Google Drive Backup"
+          label="Google Drive Backup"
+          status="Login"
+          authorizeUrl="https://accounts.google.com/o/oauth2/auth"
+          requestTokenUrl="https://oauth2.googleapis.com/token"
+          clientId="97058396636-3na443t1hc064f358l81ju3fa96fkkdp.apps.googleusercontent.com"
+          clientSecret="cbanGxLKVaN4_yU5wWCXTlZd"
+          scope="https://www.googleapis.com/auth/drive.appdata"
+          pkce
+        />
+      </Section>
+    );
+  } else {
+    return (
+      <Section title={<Text bold align="center">Backup</Text>}>
+        <Button label="Backup" onClick={() => backupProgress(props)}></Button>
+        <Button label="Logout" onClick={() => logoutOfBackup(props)}></Button>
+      </Section>
+    );
+  }
+}
+
+function backupProgress(props) {
+  console.log(props.settingsStorage.getItem(settingsKeys.backupAccessToken()));
+}
+
+function logoutOfBackup(props) {
+  //https://accounts.google.com/o/oauth2/revoke?token=
+  props.settingsStorage.removeItem(settingsKeys.backupAccessToken());
 }
 
 function tileSets() {

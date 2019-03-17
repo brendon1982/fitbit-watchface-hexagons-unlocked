@@ -30,8 +30,10 @@ function seedProgress() {
     const seedData = new Progress("Grass Land", [
         new UnlockedTile(1, new Date(2019, 0, 1)),
         new UnlockedTile(2, new Date(2019, 0, 1)),
+
         new UnlockedTile(10, new Date(2019, 0, 1)),
         new UnlockedTile(11, new Date(2019, 0, 1)),
+        
         new UnlockedTile(19, new Date(2019, 0, 1)),
         new UnlockedTile(20, new Date(2019, 0, 1))
     ]);
