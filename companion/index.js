@@ -3,16 +3,17 @@ import { inbox } from "file-transfer";
 import * as messaging from "messaging";
 import * as commands from "../common/commands";
 import * as settingsKeys from "../common/settingsKeys";
+import * as backup from "./backup";
 
 async function processFiles() {
-    let file;
-    while (file = await inbox.pop()) {
-        const progress = await file.json();
+        let file;
+        while (file = await inbox.pop()) {
+            const progress = await file.json();
 
-        addUnlockedTilesToSettings(progress);
-        addTileSetToSetting(progress);
-    }
-};
+            addUnlockedTilesToSettings(progress);
+            addTileSetToSetting(progress);
+        }
+    };
 
 function addUnlockedTilesToSettings(progress) {
     if (progress && progress.unlockedTiles) {
@@ -51,5 +52,9 @@ settingsStorage.onchange = onSettingChanged
 
 processFiles();
 
+// backup.upload({test: "yay1"});
+// backup.list();
+
 // TODO add more tile sets.
-// TODO decide if it is worth adding the ability for users to sync their progress somewhere.
+// TODO backup should check if file already exists and if it does update it instead of creating a new one
+// TODO add restore functionality
