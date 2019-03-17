@@ -60,7 +60,7 @@ function renderMap() {
         }
 
         map.render(
-            new TileSetUnlockProgressPresenter(tileSet, map.spiral(), getStepsProgress, hexRenderer)
+            new TileSetUnlockProgressPresenter(tileSet, progressCoordinates, getStepsProgress, hexRenderer)
         );
     });
 }

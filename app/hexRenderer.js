@@ -1,6 +1,6 @@
 import document from "document";
 
-const hexSize = 33.4;
+const hexSize = 34;
 const imageWidth = 60;
 const imageHeight = 70;
 const offset = -1;
