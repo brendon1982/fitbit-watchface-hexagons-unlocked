@@ -29,9 +29,11 @@ clock.ontick = evt => {
     time.tick(evt.date);
     date.tick(evt.date);
     renderMap();
+    checkSteps();
 };
 
 goals.onreachgoal = () => {
+    renderMap();
     checkSteps();
 }
 
@@ -42,13 +44,10 @@ messaging.peerSocket.onmessage = (evt) => {
     }
 }
 
-checkSteps();
-
 function checkSteps() {
     const tileBeingUnlockedToday = tileSet.getTileBeingUnlockedToday();
     if (tileBeingUnlockedToday && today.adjusted.steps >= goals.steps) {
         tileSet.unlockTile(tileBeingUnlockedToday);
-        renderMap();
     }
 }
 

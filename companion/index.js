@@ -51,6 +51,5 @@ settingsStorage.onchange = onSettingChanged
 
 processFiles();
 
-// TODO should the change tile set command be sent on start up ???
 // TODO add more tile sets.
 // TODO decide if it is worth adding the ability for users to sync their progress somewhere.

@@ -22,7 +22,7 @@ export function progressWriter(progress) {
     writeFileSync(fileName, progress, "json");
     outbox.enqueueFile(`/private/data/${fileName}`)
         .catch(() => {
-            // nothing to do here, will try enqueue file next write
+            console.log("Couldn't write progress");
         });
 }
 
