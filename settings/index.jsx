@@ -1,3 +1,4 @@
+import * as settingsKeys from "../common/settingsKeys";
 import { tiles } from "./tilesWithEmbeddedImages";
 import locked from "./locked.png"
 
@@ -40,18 +41,18 @@ function inTileSet(tileSet) {
 }
 
 function selectTileSetButton(props, tileSet) {
-  const currentTileSet = props.settingsStorage.getItem("tileSet");
+  const currentTileSet = props.settingsStorage.getItem(settingsKeys.tileSet());
   if (currentTileSet !== tileSet) {
     return (<Button label="Switch to this tile set" onClick={() => switchToTileSet(props, tileSet)}></Button>);
   }
 }
 
 function switchToTileSet(props, tileSet) {
-  props.settingsStorage.setItem("tileSet", tileSet);
+  props.settingsStorage.setItem(settingsKeys.tileSet(), tileSet);
 }
 
 function subLabel(props, tile) {
-  const status = props.settingsStorage.getItem(getUnlockedTileKey(tile));
+  const status = props.settingsStorage.getItem(settingsKeys.unlockedTile(tile));
   if (status) {
     return `Unlocked on ${status}`;
   }
@@ -60,16 +61,12 @@ function subLabel(props, tile) {
 }
 
 function tileImage(props, tile) {
-  const status = props.settingsStorage.getItem(getUnlockedTileKey(tile));
+  const status = props.settingsStorage.getItem(settingsKeys.unlockedTile(tile));
   if (status) {
     return tile.image;
   }
 
   return locked;
-}
-
-function getUnlockedTileKey(tile) {
-  return `unlockedTile-${tile.id}`;
 }
 
 registerSettingsPage(settingsComponent);

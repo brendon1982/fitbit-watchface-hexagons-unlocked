@@ -2,6 +2,7 @@ import { settingsStorage } from "settings";
 import { inbox } from "file-transfer";
 import * as messaging from "messaging";
 import * as commands from "../common/commands";
+import * as settingsKeys from "../common/settingsKeys";
 
 async function processFiles() {
     let file;
@@ -16,19 +17,19 @@ async function processFiles() {
 function addUnlockedTilesToSettings(progress) {
     if (progress && progress.unlockedTiles) {
         progress.unlockedTiles.forEach(unlockedTile => {
-            settingsStorage.setItem(`unlockedTile-${unlockedTile.id}`, unlockedTile.date);
+            settingsStorage.setItem(settingsKeys.unlockedTile(unlockedTile), unlockedTile.date);
         });
     }
 }
 
 function addTileSetToSetting(progress) {
     if (progress && progress.tileSet) {
-        settingsStorage.setItem("tileSet", progress.tileSet)
+        settingsStorage.setItem(settingsKeys.tileSet(), progress.tileSet)
     }
 }
 
 function onSettingChanged(evt) {
-    if (evt.key === "tileSet") {
+    if (evt.key === settingsKeys.tileSet()) {
         sendTileSet(evt.newValue);
     }
 }
