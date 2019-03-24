@@ -34,6 +34,7 @@ function backupSection(props) {
       <Section title={<Text bold align="center">Backup</Text>}>
         <Button label="Backup" onClick={() => backupProgress(props)}></Button>
         <Button label="Logout" onClick={() => logoutOfBackup(props)}></Button>
+        <Text>{props.settingsStorage.getItem(settingsKeys.backupMessage())}</Text>
       </Section>
     );
   }
