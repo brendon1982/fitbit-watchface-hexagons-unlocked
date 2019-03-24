@@ -2,33 +2,41 @@ import { settingsStorage } from "settings";
 import * as settingsKeys from "../common/settingsKeys";
 
 function upload(progress) {
-    // TODO check if logged in, if not exit early with rejection
-    const backupAuth = JSON.parse(settingsStorage.getItem(settingsKeys.backupAccessToken()));
     const body = createUploadBody(progress);
 
-    return fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
+    return progressFileId()
+        .then(fileId => {
+            const method = fileId ? "PATCH" : "POST";
+            const url = fileId ?
+                `https://www.googleapis.com/upload/drive/v3/files/${fileId}?spaces=appDataFolder` :
+                `https://www.googleapis.com/drive/v3/files?spaces=appDataFolder`;
+
+            return authenticatedRequest(url, method, body)
+                .then(response => {
+                    return response.text();
+                });
+        });
+}
+
+function progressFileId() {
+    return authenticatedRequest("https://www.googleapis.com/drive/v3/files?spaces=appDataFolder", "GET")
+        .then(progressFile)
+        .then(file => {
+            return file && file.id
+        });
+}
+
+function authenticatedRequest(url, method, body) {
+    // TODO check if logged in, if not exit early with rejection
+    const backupAuth = JSON.parse(settingsStorage.getItem(settingsKeys.backupAccessToken()));
+
+    return fetch(url,
         {
-            method: "POST",
+            method: method,
             headers: new Headers({ "Authorization": `Bearer ${backupAuth["access_token"]}` }),
             body: body
         }
-    ).then(response => {
-        return response.text().then(data => console.log(data));
-    });
-}
-
-function list() {
-    // TODO check if logged in, if not exit early with rejection
-    const backupAuth = JSON.parse(settingsStorage.getItem(settingsKeys.backupAccessToken()));
-
-    return fetch("https://www.googleapis.com/drive/v3/files?spaces=appDataFolder",
-        {
-            method: "GET",
-            headers: new Headers({ "Authorization": `Bearer ${backupAuth["access_token"]}` })
-        }
-    ).then(response => {
-        return response.text().then(data => console.log(data));
-    });
+    );
 }
 
 function createUploadBody(progress) {
@@ -46,7 +54,13 @@ function createUploadBody(progress) {
     return form;
 }
 
+function progressFile(response) {
+    return response.text().then(responseText => {
+        const fileList = JSON.parse(responseText);
+        return fileList.files.find(file => file.name === "progress.json");;
+    });
+}
+
 export {
-    upload,
-    list
+    upload
 }

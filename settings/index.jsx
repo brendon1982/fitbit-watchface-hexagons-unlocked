@@ -40,7 +40,7 @@ function backupSection(props) {
 }
 
 function backupProgress(props) {
-  console.log(props.settingsStorage.getItem(settingsKeys.backupAccessToken()));
+  props.settingsStorage.setItem(settingsKeys.backupDate(), new Date().toISOString());
 }
 
 function logoutOfBackup(props) {

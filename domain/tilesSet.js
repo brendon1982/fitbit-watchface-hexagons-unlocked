@@ -1,4 +1,4 @@
-import { formatDateAsString } from "../common/utils";
+import { formatDateAsString, find } from "../common/utils";
 import { tiles } from "./tiles";
 import Progress from "./progress";
 import UnlockedTile from "./unlockedTile";
@@ -116,14 +116,4 @@ function notIn(tiles) {
 
 function withSet(inputSet) {
     return tile => tile.sets.some(set => inputSet === set);
-}
-
-function find(list, predicate) {
-    for (const item of list) {
-        if (predicate(item)) {
-            return item;
-        }
-    }
-
-    return undefined;
 }
