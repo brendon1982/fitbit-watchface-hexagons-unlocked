@@ -64,8 +64,13 @@ function backupProgress() {
         .then(() => {
             setBackupMessage("Backup successful");
         }).catch(() => {
-            setBackupMessage("Error backing up");
+            logout();
+            setBackupMessage("Error, please login and try again");
         });
+}
+
+function logout() {
+    settingsStorage.removeItem(settingsKeys.backupAccessToken());
 }
 
 function setBackupMessage(message) {

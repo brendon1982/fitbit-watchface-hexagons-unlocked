@@ -11,44 +11,6 @@ function settingsComponent(props) {
   );
 }
 
-function backupSection(props) {
-  if (!props.settingsStorage.getItem(settingsKeys.backupAccessToken())) {
-    return (
-      <Section title={<Text bold align="center">Backup</Text>}>
-        <Oauth
-          settingsKey={settingsKeys.backupAccessToken()}
-          title="Google Drive Backup"
-          label="Google Drive Backup"
-          status="Login"
-          authorizeUrl="https://accounts.google.com/o/oauth2/auth"
-          requestTokenUrl="https://oauth2.googleapis.com/token"
-          clientId="97058396636-3na443t1hc064f358l81ju3fa96fkkdp.apps.googleusercontent.com"
-          clientSecret="cbanGxLKVaN4_yU5wWCXTlZd"
-          scope="https://www.googleapis.com/auth/drive.appdata"
-          pkce
-        />
-      </Section>
-    );
-  } else {
-    return (
-      <Section title={<Text bold align="center">Backup</Text>}>
-        <Button label="Backup" onClick={() => backupProgress(props)}></Button>
-        <Button label="Logout" onClick={() => logoutOfBackup(props)}></Button>
-        <Text>{props.settingsStorage.getItem(settingsKeys.backupMessage())}</Text>
-      </Section>
-    );
-  }
-}
-
-function backupProgress(props) {
-  props.settingsStorage.setItem(settingsKeys.backupDate(), new Date().toISOString());
-}
-
-function logoutOfBackup(props) {
-  //https://accounts.google.com/o/oauth2/revoke?token=
-  props.settingsStorage.removeItem(settingsKeys.backupAccessToken());
-}
-
 function tileSets() {
   const sets = [];
   tiles.forEach((tile) => {
@@ -60,6 +22,58 @@ function tileSets() {
   });
 
   return sets;
+}
+
+function backupSection(props) {
+  if (!props.settingsStorage.getItem(settingsKeys.backupAccessToken())) {
+    return backupLogin(props);
+  } else {
+    return backupMenu(props);
+  }
+}
+
+function backupLogin(props) {
+  return (
+    <Section title={<Text bold align="center">Progress Backup</Text>}>
+      <Oauth
+        settingsKey={settingsKeys.backupAccessToken()}
+        title="Google Drive Backup"
+        label="Google Drive Backup"
+        status="Login"
+        authorizeUrl="https://accounts.google.com/o/oauth2/auth"
+        requestTokenUrl="https://oauth2.googleapis.com/token"
+        clientId="97058396636-3na443t1hc064f358l81ju3fa96fkkdp.apps.googleusercontent.com"
+        clientSecret="cbanGxLKVaN4_yU5wWCXTlZd"
+        scope="https://www.googleapis.com/auth/drive.appdata"
+        pkce
+        onAccessToken={async () => { clearBackupMessage(props) }}
+      />
+      <Text align="center">{props.settingsStorage.getItem(settingsKeys.backupMessage())}</Text>
+    </Section>
+  );
+}
+
+function backupMenu(props) {
+  return (
+    <Section title={<Text bold align="center">Progress Backup</Text>}>
+      <Button label="Backup" onClick={() => backupProgress(props)}></Button>
+      <Button label="Logout" onClick={() => logoutOfBackup(props)}></Button>
+      <Text align="center">{props.settingsStorage.getItem(settingsKeys.backupMessage())}</Text>
+    </Section>
+  );
+}
+
+function backupProgress(props) {
+  props.settingsStorage.setItem(settingsKeys.backupDate(), new Date().toISOString());
+}
+
+function logoutOfBackup(props) {
+  clearBackupMessage(props);
+  props.settingsStorage.removeItem(settingsKeys.backupAccessToken());
+}
+
+function clearBackupMessage(props) {
+  props.settingsStorage.setItem(settingsKeys.backupMessage(), "");
 }
 
 function tileSetSection(props, tileSet) {
