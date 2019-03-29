@@ -24,6 +24,10 @@ function onSettingChanged(evt) {
     if (evt.key === settingsKeys.backupDate()) {
         backupProgress();
     }
+
+    if (evt.key === settingsKeys.backupRestoreDate()) {
+        restoreProgress();
+    }
 }
 
 function updateUnlockedTilesInSettings(progress) {
@@ -69,6 +73,23 @@ function backupProgress() {
         });
 }
 
+function restoreProgress() {
+    setBackupMessage("In progress");
+
+    backup.download()
+        .then((progress) => {
+            // TODO deal with no scenario where progress doesn't exist
+            updateBackupDataInSettings(progress);
+            updateUnlockedTilesInSettings(progress);
+            updateTileSetInSettings(progress);
+            // TODO send progress to watch
+            setBackupMessage("Restore successful");
+        }).catch(() => {
+            logout();
+            setBackupMessage("Error, please login and try again");
+        });
+}
+
 function logout() {
     settingsStorage.removeItem(settingsKeys.backupAccessToken());
 }
@@ -93,4 +114,5 @@ processFiles();
 
 // TODO add more tile sets.
 // TODO add restore functionality
-// TODO hide backup text if there is no message to display
+// TODO think about how to prevent overriding greater with lesser progress
+// TODO look into if new Date() is wrong on watch because it seems to be in the emulator.

@@ -83,7 +83,6 @@ export default class TileSet {
 
         const today = formatDateAsString(new Date());
         const todaysUnlockedTile = find(this.unlockedTiles, on(today));
-
         if (todaysUnlockedTile) {
             return find(tilesInSet, withId(todaysUnlockedTile.id));
         }

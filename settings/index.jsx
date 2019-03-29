@@ -46,7 +46,7 @@ function backupLogin(props) {
         clientSecret="cbanGxLKVaN4_yU5wWCXTlZd"
         scope="https://www.googleapis.com/auth/drive.appdata"
         pkce
-        onAccessToken={async () => { clearBackupMessage(props) }}
+        onAccessToken={async () => clearBackupMessage(props) }
       />
       <Text align="center">{props.settingsStorage.getItem(settingsKeys.backupMessage())}</Text>
     </Section>
@@ -57,6 +57,7 @@ function backupMenu(props) {
   return (
     <Section title={<Text bold align="center">Progress Backup</Text>}>
       <Button label="Backup" onClick={() => backupProgress(props)}></Button>
+      <Button label="Restore" onClick={() => restoreProgress(props)}></Button>
       <Button label="Logout" onClick={() => logoutOfBackup(props)}></Button>
       <Text align="center">{props.settingsStorage.getItem(settingsKeys.backupMessage())}</Text>
     </Section>
@@ -65,6 +66,10 @@ function backupMenu(props) {
 
 function backupProgress(props) {
   props.settingsStorage.setItem(settingsKeys.backupDate(), new Date().toISOString());
+}
+
+function restoreProgress(props) {
+  props.settingsStorage.setItem(settingsKeys.backupRestoreDate(), new Date().toISOString());
 }
 
 function logoutOfBackup(props) {
