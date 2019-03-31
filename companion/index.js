@@ -11,17 +11,6 @@ settingsStorage.onchange = onSettingChanged
 setBackupMessage("");
 processFiles();
 
-async function processFiles() {
-    let file;
-    while (file = await inbox.pop()) {
-        const progress = await file.json();
-
-        updateBackupDataInSettings(progress);
-        updateUnlockedTilesInSettings(progress);
-        updateTileSetInSettings(progress);
-    }
-};
-
 function onSettingChanged(evt) {
     if (evt.key === settingsKeys.tileSet()) {
         sendChangeTileSetToDevice(evt.newValue);
@@ -33,26 +22,6 @@ function onSettingChanged(evt) {
 
     if (evt.key === settingsKeys.backupRestoreDate()) {
         restoreProgress();
-    }
-}
-
-function updateUnlockedTilesInSettings(progress) {
-    if (progress && progress.unlockedTiles) {
-        progress.unlockedTiles.forEach(unlockedTile => {
-            settingsStorage.setItem(settingsKeys.unlockedTile(unlockedTile), unlockedTile.date);
-        });
-    }
-}
-
-function updateTileSetInSettings(progress) {
-    if (progress && progress.tileSet) {
-        settingsStorage.setItem(settingsKeys.tileSet(), progress.tileSet);
-    }
-}
-
-function updateBackupDataInSettings(progress) {
-    if (progress) {
-        settingsStorage.setItem(settingsKeys.backupData(), JSON.stringify(progress));
     }
 }
 
@@ -103,6 +72,37 @@ function restoreProgress() {
 function sendToDevice(progress){
     const textEncoder = new TextEncoder();
     return outbox.enqueue(`${Date.now()}.json`, textEncoder.encode(JSON.stringify(progress)));            
+}
+
+async function processFiles() {
+    let file;
+    while (file = await inbox.pop()) {
+        const progress = await file.json();
+
+        updateBackupDataInSettings(progress);
+        updateUnlockedTilesInSettings(progress);
+        updateTileSetInSettings(progress);
+    }
+};
+
+function updateUnlockedTilesInSettings(progress) {
+    if (progress && progress.unlockedTiles) {
+        progress.unlockedTiles.forEach(unlockedTile => {
+            settingsStorage.setItem(settingsKeys.unlockedTile(unlockedTile), unlockedTile.date);
+        });
+    }
+}
+
+function updateTileSetInSettings(progress) {
+    if (progress && progress.tileSet) {
+        settingsStorage.setItem(settingsKeys.tileSet(), progress.tileSet);
+    }
+}
+
+function updateBackupDataInSettings(progress) {
+    if (progress) {
+        settingsStorage.setItem(settingsKeys.backupData(), JSON.stringify(progress));
+    }
 }
 
 function logout() {
