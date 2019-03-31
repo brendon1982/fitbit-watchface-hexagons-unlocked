@@ -25,3 +25,5 @@ export default class ProgressRestoration {
         }
     }
 }
+
+// TODO does this need to be a class? only the things in /domain are classes

@@ -5,6 +5,12 @@ import * as commands from "../common/commands";
 import * as settingsKeys from "../common/settingsKeys";
 import * as backup from "./backup";
 
+inbox.onnewfile = processFiles;
+settingsStorage.onchange = onSettingChanged
+
+setBackupMessage("");
+processFiles();
+
 async function processFiles() {
     let file;
     while (file = await inbox.pop()) {
@@ -83,7 +89,7 @@ function restoreProgress() {
             updateUnlockedTilesInSettings(progress);
             updateTileSetInSettings(progress);
 
-            sendToWatch(progress);
+            sendToDevice(progress);
         })
         .then(() => {
             setBackupMessage("Restore successfully downloaded and queued to watch");
@@ -94,7 +100,7 @@ function restoreProgress() {
         });
 }
 
-function sendToWatch(progress){
+function sendToDevice(progress){
     const textEncoder = new TextEncoder();
     return outbox.enqueue(`${Date.now()}.json`, textEncoder.encode(JSON.stringify(progress)));            
 }
@@ -115,14 +121,7 @@ function sendMessage(message) {
     }
 }
 
-inbox.onnewfile = processFiles;
-settingsStorage.onchange = onSettingChanged
-
-setBackupMessage("");
-processFiles();
-
 // TODO add more tile sets.
-// TODO add restore functionality
 // TODO think about how to prevent overriding greater with lesser progress (both ways).
 // TODO consolidate progress file name.
 // TODO consider splitting this file up, it has gotten big and has multiple concerns.

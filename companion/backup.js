@@ -1,6 +1,5 @@
 import { settingsStorage } from "settings";
 import * as settingsKeys from "../common/settingsKeys";
-import { parse, getBoundary } from "./multipartParser";
 
 function upload(progress) {
     const body = createUploadBody(progress);

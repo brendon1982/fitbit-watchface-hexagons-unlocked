@@ -43,5 +43,3 @@ function seedProgress() {
 
     return seedData;
 }
-
-// TODO why is this not a class?
