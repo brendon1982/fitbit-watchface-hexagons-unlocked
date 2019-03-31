@@ -21,7 +21,7 @@ export default class TileSet {
         }
 
         this.unlockedTiles.push(new UnlockedTile(tileId, date));
-        this.cachedUnlockedTiles = undefined
+        this.cachedFilteredUnlockedTiles = undefined;
 
         this.progressWriter(new Progress(this.currentTileSet, this.unlockedTiles));
 
@@ -42,7 +42,7 @@ export default class TileSet {
         }
 
         this.currentTileSet = tileSet;
-        this.cachedUnlockedTiles = undefined
+        this.cachedFilteredUnlockedTiles = undefined;
 
         this.progressWriter(new Progress(this.currentTileSet, this.unlockedTiles));
         1
@@ -58,23 +58,24 @@ export default class TileSet {
         const progress = progressReader();
         this.currentTileSet = progress.tileSet;
         this.unlockedTiles = progress.unlockedTiles;
+        this.cachedFilteredUnlockedTiles = undefined;
         return this;
     }
 
     getUnlockedTiles() {
         const today = formatDateAsString(new Date());
 
-        if (this.cachedUnlockedTiles && this.cachedUnlockedTiles[today]) {
-            return this.cachedUnlockedTiles[today];
+        if (this.cachedFilteredUnlockedTiles && this.cachedFilteredUnlockedTiles[today]) {
+            return this.cachedFilteredUnlockedTiles[today];
         }
 
-        this.cachedUnlockedTiles = {
+        this.cachedFilteredUnlockedTiles = {
             [today]: this.allTiles
                 .filter(inButNotOn(this.unlockedTiles, today))
                 .filter(withSet(this.currentTileSet))
         };
 
-        return this.cachedUnlockedTiles[today];
+        return this.cachedFilteredUnlockedTiles[today];
     }
 
     getTileBeingUnlockedToday() {

@@ -8,8 +8,10 @@ const fileName = "progress.json";
 export function progressReader() {
     let progress;
     try {
-        progress = readFileSync(fileName, "json");
-    } catch { }
+        progress = readFileSync(`/private/data/${fileName}`, "json");
+    } catch (error) {
+        console.log(error);
+    }
 
     if (!progress) {
         return seedProgress();
@@ -33,7 +35,7 @@ function seedProgress() {
 
         new UnlockedTile(10, new Date(2019, 0, 1)),
         new UnlockedTile(11, new Date(2019, 0, 1)),
-        
+
         new UnlockedTile(19, new Date(2019, 0, 1)),
         new UnlockedTile(20, new Date(2019, 0, 1))
     ]);
@@ -41,3 +43,5 @@ function seedProgress() {
 
     return seedData;
 }
+
+// TODO why is this not a class?

@@ -1,5 +1,5 @@
 import { settingsStorage } from "settings";
-import { inbox } from "file-transfer";
+import { inbox, outbox } from "file-transfer";
 import * as messaging from "messaging";
 import * as commands from "../common/commands";
 import * as settingsKeys from "../common/settingsKeys";
@@ -82,12 +82,21 @@ function restoreProgress() {
             updateBackupDataInSettings(progress);
             updateUnlockedTilesInSettings(progress);
             updateTileSetInSettings(progress);
-            // TODO send progress to watch
-            setBackupMessage("Restore successful");
-        }).catch(() => {
+
+            sendToWatch(progress);
+        })
+        .then(() => {
+            setBackupMessage("Restore successfully downloaded and queued to watch");
+        })
+        .catch(() => {
             logout();
             setBackupMessage("Error, please login and try again");
         });
+}
+
+function sendToWatch(progress){
+    const textEncoder = new TextEncoder();
+    return outbox.enqueue(`${Date.now()}.json`, textEncoder.encode(JSON.stringify(progress)));            
 }
 
 function logout() {
@@ -114,5 +123,6 @@ processFiles();
 
 // TODO add more tile sets.
 // TODO add restore functionality
-// TODO think about how to prevent overriding greater with lesser progress
-// TODO look into if new Date() is wrong on watch because it seems to be in the emulator.
+// TODO think about how to prevent overriding greater with lesser progress (both ways).
+// TODO consolidate progress file name.
+// TODO consider splitting this file up, it has gotten big and has multiple concerns.

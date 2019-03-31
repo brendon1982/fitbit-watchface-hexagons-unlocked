@@ -215,6 +215,46 @@ describe("tileSet", function () {
             const unlockedTilesOnDay2 = sut.getUnlockedTiles();
             // assert
             expect(unlockedTilesOnDay2).to.have.deep.members([tiles[0], tiles[1]]);
-        })
+        });
+
+        it("should consider newly loaded progress", function () {
+            // arrange
+            const tileSet = faker.random.word();
+            const tiles = [
+                TileTestDataBuilder.create().withId(1).withSets(tileSet).build(),
+                TileTestDataBuilder.create().withId(2).withSets(tileSet).build()
+            ];
+
+            const savedProgress1 = ProgressTestDataBuilder.create()
+                .withTileSet(tileSet)
+                .withUnlockedTile(tiles[0], createDateDaysInFuture(1))
+                .build();
+            const savedProgress2 = ProgressTestDataBuilder.create()
+                .withTileSet(tileSet)
+                .withUnlockedTile(tiles[0], createDateDaysInFuture(1))
+                .withUnlockedTile(tiles[1], createDateDaysInFuture(2))
+                .build();
+
+            const sut = new TileSet(tiles);
+            sut.loadProgressUsing(() => {
+                return savedProgress1;
+            });
+
+            sut.getUnlockedTiles();
+            // act
+            sut.loadProgressUsing(() => {
+                return savedProgress2;
+            });
+
+            const unlockedTilesAfterSecondLoad = sut.getUnlockedTiles();
+            // assert
+            expect(unlockedTilesAfterSecondLoad).to.have.deep.members([tiles[0], tiles[1]]);
+        });
+
+        function createDateDaysInFuture(numberOfDays) {
+            const date = new Date();
+            date.setDate(date.getDate() + numberOfDays);
+            return date;
+        }
     });
 });

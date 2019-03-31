@@ -12,29 +12,34 @@ import TileSetUnlockProgressPresenter from "../domain/tileSetUnlockProgressPrese
 import { progressReader, progressWriter } from "./progressReaderWriter";
 import { formatDateAsString } from "../common/utils";
 import { goals, today } from "user-activity";
+import ProgressRestoration from './progressRestoraton';
 
 // import { memory } from "system";
 // console.log(`A ${memory.js.used} / ${memory.js.total}`);
 
-const tileSet = new TileSet()
+let tileSet = new TileSet()
     .loadProgressUsing(progressReader)
     .savesProgressUsing(progressWriter);
+let lastRenderKey;
 
 const map = new Map({ width: 7, height: 6 });
 const progressCoordinates = map.spiral();
 const hexRenderer = new HexRenderer();
+
+const progressRestoration = new ProgressRestoration(reloadProgress);
+progressRestoration.startListeningForProgressRestoration();
 
 clock.granularity = "minutes";
 clock.ontick = evt => {
     time.tick(evt.date);
     date.tick(evt.date);
     renderMap();
-    checkSteps();
+    checkIfTileShouldBeUnlocked();
 };
 
 goals.onreachgoal = () => {
     renderMap();
-    checkSteps();
+    checkIfTileShouldBeUnlocked();
 }
 
 messaging.peerSocket.onmessage = (evt) => {
@@ -44,25 +49,29 @@ messaging.peerSocket.onmessage = (evt) => {
     }
 }
 
-function checkSteps() {
-    const tileBeingUnlockedToday = tileSet.getTileBeingUnlockedToday();
-    if (tileBeingUnlockedToday && today.adjusted.steps >= goals.steps) {
-        tileSet.unlockTile(tileBeingUnlockedToday);
-    }
+function reloadProgress() {
+    tileSet.loadProgressUsing(progressReader);
+    renderMap();
+    checkIfTileShouldBeUnlocked();
 }
 
 function renderMap() {
     allowRuntimeToCollectMemoryThen(() => {
         if (isNewDayOrTileSet()) {
-            map.render(
-                new TileSetRandomImagePresenter(tileSet, [], hexRenderer)
-            );
+            const randomImagePresenter = new TileSetRandomImagePresenter(tileSet, [], hexRenderer)
+            map.render(randomImagePresenter);
         }
 
-        map.render(
-            new TileSetUnlockProgressPresenter(tileSet, progressCoordinates, getStepsProgress, hexRenderer)
-        );
+        const unlockProgressPresenter = new TileSetUnlockProgressPresenter(tileSet, progressCoordinates, getStepsProgress, hexRenderer);
+        map.render(unlockProgressPresenter);
     });
+}
+
+function checkIfTileShouldBeUnlocked() {
+    const tileBeingUnlockedToday = tileSet.getTileBeingUnlockedToday();
+    if (tileBeingUnlockedToday && today.adjusted.steps >= goals.steps) {
+        tileSet.unlockTile(tileBeingUnlockedToday);
+    }
 }
 
 function allowRuntimeToCollectMemoryThen(then) {
@@ -71,11 +80,10 @@ function allowRuntimeToCollectMemoryThen(then) {
     }, 0);
 }
 
-let lastRenderedCombination;
 function isNewDayOrTileSet() {
-    const currentCombination = `${formatDateAsString(new Date())}-${tileSet.currentTileSet}`;
-    const shouldRerender = currentCombination !== lastRenderedCombination;
-    lastRenderedCombination = currentCombination;
+    const currentRenderKey = `${formatDateAsString(new Date())}-${tileSet.currentTileSet}-${tileSet.unlockedTiles.length}`;
+    const shouldRerender = currentRenderKey !== lastRenderKey;
+    lastRenderKey = currentRenderKey;
 
     return shouldRerender;
 }
