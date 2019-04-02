@@ -14,8 +14,8 @@ import { formatDateAsString } from "../common/utils";
 import { goals, today } from "user-activity";
 import ProgressRestoration from './progressRestoraton';
 
-// import { memory } from "system";
-// console.log(`A ${memory.js.used} / ${memory.js.total}`);
+import { memory } from "system";
+console.log(`A ${memory.js.used} / ${memory.js.total}`);
 
 let tileSet = new TileSet()
     .loadProgressUsing(progressReader)
@@ -35,6 +35,7 @@ clock.ontick = evt => {
     date.tick(evt.date);
     renderMap();
     checkIfTileShouldBeUnlocked();
+    console.log(`B ${memory.js.used} / ${memory.js.total}`);
 };
 
 goals.onreachgoal = () => {
@@ -58,12 +59,14 @@ function reloadProgress() {
 function renderMap() {
     allowRuntimeToCollectMemoryThen(() => {
         if (isNewDayOrTileSet()) {
-            const randomImagePresenter = new TileSetRandomImagePresenter(tileSet, [], hexRenderer)
+            let randomImagePresenter = new TileSetRandomImagePresenter(tileSet, [], hexRenderer)
             map.render(randomImagePresenter);
+            randomImagePresenter = null;
         }
 
-        const unlockProgressPresenter = new TileSetUnlockProgressPresenter(tileSet, progressCoordinates, getStepsProgress, hexRenderer);
+        let unlockProgressPresenter = new TileSetUnlockProgressPresenter(tileSet, progressCoordinates, getStepsProgress, hexRenderer);
         map.render(unlockProgressPresenter);
+        unlockProgressPresenter = null;
     });
 }
 

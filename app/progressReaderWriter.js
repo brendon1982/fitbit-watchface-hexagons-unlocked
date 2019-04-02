@@ -27,6 +27,7 @@ export function progressWriter(progress) {
         });
 }
 
+// TODO consider rather seeding when tileset is changed
 function seedProgress() {
     const seedData = new Progress("Grass Land", [
         new UnlockedTile(1, new Date(2019, 0, 1)),
@@ -36,7 +37,10 @@ function seedProgress() {
         new UnlockedTile(11, new Date(2019, 0, 1)),
 
         new UnlockedTile(19, new Date(2019, 0, 1)),
-        new UnlockedTile(20, new Date(2019, 0, 1))
+        new UnlockedTile(20, new Date(2019, 0, 1)),
+
+        new UnlockedTile(27, new Date(2019, 0, 1)),
+        new UnlockedTile(28, new Date(2019, 0, 1))
     ]);
     progressWriter(seedData);
 
