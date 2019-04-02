@@ -208,7 +208,6 @@ describe("randomTilePresenter", function () {
         }
     }
 
-    // TODO refactored out as it is duplicated else where
     function createPoint(x, y) {
         return { x, y }
     }

@@ -1,17 +1,7 @@
-const tileSet = () => "tileSet";
-const unlockedTile = (unlockedTile) => `unlockedTile-${unlockedTile.id}`;
-const backupAccessToken = () => "backup-access-token";
-const backupDate = () => "backup-date";
-const backupRestoreDate = () => "backup-restore-date";
-const backupData = () => "backup-data";
-const backupMessage = () => "backup-message";
-
-export {
-    tileSet,
-    unlockedTile,
-    backupAccessToken,
-    backupDate,
-    backupRestoreDate,
-    backupData,
-    backupMessage
-}
+export function tileSet() {return "tileSet" };
+export function unlockedTile(unlockedTile) {return `unlockedTile-${unlockedTile.id}` };
+export function backupAccessToken() {return "backup-access-token" };
+export function backupDate() {return "backup-date" };
+export function backupRestoreDate() {return "backup-restore-date" };
+export function backupData() {return "backup-data" };
+export function backupMessage() {return "backup-message" };

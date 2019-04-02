@@ -1,12 +1,8 @@
-const changeTileSet = "command.changetileset"
-const createChangeTileSetMessage = function (tileSet) {
+export const changeTileSet = "command.changetileset"
+
+export function createChangeTileSetMessage (tileSet) {
     return {
         command: changeTileSet,
         tileSet: tileSet
     }
-}
-
-export {
-    changeTileSet,
-    createChangeTileSetMessage
 }

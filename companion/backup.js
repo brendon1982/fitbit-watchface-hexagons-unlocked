@@ -1,7 +1,7 @@
 import { settingsStorage } from "settings";
 import * as settingsKeys from "../common/settingsKeys";
 
-function upload(progress) {
+export function upload(progress) {
     const body = createUploadBody(progress);
 
     return progressFileId()
@@ -18,7 +18,7 @@ function upload(progress) {
         });
 }
 
-function download() {
+export function download() {
     return progressFileId()
         .then(fileId => {
             const method = "GET";
@@ -47,7 +47,6 @@ function progressFileId() {
 }
 
 function authenticatedRequest(url, method, body) {
-    // TODO check if logged in, if not exit early with rejection
     const backupAuth = JSON.parse(settingsStorage.getItem(settingsKeys.backupAccessToken()));
 
     return fetch(url,
@@ -79,9 +78,4 @@ function progressFile(response) {
         const fileList = JSON.parse(responseText);
         return fileList.files.find(file => file.name === "progress.json");;
     });
-}
-
-export {
-    upload,
-    download
 }

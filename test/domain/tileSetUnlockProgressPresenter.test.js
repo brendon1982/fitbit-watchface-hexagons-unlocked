@@ -225,7 +225,6 @@ describe("tileSetUnlockProgressPresenter", function () {
         return new TileSetUnlockProgressPresenter(tiles, progressCoordinates, progressAccessor, hexRenderer);
     }
 
-    // TODO refactored out as it is duplicated else where
     function createPoint(x, y) {
         return { x, y }
     }

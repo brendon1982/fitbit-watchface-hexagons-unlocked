@@ -5,7 +5,7 @@ const terainGrassPath = "/resources/Tiles/Terrain/Grass";
 const terainDirtPath = "/resources/Tiles/Terrain/Dirt";
 const terainDesertPath = "/resources/Tiles/Terrain/Sand";
 
-const tiles = [{
+export const tiles = [{
     id: 1,
     name: "Plain grass",
     sets: [grassLand],
@@ -141,7 +141,3 @@ const tiles = [{
     sets: [desert],
     image: `${terainDesertPath}/sand_19.png`
 }];
-
-export {
-    tiles as tiles
-}

@@ -45,7 +45,6 @@ export default class Map {
     }
 }
 
-// TODO refactored out as it is duplicated else where
 function createPoint(x, y) {
     return { x: x, y: y };
 }

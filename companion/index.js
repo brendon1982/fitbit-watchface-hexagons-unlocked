@@ -44,7 +44,7 @@ function backupProgress() {
             setBackupMessage("Backup successful");
         }).catch(() => {
             logout();
-            setBackupMessage("Error, please login and try again");
+            setBackupMessage("Error, token may have expired, please login and try again");
         });
 }
 
@@ -65,13 +65,13 @@ function restoreProgress() {
         })
         .catch(() => {
             logout();
-            setBackupMessage("Error, please login and try again");
+            setBackupMessage("Error, token may have expired, please login and try again");
         });
 }
 
-function sendToDevice(progress){
+function sendToDevice(progress) {
     const textEncoder = new TextEncoder();
-    return outbox.enqueue(`${Date.now()}.json`, textEncoder.encode(JSON.stringify(progress)));            
+    return outbox.enqueue(`${Date.now()}.json`, textEncoder.encode(JSON.stringify(progress)));
 }
 
 async function processFiles() {

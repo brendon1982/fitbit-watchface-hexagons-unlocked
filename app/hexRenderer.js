@@ -26,8 +26,6 @@ export default class HexRenderer {
     };
 }
 
-// does this need to be a class? on the things in /domain are classes.
-
 function coordinatesToElementPoint(coordinates) {
     const cubeCoordinates = cartesianToCube(coordinates.x, coordinates.y);
     return toPoint(cubeCoordinates.q, cubeCoordinates.r, hexSize);
