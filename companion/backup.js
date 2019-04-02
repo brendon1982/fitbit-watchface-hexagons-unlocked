@@ -1,5 +1,6 @@
 import { settingsStorage } from "settings";
 import * as settingsKeys from "../common/settingsKeys";
+import * as fileNames from "../common/fileNames";
 
 export function upload(progress) {
     const body = createUploadBody(progress);
@@ -40,9 +41,9 @@ export function download() {
 
 function progressFileId() {
     return authenticatedRequest("https://www.googleapis.com/drive/v3/files?spaces=appDataFolder", "GET")
-        .then(progressFile)
-        .then(file => {
-            return file && file.id
+        .then(findProgressFile)
+        .then(progressFile => {
+            return progressFile && progressFile.id
         });
 }
 
@@ -60,7 +61,7 @@ function authenticatedRequest(url, method, body) {
 
 function createUploadBody(progress) {
     const metadata = {
-        "name": "progress.json",
+        "name": fileNames.progress,
         "parents": ["appDataFolder"]
     };
     const metadataBlob = new Blob([JSON.stringify(metadata)], { type: "application/json" })
@@ -73,9 +74,10 @@ function createUploadBody(progress) {
     return form;
 }
 
-function progressFile(response) {
+function findProgressFile(response) {
+    //TODO can the .text() not be changed to .json()?
     return response.text().then(responseText => {
         const fileList = JSON.parse(responseText);
-        return fileList.files.find(file => file.name === "progress.json");;
+        return fileList.files.find(file => file.name === fileNames.progress);;
     });
 }

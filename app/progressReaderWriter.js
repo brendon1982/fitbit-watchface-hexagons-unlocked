@@ -2,13 +2,12 @@ import Progress from "../domain/progress";
 import UnlockedTile from '../domain/unlockedTile';
 import { readFileSync, writeFileSync } from "fs";
 import { outbox } from "file-transfer";
-
-const fileName = "progress.json";
+import * as fileNames from "../common/fileNames"
 
 export function progressReader() {
     let progress;
     try {
-        progress = readFileSync(`/private/data/${fileName}`, "json");
+        progress = readFileSync(`/private/data/${fileNames.progress}`, "json");
     } catch (error) {
         console.log(error);
     }
@@ -21,8 +20,8 @@ export function progressReader() {
 }
 
 export function progressWriter(progress) {
-    writeFileSync(fileName, progress, "json");
-    outbox.enqueueFile(`/private/data/${fileName}`)
+    writeFileSync(fileNames.progress, progress, "json");
+    outbox.enqueueFile(`/private/data/${fileNames.progress}`)
         .catch(() => {
             console.log("Couldn't write progress");
         });

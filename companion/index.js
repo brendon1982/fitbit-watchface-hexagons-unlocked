@@ -123,5 +123,3 @@ function sendMessage(message) {
 
 // TODO add more tile sets.
 // TODO think about how to prevent overriding greater with lesser progress (both ways).
-// TODO consolidate progress file name.
-// TODO consider splitting this file up, it has gotten big and has multiple concerns.

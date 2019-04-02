@@ -1,5 +1,6 @@
 import { inbox } from "file-transfer";
 import { writeFileSync, readFileSync, unlinkSync } from "fs";
+import * as fileNames from "../common/fileNames";
 
 export default class ProgressRestoration {
     constructor(progressChangedCallback) {
@@ -12,12 +13,12 @@ export default class ProgressRestoration {
     }
 
     processAllFiles() {
-        let fileName;
-        while (fileName = inbox.nextFile()) {
-            const fullFileName = `/private/data/${fileName}`
+        let tmpFileName;
+        while (tmpFileName = inbox.nextFile()) {
+            const fullFileName = `/private/data/${tmpFileName}`
             
             const progress = readFileSync(fullFileName, "json");
-            writeFileSync("/private/data/progress.json", progress, "json");
+            writeFileSync(`/private/data/${fileNames.progress}`, progress, "json");
 
             unlinkSync(fullFileName);
 
@@ -25,5 +26,3 @@ export default class ProgressRestoration {
         }
     }
 }
-
-// TODO does this need to be a class? only the things in /domain are classes
