@@ -39,8 +39,11 @@ function seedProgress() {
         new UnlockedTile(19, new Date(2019, 0, 1)),
         new UnlockedTile(20, new Date(2019, 0, 1)),
 
-        new UnlockedTile(27, new Date(2019, 0, 1)),
-        new UnlockedTile(28, new Date(2019, 0, 1))
+        new UnlockedTile(28, new Date(2019, 0, 1)),
+        new UnlockedTile(29, new Date(2019, 0, 1)),
+
+        new UnlockedTile(37, new Date(2019, 0, 1)),
+        new UnlockedTile(38, new Date(2019, 0, 1))
     ]);
     progressWriter(seedData);
 
