@@ -4,12 +4,14 @@ const desert = "Desert";
 const stone = "Stone";
 const mars = "Mars";
 const medieval = "Medieval";
+const military = "Military";
 const terainGrassPath = "/resources/Tiles/Terrain/Grass";
 const terainDirtPath = "/resources/Tiles/Terrain/Dirt";
 const terainDesertPath = "/resources/Tiles/Terrain/Sand";
 const terainStonePath = "/resources/Tiles/Terrain/Stone";
 const terainMarsPath = "/resources/Tiles/Terrain/Mars";
 const themeMedievalPath = "/resources/Tiles/Medieval";
+const themeMilitaryPath = "/resources/Tiles/Military";
 
 
 const terrainGrassSets = [grassLand, medieval];
@@ -25,7 +27,7 @@ const terrainGrass = [
     { id: 9, name: "Raised grass", sets: terrainGrassSets, image: `${terainGrassPath}/9.png`}
 ];
 
-const terrainDirtSets = [dirt];
+const terrainDirtSets = [dirt, military];
 const terrainDirt = [
     { id: 10, name: "Plain dirt", sets: terrainDirtSets, image: `${terainDirtPath}/1.png`}, 
     { id: 11, name: "Some angled trees", sets: terrainDirtSets, image: `${terainDirtPath}/2.png`}, 
@@ -96,6 +98,17 @@ const themeMedieval = [
     { id: 60, name: "Windmill", sets: themeMedievalSets, image: `${themeMedievalPath}/15.png`},
 ];
 
+const themeMilitarySets = [military];
+const themeMilitary = [
+    { id: 61, name: "Entrance", sets: themeMilitarySets, image: `${themeMilitaryPath}/1.png`}, 
+    { id: 62, name: "Hangar", sets: themeMilitarySets, image: `${themeMilitaryPath}/2.png`}, 
+    { id: 63, name: "Rockets", sets: themeMilitarySets, image: `${themeMilitaryPath}/3.png`}, 
+    { id: 64, name: "Tanks", sets: themeMilitarySets, image: `${themeMilitaryPath}/4.png`}, 
+    { id: 65, name: "Large turret", sets: themeMilitarySets, image: `${themeMilitaryPath}/5.png`}, 
+    { id: 66, name: "Medium turret", sets: themeMilitarySets, image: `${themeMilitaryPath}/6.png`}, 
+    { id: 67, name: "Small turret", sets: themeMilitarySets, image: `${themeMilitaryPath}/7.png`}, 
+];
+
 // TODO try save more memory by creating constants for file name prefixes
 
 export const tiles = terrainGrass
@@ -104,5 +117,6 @@ export const tiles = terrainGrass
         terrainDesert,
         terrainStone,
         terrainMars,
-        themeMedieval
+        themeMedieval,
+        themeMilitary
     );
