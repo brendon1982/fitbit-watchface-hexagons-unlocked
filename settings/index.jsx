@@ -42,8 +42,8 @@ function backupLogin(props) {
         status="Login"
         authorizeUrl="https://accounts.google.com/o/oauth2/auth"
         requestTokenUrl="https://oauth2.googleapis.com/token"
-        clientId="97058396636-3na443t1hc064f358l81ju3fa96fkkdp.apps.googleusercontent.com"
-        clientSecret="cbanGxLKVaN4_yU5wWCXTlZd"
+        clientId="752298837796-sdau7ungjgnu3ksgm7t29s3itj2kdg46.apps.googleusercontent.com"
+        clientSecret="DAwsGn_G8kWGGwRTAG0vJrRi"
         scope="https://www.googleapis.com/auth/drive.appdata"
         pkce
         onAccessToken={async () => clearBackupMessage(props) }
