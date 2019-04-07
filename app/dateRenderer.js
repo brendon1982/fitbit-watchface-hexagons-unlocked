@@ -6,7 +6,7 @@ const dateElements = document.getElementsByClassName("date");
 const weekDays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 
-export function tick(date) {
+export function render(date) {
   const month = getMonth(date);
   const monthDay = getMonthDay(date);
   const weekDay = getWeekDay(date);

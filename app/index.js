@@ -16,8 +16,8 @@ import { formatDateAsString } from "../common/utils";
 import { goals, today } from "user-activity";
 import ProgressRestoration from './progressRestoraton';
 
-import { memory } from "system";
-console.log(`A ${memory.js.used} / ${memory.js.total}`);
+// import { memory } from "system";
+// console.log(`A ${memory.js.used} / ${memory.js.total}`);
 
 let tileSet = new TileSet()
     .loadProgressUsing(progressReader)
@@ -33,15 +33,15 @@ progressRestoration.startListeningForProgressRestoration();
 
 clock.granularity = "minutes";
 clock.ontick = evt => {
-    timeRenderer.tick(evt.date);
-    dateRenderer.tick(evt.date);
+    timeRenderer.render(evt.date);
+    dateRenderer.render(evt.date);
     renderMap();
     checkIfTileShouldBeUnlocked();
-    console.log(`B ${memory.js.used} / ${memory.js.total}`);
+    // console.log(`B ${memory.js.used} / ${memory.js.total}`);
 };
 
 heart.initialize(hrm => {
-    heartRenderer.tick(hrm.heartRate);
+    heartRenderer.render(hrm.heartRate);
 });
 
 goals.onreachgoal = () => {

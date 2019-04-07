@@ -4,7 +4,7 @@ import { preferences } from "user-settings";
 
 const timeElements = document.getElementsByClassName("time");
 
-export function tick(date) {
+export function render(date) {
   const hours = getHours(date);
   const mins = getMinutes(date);
 
