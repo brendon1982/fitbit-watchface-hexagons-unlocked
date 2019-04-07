@@ -1,5 +1,5 @@
 import document from "document";
-import * as util from "./utils";
+import * as util from "../common/utils";
 
 const dateElements = document.getElementsByClassName("date");
 

@@ -18,3 +18,19 @@
   x: 100%-10;
   y: 100%-10;
 }
+
+.heart {
+  font-size: 50;
+  text-length: 3;
+  text-anchor: start;
+  x: 48;
+  y: 100%-10;
+}
+
+.heart-image {
+  x: 0;
+  y: 100%-53;
+  height: 50;
+  width: 50;
+  fill: white;
+}

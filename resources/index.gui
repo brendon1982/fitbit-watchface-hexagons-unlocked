@@ -58,5 +58,7 @@
   <svg>
     <text class="time text" />
     <text class="date text" />
+    <text class="heart text" />
+    <image class="heart-image" href="heart.png"></image>
   </svg>
 </svg>

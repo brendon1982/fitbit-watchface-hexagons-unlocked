@@ -1,8 +1,10 @@
 import clock from "clock";
 import * as messaging from "messaging";
-import * as time from "../common/time";
-import * as date from "../common/date";
+import * as timeRenderer from "./timeRenderer";
+import * as dateRenderer from "./dateRenderer";
+import * as heartRenderer from "./heartRenderer";
 import * as commands from "../common/commands";
+import * as heart from "../common/heart";
 
 import Map from "../domain/map";
 import TileSet from "../domain/tilesSet";
@@ -31,12 +33,16 @@ progressRestoration.startListeningForProgressRestoration();
 
 clock.granularity = "minutes";
 clock.ontick = evt => {
-    time.tick(evt.date);
-    date.tick(evt.date);
+    timeRenderer.tick(evt.date);
+    dateRenderer.tick(evt.date);
     renderMap();
     checkIfTileShouldBeUnlocked();
     console.log(`B ${memory.js.used} / ${memory.js.total}`);
 };
+
+heart.initialize(hrm => {
+    heartRenderer.tick(hrm.heartRate);
+});
 
 goals.onreachgoal = () => {
     renderMap();
