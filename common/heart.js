@@ -1,5 +1,6 @@
 import { BodyPresenceSensor } from "body-presence";
 import { HeartRateSensor } from "heart-rate";
+import { display } from "display";
 
 let onHeartRateChange;
 
@@ -7,7 +8,7 @@ export function initialize(callback) {
   onHeartRateChange = callback;
 }
 
-let hrm = new HeartRateSensor({ frequency: 5, batch: 1 });
+let hrm = new HeartRateSensor({ frequency: 1 });
 hrm.onreading = function () {
   if(onHeartRateChange){
     onHeartRateChange(hrm);
@@ -23,3 +24,9 @@ body.onreading = () => {
   }
 };
 body.start();
+
+display.onchange = () => {
+  if(body.present){
+    display.on ? hrm.start() : hrm.stop();
+  }
+};
