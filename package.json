@@ -4,22 +4,22 @@
   "private": true,
   "license": "UNLICENSED",
   "devDependencies": {
-    "@fitbit/sdk": "~3.1.0",
+    "@fitbit/sdk": "~3.1.1",
     "@fitbit/sdk-cli": "^1.6.0",
     "@types/chai": "^4.1.7",
     "@types/faker": "^4.1.5",
-    "@types/lodash": "^4.14.121",
+    "@types/lodash": "^4.14.130",
     "@types/mocha": "^5.2.6",
-    "@types/sinon": "^7.0.9",
+    "@types/sinon": "^7.0.11",
     "chai": "^4.2.0",
-    "esm": "^3.2.7",
+    "esm": "^3.2.25",
     "faker": "^4.1.0",
-    "glob": "^7.1.3",
-    "io-ts": "^1.8.2",
-    "jimp": "^0.6.0",
+    "glob": "^7.1.4",
+    "io-ts": "^1.8.6",
+    "jimp": "^0.6.4",
     "lodash": "^4.17.11",
-    "mocha": "^6.0.2",
-    "sinon": "^7.2.7"
+    "mocha": "^6.1.4",
+    "sinon": "^7.3.2"
   },
   "fitbit": {
     "appUUID": "a6ed4a7f-45f7-4ed8-9961-b8ce660b86a3",
@@ -33,7 +33,9 @@
       "access_internet"
     ],
     "buildTargets": [
-      "higgs"
+      "higgs",
+      "meson",
+      "gemini"
     ],
     "i18n": {
       "en": {

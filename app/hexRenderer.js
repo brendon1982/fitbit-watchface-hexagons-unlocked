@@ -5,7 +5,7 @@ const imageWidth = 60;
 const imageHeight = 70;
 const offset = -1;
 const xOffset = (imageWidth / 2) + imageWidth / 4;
-const yOffset = (Math.sqrt(hexSize) - (imageWidth / 2));
+const yOffset = imageHeight / 1.5 * -1;
 const sqrt3 = Math.sqrt(3);
 
 export default class HexRenderer {

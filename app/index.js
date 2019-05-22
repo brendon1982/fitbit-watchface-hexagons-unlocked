@@ -1,4 +1,5 @@
 import clock from "clock";
+import { me as device } from "device";
 import * as messaging from "messaging";
 import * as timeRenderer from "./timeRenderer";
 import * as dateRenderer from "./dateRenderer";
@@ -24,7 +25,7 @@ let tileSet = new TileSet()
     .savesProgressUsing(progressWriter);
 let lastRenderKey;
 
-const map = new Map({ width: 7, height: 6 });
+const map = new Map(getMapSizeForDevice());
 const progressCoordinates = map.spiral();
 const hexRenderer = new HexRenderer();
 
@@ -100,4 +101,20 @@ function isNewDayOrTileSet() {
 function getStepsProgress() {
     const stepsGoal = goals.steps || 10000;
     return today.adjusted.steps / stepsGoal * 100;
+}
+
+function getMapSizeForDevice() {
+    const mapSize = { width: 7, height: 7 };
+    if (!isIonic()) {
+        mapSize.width = 6;
+    }
+    if (isIonic()) {
+        mapSize.height = 6;
+    }
+
+    return mapSize;
+}
+
+function isIonic() {
+    return device.modelId === "27";
 }
