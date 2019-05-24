@@ -1,11 +1,9 @@
 import * as settingsKeys from "../common/settingsKeys";
 import { tiles } from "./tilesWithEmbeddedImages";
-import locked from "./locked.png"
 
 function settingsComponent(props) {
   return (
     <Page>
-      {backupSection(props)}
       {tileSets().map(set => tileSetSection(props, set))}
     </Page>
   );
@@ -24,69 +22,12 @@ function tileSets() {
   return sets;
 }
 
-function backupSection(props) {
-  if (!props.settingsStorage.getItem(settingsKeys.backupAccessToken())) {
-    return backupLogin(props);
-  } else {
-    return backupMenu(props);
-  }
-}
-
-function backupLogin(props) {
-  return (
-    <Section title={<Text bold align="center">Progress Backup</Text>}>
-      <Oauth
-        settingsKey={settingsKeys.backupAccessToken()}
-        title="Google Drive Backup"
-        label="Google Drive Backup"
-        status="Login"
-        authorizeUrl="https://accounts.google.com/o/oauth2/auth"
-        requestTokenUrl="https://oauth2.googleapis.com/token"
-        clientId="752298837796-sdau7ungjgnu3ksgm7t29s3itj2kdg46.apps.googleusercontent.com"
-        clientSecret="DAwsGn_G8kWGGwRTAG0vJrRi"
-        scope="https://www.googleapis.com/auth/drive.appdata"
-        pkce
-        onAccessToken={async () => clearBackupMessage(props) }
-      />
-      <Text align="center">{props.settingsStorage.getItem(settingsKeys.backupMessage())}</Text>
-    </Section>
-  );
-}
-
-function backupMenu(props) {
-  return (
-    <Section title={<Text bold align="center">Progress Backup</Text>}>
-      <Button label="Backup" onClick={() => backupProgress(props)}></Button>
-      <Button label="Restore" onClick={() => restoreProgress(props)}></Button>
-      <Button label="Logout" onClick={() => logoutOfBackup(props)}></Button>
-      <Text align="center">{props.settingsStorage.getItem(settingsKeys.backupMessage())}</Text>
-    </Section>
-  );
-}
-
-function backupProgress(props) {
-  props.settingsStorage.setItem(settingsKeys.backupDate(), new Date().toISOString());
-}
-
-function restoreProgress(props) {
-  props.settingsStorage.setItem(settingsKeys.backupRestoreDate(), new Date().toISOString());
-}
-
-function logoutOfBackup(props) {
-  clearBackupMessage(props);
-  props.settingsStorage.removeItem(settingsKeys.backupAccessToken());
-}
-
-function clearBackupMessage(props) {
-  props.settingsStorage.setItem(settingsKeys.backupMessage(), "");
-}
-
 function tileSetSection(props, tileSet) {
   return (
     <Section title={<Text bold align="center">{tileSet}</Text>}>
       {selectTileSetButton(props, tileSet)}
       {tiles.filter(inTileSet(tileSet)).map(tile =>
-        <TextImageRow label={tile.name} sublabel={subLabel(props, tile)} icon={tileImage(props, tile)} />
+        <TextImageRow label={tile.name} icon={tile.image} />
       )}
     </Section>
   )
@@ -107,24 +48,6 @@ function selectTileSetButton(props, tileSet) {
 
 function switchToTileSet(props, tileSet) {
   props.settingsStorage.setItem(settingsKeys.tileSet(), tileSet);
-}
-
-function subLabel(props, tile) {
-  const status = props.settingsStorage.getItem(settingsKeys.unlockedTile(tile));
-  if (status) {
-    return `Unlocked on ${status}`;
-  }
-
-  return "Locked";
-}
-
-function tileImage(props, tile) {
-  const status = props.settingsStorage.getItem(settingsKeys.unlockedTile(tile));
-  if (status) {
-    return tile.image;
-  }
-
-  return locked;
 }
 
 registerSettingsPage(settingsComponent);

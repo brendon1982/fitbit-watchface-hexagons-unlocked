@@ -23,24 +23,6 @@ describe("map", function () {
         });
     });
 
-    describe("spiral", function () {
-        it("should return the points of the grid in an order that makes a clockwise inward spiral", function () {
-            // arrange
-            const expectedPath = [
-                creatPoint(0, 0), creatPoint(1, 0), creatPoint(2, 0),
-                creatPoint(2, 1), creatPoint(2, 2), creatPoint(2, 3),
-                creatPoint(1, 3), creatPoint(0, 3), creatPoint(0, 2),
-                creatPoint(0, 1), creatPoint(1, 1), creatPoint(1, 2),
-            ];
-
-            const sut = createMap({ height: 4, width: 3 });
-            // act
-            const result = sut.spiral();
-            // assert
-            expect(result).to.be.deep.equal(expectedPath);
-        });
-    });
-
     function createMap(gridOptions, hexOptions) {
         return new Map(gridOptions, hexOptions);
     }

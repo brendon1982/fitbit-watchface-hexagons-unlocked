@@ -83,141 +83,8 @@ describe("tileSet", function () {
         });
     });
 
-    describe("unlockTile", function () {
-        it("should save progress", function () {
-            // arrange
-            const tileSet = faker.random.word();
-            const unlockDate1 = new Date(2019, 01, 01);
-            const unlockDate2 = new Date(2019, 01, 02);
-            const tiles = [
-                TileTestDataBuilder.create().withId(1).withSets(tileSet).build(),
-                TileTestDataBuilder.create().withId(2).withSets(tileSet).build(),
-                TileTestDataBuilder.create().withId(3).withSets(tileSet).build()
-            ];
-            const expectedProgress = ProgressTestDataBuilder.create()
-                .withTileSet(tileSet)
-                .withUnlockedTile(tiles[0], unlockDate1)
-                .withUnlockedTile(tiles[1], unlockDate2)
-                .build();
-
-            let actualProgress = new Progress();
-            const sut = new TileSet(tiles)
-                .changeTileSet(tileSet)
-                .unlockTile(tiles[0], unlockDate1)
-                .savesProgressUsing(progress => actualProgress = progress);
-            // act
-            sut.unlockTile(tiles[1], unlockDate2);
-            // assert
-            expect(actualProgress).to.deep.equal(expectedProgress);
-        });
-
-        it("should support unlocking tiles with a tile id", function () {
-            // arrange
-            const tileSet = faker.random.word();
-            const unlockDate1 = new Date();
-            const tiles = [
-                TileTestDataBuilder.create().withId(1).withSets(tileSet).build()
-            ];
-            const expectedProgress = ProgressTestDataBuilder.create()
-                .withTileSet(tileSet)
-                .withUnlockedTile(tiles[0], unlockDate1)
-                .build();
-
-            let actualProgress = new Progress();
-            const sut = new TileSet(tiles)
-                .changeTileSet(tileSet)
-                .savesProgressUsing(progress => actualProgress = progress);
-            // act
-            sut.unlockTile(1, unlockDate1);
-            // assert
-            expect(actualProgress).to.deep.equal(expectedProgress);
-        });
-
-        it("should ignore a tile if it is already unlocked", function () {
-            // arrange
-            const tileSet = faker.random.word();
-            const unlockDate = new Date();
-            const tiles = [
-                TileTestDataBuilder.create().withId(1).withSets(tileSet).build(),
-            ];
-            const expectedProgress = ProgressTestDataBuilder.create()
-                .withTileSet(tileSet)
-                .withUnlockedTile(tiles[0], unlockDate)
-                .build();
-
-            let actualProgress = new Progress();
-            const sut = new TileSet(tiles)
-                .changeTileSet(tileSet)
-                .savesProgressUsing(progress => actualProgress = progress);
-            // act
-            sut.unlockTile(1, unlockDate);
-            sut.unlockTile(1, unlockDate);
-            // assert
-            expect(actualProgress).to.deep.equal(expectedProgress);
-        });
-    });
-
-    describe("loadProgressUsing", function () {
-        it("should populate progress with the result of given progress reader", function () {
-            // arrange
-            const tileSet = faker.random.word();
-            const unlockDate1 = new Date();
-            const unlockDate2 = new Date();
-            const tileAreadyUnlocked = TileTestDataBuilder.create().withId(1).build();
-            const tileBeingUnlocked = TileTestDataBuilder.create().withId(2).build();
-            const savedProgress = ProgressTestDataBuilder.create()
-                .withTileSet(tileSet)
-                .withUnlockedTile(tileAreadyUnlocked, unlockDate1)
-                .build();
-            const expectedProgress = ProgressTestDataBuilder.create()
-                .withTileSet(tileSet)
-                .withUnlockedTile(tileAreadyUnlocked, unlockDate1)
-                .withUnlockedTile(tileBeingUnlocked, unlockDate2)
-                .build();
-
-            let actualProgress = new Progress();
-            const sut = new TileSet()
-                .savesProgressUsing(progress => actualProgress = progress);
-            // act
-            sut.loadProgressUsing(() => {
-                return savedProgress;
-            });
-            // assert
-            sut.unlockTile(tileBeingUnlocked, unlockDate2);
-            expect(actualProgress).to.deep.equal(expectedProgress);
-        });
-    });
-
     describe("getUnlockedTiles", function () {
-        it("should only start returning unlocked tiles the day after they're unlocked", function () {
-            // arrange
-            const tileSet = faker.random.word();
-            const tiles = [
-                TileTestDataBuilder.create().withId(1).withSets(tileSet).build(),
-                TileTestDataBuilder.create().withId(2).withSets(tileSet).build(),
-                TileTestDataBuilder.create().withId(3).withSets(tileSet).build()
-            ];
-            const clock = FakeClock.create();
-            const sut = new TileSet(tiles)
-                .changeTileSet(tileSet)
-                .unlockTile(tiles[0]);
-
-            clock.advanceOneDay();
-
-            const unlockedTilesOnDay1BeforeNewUnlock = sut.getUnlockedTiles();
-            sut.unlockTile(tiles[1]);
-            const unlockedTilesOnDay1AfterNewUnlock = sut.getUnlockedTiles();
-
-            clock.advanceOneDay();
-            // pre-assert
-            expect(unlockedTilesOnDay1BeforeNewUnlock).to.have.deep.members(unlockedTilesOnDay1AfterNewUnlock)
-            // act
-            const unlockedTilesOnDay2 = sut.getUnlockedTiles();
-            // assert
-            expect(unlockedTilesOnDay2).to.have.deep.members([tiles[0], tiles[1]]);
-        });
-
-        it("should consider newly loaded progress", function () {
+        it("should return all tiles", function () {
             // arrange
             const tileSet = faker.random.word();
             const tiles = [
@@ -225,36 +92,11 @@ describe("tileSet", function () {
                 TileTestDataBuilder.create().withId(2).withSets(tileSet).build()
             ];
 
-            const savedProgress1 = ProgressTestDataBuilder.create()
-                .withTileSet(tileSet)
-                .withUnlockedTile(tiles[0], createDateDaysInFuture(1))
-                .build();
-            const savedProgress2 = ProgressTestDataBuilder.create()
-                .withTileSet(tileSet)
-                .withUnlockedTile(tiles[0], createDateDaysInFuture(1))
-                .withUnlockedTile(tiles[1], createDateDaysInFuture(2))
-                .build();
-
             const sut = new TileSet(tiles);
-            sut.loadProgressUsing(() => {
-                return savedProgress1;
-            });
-
-            sut.getUnlockedTiles();
             // act
-            sut.loadProgressUsing(() => {
-                return savedProgress2;
-            });
-
-            const unlockedTilesAfterSecondLoad = sut.getUnlockedTiles();
+            const result = sut.getUnlockedTiles();
             // assert
-            expect(unlockedTilesAfterSecondLoad).to.have.deep.members([tiles[0], tiles[1]]);
+            expect(result).to.have.deep.members([tiles[0], tiles[1]]);
         });
-
-        function createDateDaysInFuture(numberOfDays) {
-            const date = new Date();
-            date.setDate(date.getDate() + numberOfDays);
-            return date;
-        }
     });
 });

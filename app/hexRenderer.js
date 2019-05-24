@@ -19,11 +19,6 @@ export default class HexRenderer {
         imageElement.x = point.x - xOffset;
         imageElement.y = point.y + yOffset;
     };
-
-    progress(coordinates, percentage) {
-        const imageElement = document.getElementById(coordinatesToElementId(coordinates));
-        imageElement.style.opacity = percentage / 100;
-    };
 }
 
 function coordinatesToElementPoint(coordinates) {

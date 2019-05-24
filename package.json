@@ -1,5 +1,5 @@
 {
-  "name": "hexagons",
+  "name": "hexagons-unlocked",
   "version": "0.1.0",
   "private": true,
   "license": "UNLICENSED",
@@ -24,7 +24,7 @@
   "fitbit": {
     "appUUID": "a6ed4a7f-45f7-4ed8-9961-b8ce660b86a3",
     "appType": "clockface",
-    "appDisplayName": "Hexagons",
+    "appDisplayName": "Hexagons Unlocked",
     "iconFile": "resources/icon.png",
     "wipeColor": "#ffffff",
     "requestedPermissions": [
@@ -39,7 +39,7 @@
     ],
     "i18n": {
       "en": {
-        "name": "Hexagons"
+        "name": "Hexagons Unlocked"
       }
     },
     "defaultLanguage": "en-US"
