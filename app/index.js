@@ -26,14 +26,16 @@ const statsSource = new StatsSource()
     .loadsDataUsing(progressReader)
     .savesDataUsing(progressWriter);
 
-clock.granularity = "minutes";
+renderMap();
+
+clock.granularity = "seconds";
 clock.ontick = evt => {
     timeRenderer.render(evt.date);
     dateRenderer.render(evt.date);
 
-    statsRenderer.render(statsSource.readStat());
-
-    renderMap();
+    if(evt.date.getSeconds() % 5 === 0){
+        statsRenderer.render(statsSource.readStat());
+    }
 };
 
 messaging.peerSocket.onmessage = (evt) => {
