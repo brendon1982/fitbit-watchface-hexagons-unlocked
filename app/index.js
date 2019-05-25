@@ -11,12 +11,15 @@ import Map from "../domain/map";
 import TileSet from "../domain/tilesSet";
 import HexRenderer from "./hexRenderer";
 import TileSetRandomImagePresenter from "../domain/tileSetRandomImagePresenter";
+import { progressReader, progressWriter } from "./progressReaderWriter";
 import { formatDateAsString } from "../common/utils";
 
 // import { memory } from "system";
 // console.log(`A ${memory.js.used} / ${memory.js.total}`);
 
-let tileSet = new TileSet();
+let tileSet = new TileSet()
+    .loadProgressUsing(progressReader)
+    .savesProgressUsing(progressWriter);
 let lastRenderKey;
 
 const map = new Map(getMapSizeForDevice());

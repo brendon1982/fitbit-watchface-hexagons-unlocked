@@ -1,11 +1,12 @@
 import { find } from "../common/utils";
 import { tiles } from "./tiles";
+import SavedData from "./savedData";
 
-//TODO put persistance back in as the tileset needs to be stored
 export default class TileSet {
     constructor(overrideTiles) {
-        this.currentTileSet = "Grass Land";
+        this.currentTileSet = "";
         this.allTiles = overrideTiles || tiles;
+        this.dataWriter = () => { };
     }
 
     changeTileSet(tileSet) {
@@ -19,12 +20,25 @@ export default class TileSet {
 
         this.currentTileSet = tileSet;
 
+        this.dataWriter(new SavedData(this.currentTileSet));
+
+        return this;
+    }
+
+    savesProgressUsing(progressWriter) {
+        this.dataWriter = progressWriter;
+        return this;
+    }
+
+    loadProgressUsing(dataReader) {
+        const savedData = dataReader();
+        this.currentTileSet = savedData.tileSet;
         return this;
     }
 
     getUnlockedTiles() {
         return this.allTiles
-            .filter(withSet(this.currentTileSet));
+        .filter(withSet(this.currentTileSet))
     }
 }
 
