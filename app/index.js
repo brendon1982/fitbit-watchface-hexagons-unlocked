@@ -3,7 +3,7 @@ import { me as device } from "device";
 import * as messaging from "messaging";
 import * as timeRenderer from "./timeRenderer";
 import * as dateRenderer from "./dateRenderer";
-import * as heartRenderer from "./heartRenderer";
+import * as statsRenderer from "./statsRenderer";
 import * as commands from "../common/commands";
 import * as heart from "../common/heart";
 
@@ -34,7 +34,7 @@ clock.ontick = evt => {
 };
 
 heart.initialize(hrm => {
-    heartRenderer.render(hrm.heartRate);
+    statsRenderer.render(hrm.heartRate);
 });
 
 messaging.peerSocket.onmessage = (evt) => {
