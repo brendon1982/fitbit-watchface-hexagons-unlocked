@@ -19,7 +19,7 @@
   y: 100%-10;
 }
 
-.heart {
+.stats {
   font-size: 50;
   text-length: 3;
   text-anchor: start;
@@ -27,7 +27,7 @@
   y: 100%-10;
 }
 
-.heart-image {
+.stat-image {
   x: 0;
   y: 100%-53;
   height: 50;

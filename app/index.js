@@ -5,7 +5,7 @@ import * as timeRenderer from "./timeRenderer";
 import * as dateRenderer from "./dateRenderer";
 import * as statsRenderer from "./statsRenderer";
 import * as commands from "../common/commands";
-import * as heart from "../common/heart";
+import StatsSource from "../common/statsSource"
 
 import Map from "../domain/map";
 import TileSet from "../domain/tilesSet";
@@ -13,9 +13,6 @@ import HexRenderer from "./hexRenderer";
 import TileSetRandomImagePresenter from "../domain/tileSetRandomImagePresenter";
 import { progressReader, progressWriter } from "./progressReaderWriter";
 import { formatDateAsString } from "../common/utils";
-
-// import { memory } from "system";
-// console.log(`A ${memory.js.used} / ${memory.js.total}`);
 
 let tileSet = new TileSet()
     .loadProgressUsing(progressReader)
@@ -25,17 +22,19 @@ let lastRenderKey;
 const map = new Map(getMapSizeForDevice());
 const hexRenderer = new HexRenderer();
 
+const statsSource = new StatsSource()
+    .loadsDataUsing(progressReader)
+    .savesDataUsing(progressWriter);
+
 clock.granularity = "minutes";
 clock.ontick = evt => {
     timeRenderer.render(evt.date);
     dateRenderer.render(evt.date);
-    renderMap();
-    // console.log(`B ${memory.js.used} / ${memory.js.total}`);
-};
 
-heart.initialize(hrm => {
-    statsRenderer.render(hrm.heartRate);
-});
+    statsRenderer.render(statsSource.readStat());
+
+    renderMap();
+};
 
 messaging.peerSocket.onmessage = (evt) => {
     if (evt.data.command === commands.changeTileSet) {

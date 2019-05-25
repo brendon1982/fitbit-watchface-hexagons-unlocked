@@ -7,6 +7,7 @@ export default class TileSet {
         this.currentTileSet = "";
         this.allTiles = overrideTiles || tiles;
         this.dataWriter = () => { };
+        this.dataReader = () => new SavedData();
     }
 
     changeTileSet(tileSet) {
@@ -20,13 +21,16 @@ export default class TileSet {
 
         this.currentTileSet = tileSet;
 
-        this.dataWriter(new SavedData(this.currentTileSet));
+        const savedData = this.dataReader();
+        savedData.tileSet = tileSet;
+
+        this.dataWriter(savedData);
 
         return this;
     }
 
-    savesProgressUsing(progressWriter) {
-        this.dataWriter = progressWriter;
+    savesProgressUsing(dataWriter) {
+        this.dataWriter = dataWriter;
         return this;
     }
 

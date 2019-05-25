@@ -22,7 +22,7 @@ export function progressWriter(progress) {
 }
 
 function seedProgress() {
-    const seedData = new SavedData("Grass Land");
+    const seedData = new SavedData("Grass Land", "Heart Rate");
     progressWriter(seedData);
 
     return seedData;

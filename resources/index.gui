@@ -59,6 +59,6 @@
     <text class="time text" />
     <text class="date text" />
     <text class="stats text" />
-    <image class="heart-image" href="heart.png"></image>
+    <image class="stat-image"></image>
   </svg>
 </svg>

@@ -1,9 +1,14 @@
 import document from "document";
 
-const statsElements = document.getElementsByClassName("stats");
+const statsTextElements = document.getElementsByClassName("stats");
+const statsIconElements = document.getElementsByClassName("stat-image");
 
-export function render(value) {
-  statsElements.forEach(function (element) {
-    element.text = `${value}`;
+export function render(stat) {
+  statsTextElements.forEach(function (element) {
+    element.text = `${stat.value}`;
+  });
+
+  statsIconElements.forEach(function (element) {
+    element.href = `${stat.icon}`;
   });
 }
